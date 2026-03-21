@@ -1,0 +1,51 @@
+/* Page Inscription - IMSA IntelliBook */
+.register-bg{
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--beige), #fff);
+}
+.info-panel{
+  background: linear-gradient(135deg, rgba(26,58,92,0.98), rgba(46,109,164,0.92));
+  color:#fff;
+  border-radius: 18px;
+  overflow:hidden;
+  position: relative;
+}
+.info-panel::after{
+  content:"";
+  position:absolute;
+  inset:-120px;
+  background: radial-gradient(circle at 20% 20%, rgba(232,115,42,0.45), rgba(232,115,42,0) 55%);
+}
+.info-panel > *{
+  position: relative;
+  z-index: 1;
+}
+
+.form-panel{
+  background:#fff;
+  border-radius: 18px;
+  border: 1px solid rgba(26,58,92,0.08);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.04);
+}
+.strength-bar{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(26,58,92,0.10);
+  overflow:hidden;
+}
+.strength-fill{
+  height:100%;
+  width:0%;
+  background: var(--orange);
+  transition: width .35s ease, background .35s ease;
+}
+
+.eye-toggle{
+  position:absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor:pointer;
+  color: var(--text-muted);
+}
+

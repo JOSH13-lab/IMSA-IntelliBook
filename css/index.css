@@ -1,0 +1,167 @@
+/* Page Accueil - IMSA IntelliBook */
+.hero{
+  min-height: 100vh;
+  padding-top: 90px;
+  position: relative;
+  overflow: hidden;
+  background: url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1600") center/cover no-repeat;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(26,58,92,0.72);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  left:-80px;
+  bottom:-140px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle at center, rgba(232,115,42,0.55), rgba(232,115,42,0.0) 65%);
+}
+.hero-inner{
+  position: relative;
+  z-index: 1;
+}
+.hero-card-stats{
+  background: rgba(245,240,232,0.14);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+}
+.hero-title{
+  font-size: clamp(2.0rem, 4vw, 3.1rem);
+  color: #fff;
+  letter-spacing: 0.2px;
+}
+.hero-sub{
+  color: rgba(255,255,255,0.9);
+}
+
+.btn-hero-outline{
+  border: 1px solid rgba(255,255,255,0.9);
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+}
+.btn-hero-outline:hover{
+  background: rgba(255,255,255,0.12);
+  color:#fff;
+}
+
+.description-banner{
+  background: var(--beige);
+}
+.why-card{
+  background: #fff;
+  border: 1px solid rgba(26,58,92,0.08);
+  border-radius: 16px;
+  height: 100%;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.03);
+}
+
+.why-icon{
+  width: 54px;
+  height: 54px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 14px;
+  color:#fff;
+  background: linear-gradient(135deg, var(--orange), var(--blue-mid));
+}
+
+.testi-card{
+  background: #fff;
+  border: 1px solid rgba(26,58,92,0.08);
+  border-radius: 16px;
+}
+.testi-avatar{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue-mid), var(--orange));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 900;
+}
+
+.cta-banner{
+  background: linear-gradient(135deg, rgba(232,115,42,0.95), rgba(46,109,164,0.90));
+}
+
+.section-dark{
+  background: var(--blue-dark);
+  color:#fff;
+}
+
+.footer{
+  background: var(--blue-dark);
+  color: rgba(255,255,255,0.85);
+}
+
+.footer a{
+  color: rgba(255,255,255,0.9);
+  text-decoration:none;
+}
+.footer a:hover{
+  color:#fff;
+  text-decoration: underline;
+}
+
+/* Accueil carrousel spacing */
+.home-carousel-section{
+  margin: 28px 0;
+}
+.home-carousel-header{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+.home-carousel-header .pill{
+  background: rgba(232,115,42,0.14);
+  border: 1px solid rgba(232,115,42,0.28);
+  color: var(--orange-dark);
+  font-weight: 900;
+  padding: 8px 12px;
+  border-radius: 999px;
+  letter-spacing: .2px;
+}
+
+/* Largeur pilotée par js/carousel.js pour respecter perView */
+.imsa-carousel .imsa-carousel-track > .card.book-card{
+  min-width: 0;
+}
+
+/* Uniformiser la hauteur/dimension des items carrousel (optionnel) */
+.carousel-card{
+  width: 200px;
+  flex-shrink: 0;
+}
+.carousel-card .book-cover-container{
+  padding-top: 133.33%; /* ratio 3:4 strict */
+}
+@media (min-width: 768px){
+  .carousel-card{
+    width: 180px;
+  }
+}
+
+/* Hero fade-in */
+.fade-in-up{
+  opacity:0;
+  transform: translateY(16px);
+  animation: fadeInUp 900ms ease forwards;
+}
+@keyframes fadeInUp{
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fade-in-up{ animation: none; opacity:1; transform:none; }
+}
+

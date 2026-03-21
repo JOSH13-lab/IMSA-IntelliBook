@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catégories - IMSA IntelliBook</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/categories.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-transparent">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="index.html" data-navlink>
+        <span class="text-orange fs-4"><i class="fa-solid fa-bookshelf"></i></span>
+        <span class="fw-bold" style="color:var(--blue-dark);">
+          IMSA <em class="text-orange" style="font-style:italic;">IntelliBook</em>
+        </span>
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#imsaOffcanvas" aria-controls="imsaOffcanvas" aria-label="Ouvrir le menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="d-none d-lg-flex flex-1 justify-content-center">
+        <div class="input-group" style="max-width:520px;">
+          <input id="navbarSearchInput" type="search" class="form-control rounded-pill" placeholder="Rechercher un livre, un auteur, un thème..." aria-label="Recherche" />
+          <button id="navbarSearchButton" class="btn btn-orange rounded-pill px-4" type="button" aria-label="Rechercher">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-none d-lg-flex gap-2 align-items-center">
+        <a href="index.html" class="nav-link px-2" data-navlink>Accueil</a>
+        <a href="categories.html" class="nav-link px-2" data-navlink>Catégories</a>
+        <a href="recherche.html" class="nav-link px-2" data-navlink>Recherche</a>
+        <a href="inscription.html" class="nav-link px-2" data-navlink>Inscription</a>
+        <a href="utilisateurs.html" class="nav-link px-2" data-navlink>Utilisateurs</a>
+        <a href="inscription.html" class="btn btn-orange rounded-pill px-4 fw-bold ms-2" data-navlink aria-label="Connexion">Connexion</a>
+        <div id="navProfileItem" class="d-none">
+          <a href="profil.html" class="btn btn-blue-dark rounded-pill px-4 fw-bold ms-2" data-navlink aria-label="Mon profil">Mon Profil</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- OFFCANVAS MOBILE -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="imsaOffcanvas" aria-labelledby="imsaOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="imsaOffcanvasLabel">
+        <span class="text-orange"><i class="fa-solid fa-bookshelf"></i></span> IMSA IntelliBook
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <div class="input-group mb-3">
+        <input id="navbarSearchInputMobile" type="search" class="form-control rounded-pill" placeholder="Rechercher..." aria-label="Recherche" />
+        <button id="navbarSearchButtonMobile" class="btn btn-orange rounded-pill px-4" type="button" aria-label="Rechercher">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+      <a href="index.html" class="nav-link" data-navlink>Accueil</a>
+      <a href="categories.html" class="nav-link" data-navlink>Catégories</a>
+      <a href="recherche.html" class="nav-link" data-navlink>Recherche</a>
+      <a href="inscription.html" class="nav-link" data-navlink>Inscription</a>
+      <a href="utilisateurs.html" class="nav-link" data-navlink>Utilisateurs</a>
+      <a href="inscription.html" class="btn btn-orange rounded-pill mt-2 fw-bold" data-navlink>Connexion</a>
+      <a id="navProfileLinkMobile" href="profil.html" class="btn btn-blue-dark rounded-pill mt-2 fw-bold d-none" data-navlink>Mon Profil</a>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <nav aria-label="Fil d’Ariane" class="text-white-50 mb-2" style="font-size:14px;">
+        <ol class="breadcrumb breadcrumb-light mb-0">
+          <li class="breadcrumb-item"><a class="link-light" href="index.html">Accueil</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Catégories</li>
+        </ol>
+      </nav>
+      <h1 class="category-hero-title mb-1">Nos Catégories</h1>
+      <p class="text-white-50 mb-0">Trouvez vos livres selon vos centres d’intérêt.</p>
+    </div>
+  </section>
+
+  <!-- FILTER BAR + GRID -->
+  <section class="py-4" style="background: linear-gradient(180deg, var(--beige), #fff);">
+    <div class="container">
+      <div class="row g-3 align-items-start">
+        <div class="col-12 col-lg-8">
+          <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center mb-3">
+            <div class="input-group" style="max-width:520px;">
+              <input id="categorySearchInput" type="search" class="form-control rounded-pill" placeholder="Rechercher une catégorie..." aria-label="Rechercher une catégorie" />
+              <span class="input-group-text bg-transparent border-0 text-muted"><i class="fa-solid fa-filter"></i></span>
+            </div>
+            <div class="d-flex flex-wrap gap-2 ms-md-auto" role="tablist" aria-label="Filtres de catégories">
+              <button class="btn btn-sm btn-orange-outline filter-pill active" type="button" data-category-filter="toutes">Toutes</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="romans">Romans</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="histoire">Histoire</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="sciences">Sciences</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="informatique">Informatique</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="droit">Droit</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="jeunesse">Jeunesse</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="arts">Arts</button>
+              <button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="economie">Économie</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4 text-end">
+          <div class="text-muted fw-semibold">
+            <i class="fa-solid fa-book-open text-orange me-1"></i> Cliquez sur une catégorie pour voir les 30 livres.
+          </div>
+        </div>
+      </div>
+
+      <div id="categoryEmptyState" class="empty-state d-none mt-4">
+        <div class="text-center">
+          <div class="text-orange fs-1 mb-2"><i class="fa-solid fa-circle-question"></i></div>
+          <h3 class="h5 mb-1">Aucun résultat</h3>
+          <p class="text-muted mb-0">Essayez un autre mot-clé ou un filtre différent.</p>
+        </div>
+      </div>
+
+      <div id="categoriesGrid" class="row g-3 category-grid mt-0">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="romans" aria-label="Ouvrir Romans">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(232,115,42,1), rgba(46,109,164,0.95));">
+                <i class="fa-solid fa-feather-pointed"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Romans Africains</h3>
+                <p class="text-muted mb-0">Histoires pour grandir, rêver et réfléchir.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="histoire">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(46,109,164,1), rgba(232,115,42,0.90));">
+                <i class="fa-solid fa-landmark"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Histoire & Patrimoine Gabonais</h3>
+                <p class="text-muted mb-0">Royaumes, rites, archives et mémoire.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="sciences">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(74,142,194,1), rgba(232,115,42,0.88));">
+                <i class="fa-solid fa-microscope"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Sciences & Recherche</h3>
+                <p class="text-muted mb-0">Médecine, mathématiques et méthodes.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="informatique">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(232,115,42,1), rgba(46,109,164,0.9));">
+                <i class="fa-solid fa-microchip"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Informatique & Technologies</h3>
+                <p class="text-muted mb-0">Innovation, réseaux et solutions.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="droit">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(46,109,164,1), rgba(74,142,194,0.85));">
+                <i class="fa-solid fa-scale-balanced"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Droit & Sciences Politiques</h3>
+                <p class="text-muted mb-0">Règles, institutions et gouvernance.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="jeunesse">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(74,142,194,1), rgba(46,109,164,0.95));">
+                <i class="fa-solid fa-child"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Littérature Jeunesse Africaine</h3>
+                <p class="text-muted mb-0">Histoires tendres, fables et aventures.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="arts">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(232,115,42,1), rgba(74,142,194,0.9));">
+                <i class="fa-solid fa-palette"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Arts, Musique & Culture</h3>
+                <p class="text-muted mb-0">Iboga, masques, musique et cinéma.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="economie">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon" style="background: linear-gradient(135deg, rgba(46,109,164,1), rgba(232,115,42,0.92));">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">Économie & Développement</h3>
+                <p class="text-muted mb-0">Stratégies, énergie et croissance responsable.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">30 livres</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOK PANEL -->
+      <div id="categoryPanelContainer" class="category-panel mt-5 d-none">
+        <div class="d-flex align-items-center justify-content-between py-3 px-2">
+          <div>
+            <div class="text-muted mb-1">Livres de la catégorie</div>
+            <h2 id="categoryPanelTitle" class="h4 mb-0"></h2>
+          </div>
+          <button id="categoryPanelCloseBtn" class="btn panel-close-btn fw-bold">Fermer <span aria-hidden="true">×</span></button>
+        </div>
+
+        <div class="panel-slide">
+          <div id="categoryPanelBooks" class="row g-3 px-1 pb-4 book-listing"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/categories.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function(){
+      const input = document.getElementById("navbarSearchInputMobile");
+      const btn = document.getElementById("navbarSearchButtonMobile");
+      if(!input || !btn) return;
+      const go = () => {
+        const q = (input.value || "").trim();
+        window.location.href = q ? `recherche.html?q=${encodeURIComponent(q)}` : "recherche.html";
+      };
+      btn.addEventListener("click", (e)=>{ e.preventDefault(); go(); });
+      input.addEventListener("keydown", (e)=>{ if(e.key==="Enter") go(); });
+    })();
+  </script>
+</body>
+</html>
+

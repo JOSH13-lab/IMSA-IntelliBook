@@ -1,0 +1,70 @@
+/* Page Utilisateurs (Admin) - IMSA IntelliBook */
+.admin-shell{
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(245,240,232,0.92), #fff);
+}
+.admin-sidebar{
+  background: linear-gradient(180deg, rgba(26,58,92,0.98), rgba(46,109,164,0.88));
+  color:#fff;
+}
+.admin-sidebar .nav-link{
+  color: rgba(255,255,255,0.86);
+  border-radius: 14px;
+  padding: 12px 12px;
+}
+.admin-sidebar .nav-link:hover{
+  background: rgba(255,255,255,0.10);
+  color:#fff;
+}
+.admin-sidebar .nav-link.active{
+  background: rgba(232,115,42,0.20);
+  color:#fff;
+  border: 1px solid rgba(232,115,42,0.35);
+}
+
+.admin-topbar{
+  background: rgba(245,240,232,0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(26,58,92,0.08);
+}
+.badge-admin{
+  background: var(--orange);
+  color:#fff;
+  font-weight: 800;
+}
+
+.admin-card{
+  border-radius: 18px;
+  border: 1px solid rgba(26,58,92,0.08);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.03);
+}
+.trend-up{
+  color: #1fbf75;
+  font-weight: 800;
+}
+.trend-down{
+  color: #ef4444;
+  font-weight: 800;
+}
+
+.admin-table{
+  background:#fff;
+  border-radius: 18px;
+  overflow:hidden;
+  border: 1px solid rgba(26,58,92,0.08);
+}
+
+.admin-mini-thumb{
+  width: 52px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(26,58,92,0.08);
+}
+
+.danger-zone{
+  border-radius: 18px;
+  border: 1px solid rgba(239,68,68,0.25);
+  background: rgba(239,68,68,0.05);
+}
+

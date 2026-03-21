@@ -1,0 +1,42 @@
+/* Page Recherche Avancée - IMSA IntelliBook */
+.search-header{
+  background: linear-gradient(135deg, rgba(26,58,92,0.98), rgba(46,109,164,0.92));
+  color:#fff;
+  padding: 34px 0 18px;
+}
+.search-bar{
+  max-width: 860px;
+  margin: 0 auto;
+}
+.results-wrap{
+  background: linear-gradient(180deg, rgba(245,240,232,0.92), #fff);
+  min-height: 100vh;
+}
+.filters-col{
+  position: sticky;
+  top: 90px;
+  height: calc(100vh - 110px);
+  overflow:auto;
+  padding-bottom: 24px;
+}
+.filters-card{
+  background:#fff;
+  border-radius: 18px;
+  border: 1px solid rgba(26,58,92,0.08);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.03);
+}
+.active-badges{
+  min-height: 38px;
+}
+.results-grid .book-card{
+  min-height: 100%;
+}
+.view-list .book-card{
+  flex-direction: row;
+}
+.list-card-grid{
+  display:grid;
+  grid-template-columns: 140px 1fr;
+  gap: 14px;
+}
+

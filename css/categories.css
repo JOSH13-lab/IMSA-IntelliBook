@@ -1,0 +1,67 @@
+/* Page Catégories - IMSA IntelliBook */
+.page-header{
+  background: linear-gradient(135deg, rgba(26,58,92,0.98), rgba(46,109,164,0.92));
+  color:#fff;
+  padding: 34px 0 18px;
+}
+.category-hero-title{
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.category-card{
+  border-radius: 18px;
+  border: 1px solid rgba(26,58,92,0.08);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.03);
+  background: #fff;
+  overflow:hidden;
+}
+.category-card:hover{
+  transform: translateY(-4px);
+}
+.category-icon{
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size: 22px;
+}
+
+.category-grid{
+  margin-top: 18px;
+}
+.category-panel{
+  border-top: 1px solid rgba(26,58,92,0.08);
+}
+.panel-slide{
+  overflow:hidden;
+}
+.panel-close-btn{
+  color: var(--orange);
+  border: 1px solid rgba(232,115,42,0.25);
+  background: rgba(232,115,42,0.08);
+}
+
+.book-list-tools{
+  position: sticky;
+  top: 80px;
+  z-index: 10;
+  background: rgba(245,240,232,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(26,58,92,0.08);
+}
+
+.book-listing .card.book-card{
+  min-height: 100%;
+}
+
+.empty-state{
+  border: 1px dashed rgba(26,58,92,0.18);
+  border-radius: 18px;
+  padding: 24px;
+  background: rgba(245,240,232,0.7);
+}
+

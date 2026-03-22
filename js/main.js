@@ -157,6 +157,53 @@
   }
 
   // ═══════════════════════════════════════
+  //  CONFIGURATION API — BACK-END
+  // ═══════════════════════════════════════
+
+  const API_BASE = 'http://localhost:5000/api';
+
+  // Sauvegarder le token après connexion
+  function saveSession(data) {
+    localStorage.setItem('imsa_user',          JSON.stringify(data.user));
+    localStorage.setItem('imsa_access_token',  data.accessToken);
+    localStorage.setItem('imsa_refresh_token', data.refreshToken);
+  }
+
+  // Headers avec JWT pour les requêtes protégées
+  function authHeaders() {
+    const token = localStorage.getItem('imsa_access_token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+  }
+
+  // Récupérer la vraie couverture d'un livre
+  async function loadBookCover(bookId, imgElement) {
+    try {
+      const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
+      const data = await res.json();
+      if (data.success && data.coverUrl) {
+        imgElement.src = data.coverUrl;
+        imgElement.classList.add("loaded");
+        const fallback = imgElement.closest('.book-cover-wrap')?.querySelector('.book-cover-fallback');
+        if (fallback) fallback.style.display = 'none';
+      }
+    } catch (err) {
+      console.warn('Couverture indisponible pour', bookId);
+    }
+  }
+
+  // Charger TOUTES les couvertures de la page
+  function loadAllCovers() {
+    document.querySelectorAll('[data-book-id]').forEach(el => {
+      const bookId = el.dataset.bookId;
+      const img    = el.querySelector('.book-cover-img');
+      if (img && bookId) loadBookCover(bookId, img);
+    });
+  }
+
+  // ═══════════════════════════════════════
   // GESTION DES COUVERTURES DE LIVRES
   // ═══════════════════════════════════════
   function initBookCovers() {
@@ -206,6 +253,7 @@
     initNavbarSearch();
     initAnchorSmoothScroll();
     initBookCovers();
+    loadAllCovers();
 
     // Ferme l'offcanvas après navigation mobile.
     document.querySelectorAll("[data-bs-toggle='offcanvas']").forEach((tog) => {

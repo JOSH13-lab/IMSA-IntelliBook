@@ -55,7 +55,7 @@ exports.getBookById = async (req, res, next) => {
              c.color_class, c.gradient
       FROM books b
       JOIN categories c ON b.category_id = c.id
-      WHERE (b.id = $1 OR b.legacy_id = $1)
+      WHERE (b.id::text = $1 OR b.legacy_id = $1)
         AND b.deleted_at IS NULL
     `, [id]);
 
@@ -67,7 +67,7 @@ exports.getBookById = async (req, res, next) => {
     }
 
     // Incrémenter view_count
-    await query('UPDATE books SET view_count = view_count + 1 WHERE id = $1', [rows[0].id]);
+    await query('UPDATE books SET view_count = view_count + 1 WHERE id::text = $1', [rows[0].id]);
 
     // Récupérer les avis
     const reviews = await query(`
@@ -109,7 +109,7 @@ exports.getBookCover = async (req, res, next) => {
     const { id } = req.params;
 
     const { rows } = await query(
-      'SELECT isbn, isbn13, title, author, cover_url FROM books WHERE id = $1 OR legacy_id = $1',
+      'SELECT isbn, isbn13, title, author, cover_url FROM books WHERE id::text = $1 OR legacy_id = $1',
       [id]
     );
 
@@ -147,7 +147,7 @@ exports.getBookCover = async (req, res, next) => {
 
     // Sauvegarder en base pour éviter de refaire l'appel API
     if (coverUrl) {
-      await query('UPDATE books SET cover_url = $1 WHERE id = $2', [coverUrl, rows[0].id]);
+      await query('UPDATE books SET cover_url = $1 WHERE id::text = $2', [coverUrl, rows[0].id]);
     }
 
     res.json({
@@ -199,7 +199,7 @@ exports.createBook = async (req, res, next) => {
 
     // Mettre à jour le compteur de la catégorie
     await query(
-      'UPDATE categories SET book_count = book_count + 1 WHERE id = $1',
+      'UPDATE categories SET book_count = book_count + 1 WHERE id::text = $1',
       [category_id]
     );
 
@@ -228,7 +228,7 @@ exports.updateBook = async (req, res, next) => {
       .join(', ');
 
     const { rows } = await query(
-      `UPDATE books SET ${setClauses}, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      `UPDATE books SET ${setClauses}, updated_at = NOW() WHERE id::text = $1 RETURNING *`,
       [id, ...Object.values(fields)]
     );
 
@@ -247,7 +247,7 @@ exports.deleteBook = async (req, res, next) => {
   try {
     const { id } = req.params;
     await query(
-      'UPDATE books SET deleted_at = NOW(), is_active = FALSE WHERE id = $1',
+      'UPDATE books SET deleted_at = NOW(), is_active = FALSE WHERE id::text = $1',
       [id]
     );
     res.json({ success: true, message: 'Livre supprimé.' });
@@ -262,7 +262,7 @@ exports.getBookContent = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { rows } = await query(
-      'SELECT id, title, file_url, preview_url, total_copies FROM books WHERE id = $1 OR legacy_id = $1',
+      'SELECT id, title, file_url, preview_url, total_copies FROM books WHERE id::text = $1 OR legacy_id = $1',
       [id]
     );
 

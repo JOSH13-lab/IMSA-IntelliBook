@@ -185,58 +185,16 @@
   // ═══════════════════════════════════════
 
   function createBookCard(book) {
-    const categoryClass = {
-      'romans':      'cover-romans',
-      'histoire':    'cover-histoire',
-      'sciences':    'cover-sciences',
-      'informatique':'cover-info',
-      'droit':       'cover-droit',
-      'jeunesse':    'cover-jeunesse',
-      'arts':        'cover-arts',
-      'economie':    'cover-economie',
-    }[book.category] || 'cover-romans';
-
-    const stars = Array.from({length: 5}, (_, i) =>
-      `<i class="fa-solid fa-star${i < Math.floor(book.rating) ? '' : (i < book.rating ? '-half-stroke' : ' text-muted')}"></i>`
-    ).join('');
-
-    return `
-      <div class="book-card h-100" data-id="${book.id}" data-category="${book.category}" data-author="${book.author}">
-        <div class="book-cover-container ${categoryClass}">
-          <img
-            class="book-cover-img"
-            src="${book.coverUrl}"
-            alt="Couverture de ${book.title}"
-            loading="lazy"
-            onerror="this.style.display='none'"
-          />
-          <div class="book-cover-fallback">
-            <i class="fa-solid fa-book cover-icon"></i>
-            <div class="cover-title">${book.title}</div>
-            <div class="cover-author">${book.author}</div>
-          </div>
-        </div>
-        <div class="book-info p-3 d-flex flex-column flex-grow-1">
-          <div class="book-cat small text-uppercase fw-bold mb-1" style="color:#2E6DA4;letter-spacing:1px;">
-            ${book.category}
-          </div>
-          <div class="book-title fw-semibold mb-1" style="font-family:'Playfair Display',serif;font-size:0.92rem;color:#1A3A5C;">
-            ${book.title}
-          </div>
-          <div class="book-author small text-muted mb-2">${book.author} · ${book.year}</div>
-          <div class="stars mb-2" style="color:#E8732A;font-size:0.72rem;">${stars}</div>
-          <p class="book-summary small text-muted mb-3" style="font-size:0.78rem;line-height:1.5;
-             display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-            ${book.summary}
-          </p>
-          <a href="livre.html?id=${book.id}"
-             class="btn btn-outline-primary btn-sm mt-auto w-100 fw-semibold"
-             style="border-color:#E8732A;color:#E8732A;border-radius:8px;">
-            Voir le catalogue
-          </a>
-        </div>
-      </div>
-    `;
+    if (!window.imsaUtils || !window.imsaUtils.renderBookCardHTML) {
+      console.error("IMSA: imsaUtils.renderBookCardHTML not found.");
+      return "";
+    }
+    return window.imsaUtils.renderBookCardHTML(book, {
+      showNewBadge: true,
+      showBorrowButton: true,
+      showCategoryChip: true,
+      linkReadMore: true
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {

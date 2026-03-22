@@ -279,19 +279,9 @@
     document.getElementById("authorLink").textContent = book.author;
     document.getElementById("authorLink").href = `recherche.html?author=${encodeURIComponent(book.author)}`;
 
-    const container = document.getElementById("bookCoverContainer");
-    const coverImg = document.getElementById("bookCoverImg");
-    const fallbackTitle = document.getElementById("bookCoverFallbackTitle");
-    const fallbackAuthor = document.getElementById("bookCoverFallbackAuthor");
-
     if (container) {
-      container.className = `book-cover-container ${window.imsaUtils.coverGradientClass(book.categoryKey)}`;
-      // Conserve la marge/largeur inline existante
-      container.style.maxWidth = container.style.maxWidth || "280px";
+      container.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(book);
     }
-    if (coverImg) coverImg.src = book.coverUrl;
-    if (fallbackTitle) fallbackTitle.textContent = book.title;
-    if (fallbackAuthor) fallbackAuthor.textContent = book.author;
 
     // Breadcrumb current
     const breadcrumbCurrent = document.getElementById("breadcrumbCurrent");

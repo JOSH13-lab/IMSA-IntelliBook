@@ -217,19 +217,9 @@
     const viewer = document.getElementById("pdfViewer");
     if (viewer) viewer.setAttribute("data-book-id", bookId);
 
-    const coverContainer = document.getElementById("readerBookCoverContainer");
-    const coverImg = document.getElementById("readerBookCoverImg");
-    const fallbackTitle = document.getElementById("readerBookCoverFallbackTitle");
-    const fallbackAuthor = document.getElementById("readerBookCoverFallbackAuthor");
-    const title = document.getElementById("readerBookTitle");
-    const author = document.getElementById("readerBookAuthor");
-    const backLink = document.getElementById("backToBookLink");
     if (coverContainer) {
-      coverContainer.className = `book-cover-container ${window.imsaUtils.coverGradientClass(state.book?.categoryKey || "romans")}`;
+      coverContainer.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(state.book);
     }
-    if (coverImg) coverImg.src = state.book?.coverUrl || coverImg.src;
-    if (fallbackTitle) fallbackTitle.textContent = state.book?.title || "";
-    if (fallbackAuthor) fallbackAuthor.textContent = state.book?.author || "";
     if (title) title.textContent = state.book?.title || "";
     if (author) author.textContent = state.book?.author || "";
     if (backLink) backLink.href = `livre.html?id=${encodeURIComponent(bookId)}`;

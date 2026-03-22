@@ -171,20 +171,8 @@
       if ((br.status || "").toLowerCase().includes("retard")) tr.classList.add("overdue-row");
       tr.innerHTML = `
         <td>
-          <div class="book-cover-container ${window.imsaUtils.coverGradientClass(b.categoryKey)}" style="width:44px;border-radius:10px;">
-            <img
-              src="${b.coverUrl}"
-              alt="Couverture"
-              class="book-cover-img"
-              loading="lazy"
-              onload="this.classList.add('loaded')"
-              onerror="this.style.display='none'"
-            />
-            <div class="book-cover-fallback">
-              <i class="fa-solid fa-book cover-icon" style="font-size:1.2rem;"></i>
-              <div class="cover-title">${window.imsaUtils.escapeHtml(b.title)}</div>
-              <div class="cover-author">${window.imsaUtils.escapeHtml(b.author)}</div>
-            </div>
+          <div style="width:44px;border-radius:10px;overflow:hidden;">
+            ${window.imsaUtils.renderBookCoverContainerHTML(b)}
           </div>
         </td>
         <td class="fw-semibold">${window.imsaUtils.escapeHtml(b.title)}</td>
@@ -209,22 +197,19 @@
       const col = document.createElement("div");
       col.className = "col-12 col-md-6 col-lg-4";
       col.innerHTML = `
-        <div class="card book-card p-2 h-100">
-          <div style="overflow:hidden;border-radius:14px;">
-            ${window.imsaUtils.renderBookCoverContainerHTML(b)}
-          </div>
-          <div class="card-body p-3">
-            <div class="d-flex align-items-center justify-content-between gap-2">
-              <div class="fw-semibold">${window.imsaUtils.escapeHtml(b.title)}</div>
-              <div class="text-danger"><i class="fa-solid fa-heart"></i></div>
-            </div>
-            <div class="text-muted small mt-1">${window.imsaUtils.escapeHtml(b.author)}</div>
-            <div class="mt-3">
-              <button class="btn btn-orange-outline w-100 heart-btn" data-action="remove-favorite" data-book-id="${b.id}">
-                Retirer des favoris
-              </button>
-            </div>
-          </div>
+        <div class="card book-card h-100 position-relative p-2">
+           <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-3 rounded-circle text-danger shadow-sm z-3" 
+                   data-action="remove-favorite" data-book-id="${b.id}" title="Retirer des favoris">
+             <i class="fa-solid fa-heart"></i>
+           </button>
+           <div class="card-body p-0 d-flex flex-column">
+             ${window.imsaUtils.renderBookCoverContainerHTML(b)}
+             <div class="p-3">
+               <h3 class="fw-bold h6 mb-1">${window.imsaUtils.escapeHtml(b.title)}</h3>
+               <p class="text-muted small mb-0">${window.imsaUtils.escapeHtml(b.author)}</p>
+               <a href="livre.html?id=${encodeURIComponent(b.id)}" class="btn btn-orange-outline btn-sm w-100 mt-3">Voir la fiche</a>
+             </div>
+           </div>
         </div>
       `;
       grid.appendChild(col);
@@ -242,15 +227,15 @@
       col.innerHTML = `
         <div class="card book-card p-3 h-100">
           <div class="d-flex gap-3">
-            <div style="width:120px;flex:0 0 120px;overflow:hidden;border-radius:14px;">
+            <div style="width:100px;flex:0 0 100px;overflow:hidden;border-radius:10px;">
               ${window.imsaUtils.renderBookCoverContainerHTML(b)}
             </div>
             <div class="flex-grow-1">
-              <div class="badge badge-category ${window.imsaUtils.categoryBadgeClass(b.categoryKey)}">${window.imsaUtils.categoryLabel(b.categoryKey)}</div>
-              <div class="fw-bold mt-2">${window.imsaUtils.escapeHtml(b.title)}</div>
-              <div class="text-muted small">${window.imsaUtils.escapeHtml(b.author)} • ${b.year}</div>
-              <div class="text-muted small mt-2"><i class="fa-solid fa-wand-magic-sparkles text-orange me-1"></i>${window.imsaUtils.escapeHtml(r.reason)}</div>
-              <a href="livre.html?id=${encodeURIComponent(b.id)}" class="btn btn-blue-dark w-100 mt-3">Voir</a>
+              <span class="badge ${window.imsaUtils.categoryBadgeClass(b.categoryKey)} mb-2">${window.imsaUtils.categoryLabel(b.categoryKey)}</span>
+              <h4 class="fw-bold h6 mb-1">${window.imsaUtils.escapeHtml(b.title)}</h4>
+              <p class="text-muted small mb-1">${window.imsaUtils.escapeHtml(b.author)}</p>
+              <div class="text-muted small fst-italic mb-3"><i class="fa-solid fa-wand-magic-sparkles text-orange me-1"></i>${window.imsaUtils.escapeHtml(r.reason)}</div>
+              <a href="livre.html?id=${encodeURIComponent(b.id)}" class="btn btn-blue-dark btn-sm px-4">Consulter</a>
             </div>
           </div>
         </div>

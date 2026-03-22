@@ -205,6 +205,9 @@
         inst.hide();
       });
     });
+    if (window.imsaUtils) {
+      window.imsaUtils.initBookCovers = initBookCovers;
+    }
   });
 })();
 

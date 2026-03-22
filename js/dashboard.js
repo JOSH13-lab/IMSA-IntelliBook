@@ -224,20 +224,8 @@
     const borrowsHtml = picks
       .map((b, idx) => `<li class="list-group-item d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-2">
-          <div class="book-cover-container ${window.imsaUtils.coverGradientClass(b.categoryKey)}" style="width:44px;border-radius:10px;">
-            <img
-              src="${b.coverUrl}"
-              alt="Couverture"
-              class="book-cover-img"
-              loading="lazy"
-              onload="this.classList.add('loaded')"
-              onerror="this.style.display='none'"
-            />
-            <div class="book-cover-fallback">
-              <i class="fa-solid fa-book cover-icon" style="font-size:1.2rem;"></i>
-              <div class="cover-title">${window.imsaUtils.escapeHtml(b.title)}</div>
-              <div class="cover-author">${window.imsaUtils.escapeHtml(b.author)}</div>
-            </div>
+          <div style="width:44px;border-radius:10px;overflow:hidden;flex-shrink:0;">
+            ${window.imsaUtils.renderBookCoverContainerHTML(b)}
           </div>
           <div>
             <div class="fw-semibold">${window.imsaUtils.escapeHtml(b.title)}</div>
@@ -343,20 +331,8 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>
-          <div class="book-cover-container ${window.imsaUtils.coverGradientClass(b.categoryKey)}" style="width:52px;border-radius:10px;">
-            <img
-              src="${b.coverUrl}"
-              alt="Couverture"
-              class="book-cover-img"
-              loading="lazy"
-              onload="this.classList.add('loaded')"
-              onerror="this.style.display='none'"
-            />
-            <div class="book-cover-fallback">
-              <i class="fa-solid fa-book cover-icon" style="font-size:1.3rem;"></i>
-              <div class="cover-title">${window.imsaUtils.escapeHtml(b.title)}</div>
-              <div class="cover-author">${window.imsaUtils.escapeHtml(b.author)}</div>
-            </div>
+          <div style="width:52px;border-radius:10px;overflow:hidden;">
+            ${window.imsaUtils.renderBookCoverContainerHTML(b)}
           </div>
         </td>
         <td class="fw-semibold">${window.imsaUtils.escapeHtml(b.title)}</td>

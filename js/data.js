@@ -13,22 +13,16 @@ window.IMSA_CATEGORIES = {
 
 const booksRaw = {
   romans: [
-    { id: "livre-001", title: "Trois femmes puissantes", author: "Bessora", year: 2005, rating: 4.6, ratingCount: 142, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/romans-trois-femmes/300/400", shortSummary: "Trois trajectoires s’entrecroisent au rythme des villes africaines. Entre espoirs, blessures et renaissances, le roman éclaire la force intérieure des femmes.", tags: ["Afrique", "Roman", "Gabon"] },
-    { id: "livre-002", title: "Le Fleuve et la Mémoire", author: "Chinua Achebe", year: 2010, rating: 4.4, ratingCount: 98, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/romans-fleuve-memoire/300/400", shortSummary: "Une communauté lutte pour préserver ses récits face au silence imposé. Le fleuve devient miroir des générations et des choix qui façonnent l’avenir.", tags: ["Mémoire", "Afrique de l’Ouest", "Roman"] },
+    { id: "livre-001", title: "L'Enfant Noir", author: "Camara Laye", year: 1953, rating: 4.8, ratingCount: 245, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://covers.openlibrary.org/b/isbn/9782266181488-L.jpg", shortSummary: "Un classique de la littérature africaine, récit d'enfance et d'initiation en Guinée.", tags: ["Guinée", "Classique", "Autobiographie"] },
+    { id: "livre-002", title: "Le Monde s'effondre", author: "Chinua Achebe", year: 1958, rating: 4.9, ratingCount: 312, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://covers.openlibrary.org/b/isbn/9782708705357-L.jpg", shortSummary: "Le choc entre la culture traditionnelle Igbo et l'arrivée des missionnaires au Nigeria.", tags: ["Nigeria", "Classique", "Choc des cultures"] },
     { id: "livre-003", title: "La Saison des Tam-Tams", author: "Léonie Beka", year: 2016, rating: 4.7, ratingCount: 76, language: "Français", availableCount: 4, isNew: true, coverUrl: "https://picsum.photos/seed/romans-saison-tam-tams/300/400", shortSummary: "Dans un village du Gabon, les tambours annoncent plus qu’une fête. Ils ouvrent une enquête intime sur l’amour, le courage et les secrets familiaux.", tags: ["Gabon", "Tradition", "Roman"] },
     { id: "livre-004", title: "L’ombre du Baobab", author: "Calixthe Beyala", year: 2002, rating: 4.2, ratingCount: 189, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-ombre-baobab/300/400", shortSummary: "Une narratrice au franc-parler explore la ville comme un labyrinthe d’émotions. Entre humour et lucidité, le roman interroge les illusions du bonheur.", tags: ["Ville", "Afrique", "Roman"] },
-    { id: "livre-005", title: "Fragments d’Atlantide", author: "Alain Mabanckou", year: 2011, rating: 4.5, ratingCount: 210, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/romans-fragments-atlantide/300/400", shortSummary: "Des voix multiples reconstruisent une histoire absente. Au cœur du Congo et du Gabon, la fiction devient archive sensible.", tags: ["Congo", "Gabon", "Roman"] },
+    { id: "livre-005", title: "Demain j'aurai vingt ans", author: "Alain Mabanckou", year: 2010, rating: 4.5, ratingCount: 210, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://covers.openlibrary.org/b/isbn/9782070446957-L.jpg", shortSummary: "L'enfance de Michel à Pointe-Noire, entre chroniques familiales et bouleversements politiques.", tags: ["Congo", "Enfance", "Roman"] },
     { id: "livre-006", title: "Les Couleurs de la Nuit", author: "Véronique Tadjo", year: 2014, rating: 4.6, ratingCount: 123, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-couleurs-nuit/300/400", shortSummary: "Une traversée entre rêves et réalités révèle les mémoires trouées. Le récit fait dialoguer l’Afrique et l’espoir de demain.", tags: ["Rêves", "Afrique", "Roman"] },
     { id: "livre-007", title: "Le Courage des Villes", author: "Chimamanda Ngozi Adichie", year: 2013, rating: 4.3, ratingCount: 154, language: "Français", availableCount: 5, isNew: false, coverUrl: "https://picsum.photos/seed/romans-courage-villes/300/400", shortSummary: "Une génération apprend à dire non aux destinées toutes tracées. À travers des relations complexes, le roman célèbre la liberté.", tags: ["Génération", "Nigeria", "Roman"] },
     { id: "livre-008", title: "Le Voyage des Voix", author: "Ahmadou Kourouma", year: 2008, rating: 4.1, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/romans-voyage-voix/300/400", shortSummary: "Un enfant écoute le monde et comprend trop tard les lois de la peur. Le roman transforme la parole en résistance, de l’ombre à la lumière.", tags: ["Parole", "Afrique", "Roman"] },
     { id: "livre-009", title: "Courants d’Ébène", author: "Nana Ekow Daniels", year: 2017, rating: 4.4, ratingCount: 61, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/romans-courants-ebene/300/400", shortSummary: "Entre pêche et souvenirs, une famille suit les courants comme on suit les secrets. Le suspense révèle la mémoire des terres.", tags: ["Côte", "Roman", "Gabon"] },
     { id: "livre-010", title: "La Pluie qui Parle", author: "Dieudonné Gnammankou", year: 2012, rating: 4.0, ratingCount: 73, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-pluie-parle/300/400", shortSummary: "Quand la pluie tombe, les vies s’ouvrent comme des livres. Le récit explore les relations et la réparation au sein des communautés.", tags: ["Pluie", "Afrique centrale", "Roman"] },
-    { id: "livre-011", title: "L’Étoffe des Serments", author: "Catherine Mvondo", year: 2015, rating: 4.5, ratingCount: 119, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/romans-etoffe-serments/300/400", shortSummary: "Des promesses anciennes pèsent sur les choix contemporains. Un roman sur l’honneur, la famille et la vérité qui finit par revenir.", tags: ["Serments", "Gabon", "Roman"] },
-    { id: "livre-012", title: "Le Rire des Place publiques", author: "Judith Nyaga", year: 2009, rating: 4.2, ratingCount: 95, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-rire-place/300/400", shortSummary: "Sur une place, les conversations deviennent des chapitres. Le roman montre comment la culture populaire guide les décisions.", tags: ["Culture", "Afrique", "Roman"] },
-    { id: "livre-013", title: "L’Appel des Forêts", author: "Pierre-François Nguema", year: 2018, rating: 4.6, ratingCount: 58, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/romans-appel-forets/300/400", shortSummary: "Un groupe traverse les forêts pour retrouver une archive oubliée. Entre superstition et science, la quête devient initiatique.", tags: ["Forêts", "Gabon", "Aventure"] },
-    { id: "livre-014", title: "Les Lettres d’Oyem", author: "Mireille N’tchama", year: 2011, rating: 4.3, ratingCount: 101, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-lettres-oyem/300/400", shortSummary: "Des lettres perdues relient des générations séparées par le temps. Le roman éclaire l’histoire locale et les émotions de l’après-indépendance.", tags: ["Oyem", "Gabon", "Roman"] },
-    { id: "livre-015", title: "Les Routes du Cacao", author: "Kossi Dossou", year: 2007, rating: 4.1, ratingCount: 84, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/romans-routes-cacao/300/400", shortSummary: "De la plantation au marché, chacun porte une histoire de travail et de dignité. Le roman explore l’économie quotidienne et les relations humaines.", tags: ["Travail", "Afrique de l’Ouest", "Roman"] },
-    { id: "livre-016", title: "La Méthode du Vent", author: "Raphaël Moukassa", year: 2019, rating: 4.7, ratingCount: 44, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-methode-vent/300/400", shortSummary: "Le vent guide un apprenti écrivain dans une ville en transformation. À travers des rencontres, le roman traite de l’identité et du futur.", tags: ["Transformation", "Afrique", "Roman"] },
     { id: "livre-017", title: "Les Jardins de Lambaréné", author: "Rosalie Moukoko", year: 2010, rating: 4.4, ratingCount: 129, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-jardins-lambarene/300/400", shortSummary: "À Lambaréné, un jardin devient lieu de mémoire et de guérison. Le roman met en scène l’attention aux autres, sans illusion.", tags: ["Lambaréné", "Gabon", "Roman"] },
     { id: "livre-018", title: "Le Dernier Voyage de l’Aube", author: "Sékou Traoré", year: 2016, rating: 4.2, ratingCount: 67, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/romans-dernier-voyage-aube/300/400", shortSummary: "Une expédition recommence quand tout semblait fini. Le récit montre comment on reconstruit après la perte.", tags: ["Aube", "Afrique", "Roman"] },
     { id: "livre-019", title: "Cœur de Port-Gentil", author: "Jean N’Goma", year: 2014, rating: 4.5, ratingCount: 112, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/romans-coeur-portgentil/300/400", shortSummary: "Au rythme des quais, des rencontres redessinent les destins. Le roman fait dialoguer travail maritime, amours et espoirs.", tags: ["Port-Gentil", "Gabon", "Roman"] },
@@ -46,7 +40,7 @@ const booksRaw = {
   ],
 
   histoire: [
-    { id: "livre-031", title: "Royaume Fang : mémoire des veilleurs", author: "Doris Idiata", year: 2014, rating: 4.7, ratingCount: 130, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-fang-memoire/300/400", shortSummary: "Ce livre retrace les dynamiques sociales et symboliques du royaume Fang. Il met en lumière les veilleurs, les rites et la transmission des savoirs.", tags: ["Fang", "Gabon", "Histoire"] },
+    { id: "livre-031", title: "Mémoire d'une année électorale", author: "Mbourou", year: 2014, rating: 4.7, ratingCount: 130, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://covers.openlibrary.org/b/isbn/9782343022208-L.jpg", shortSummary: "Une analyse profonde des enjeux politiques et sociaux lors d'une année électorale au Gabon.", tags: ["Gabon", "Politique", "Histoire"] },
     { id: "livre-032", title: "Myène : voix de l’ombre et du chant", author: "Nicolas Metegue N'Nah", year: 2017, rating: 4.4, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-miene-voix/300/400", shortSummary: "Entre traditions orales et analyses, l’ouvrage explore l’univers Myène. La musique et les récits structurent une histoire vivante.", tags: ["Myène", "Gabon", "Patrimoine"] },
     { id: "livre-033", title: "Bwiti : initiation, éthique et modernité", author: "Joseph Tonda", year: 2013, rating: 4.6, ratingCount: 119, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-bwiti-initiation/300/400", shortSummary: "Le Bwiti est présenté comme une institution culturelle et morale. L’auteur discute les transformations contemporaines et la continuité des valeurs.", tags: ["Bwiti", "Culture", "Gabon"] },
     { id: "livre-034", title: "Colonisation : fragments de 1900 à 1960", author: "Lucie Mba", year: 2010, rating: 4.2, ratingCount: 152, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-colonisation-fragments/300/400", shortSummary: "Une lecture historique des ruptures et des résistances. Les documents contextualisés révèlent l’impact sur les sociétés gabonaises.", tags: ["Colonisation", "Indépendance", "Gabon"] },
@@ -351,22 +345,20 @@ window.imsaUtils = {
   },
 
   renderBookCoverContainerHTML(book) {
-    const categoryKey = book.categoryKey;
     const title = window.imsaUtils.escapeHtml(book.title || "");
     const author = window.imsaUtils.escapeHtml(book.author || "");
-    const cover = book.coverUrl || "";
-    const gradient = window.imsaUtils.coverGradientClass(categoryKey);
+    const gradient = window.imsaUtils.coverGradientClass(book.categoryKey);
+    const coverUrl = book.coverUrl || "";
 
     return `
       <div class="book-cover-container ${gradient}">
         <img
-          class="book-cover-img"
-          src="${window.imsaUtils.escapeHtml(cover)}"
+          src="${coverUrl}"
           alt="Couverture de ${title}"
+          class="book-cover-img"
           loading="lazy"
-          onload="this.classList.add('loaded')"
           onerror="this.style.display='none'"
-        />
+        >
         <div class="book-cover-fallback">
           <i class="fa-solid fa-book cover-icon"></i>
           <div class="cover-title">${title}</div>
@@ -511,11 +503,11 @@ const coverOverrides = {
 
 Object.keys(window.booksData).forEach((catKey) => {
   window.booksData[catKey] = window.booksData[catKey].map((b) => {
-    const override = coverOverrides[b.id];
-    if (override) {
-      return { ...b, ...override };
+    // Si l'URL contient déjà covers.openlibrary.org (on vient de l'injecter manuellement), on garde
+    if (b.coverUrl && b.coverUrl.includes("covers.openlibrary.org")) {
+      return b;
     }
-    // Par défaut : Open Library via un ISBN13 "plausible"
+    // Sinon : Open Library via un ISBN13 "plausible"
     const isbn13 = generateISBN13LikeFromId(b.id);
     return { ...b, coverUrl: `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg` };
   });

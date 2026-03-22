@@ -26,58 +26,14 @@
   }
 
   function renderBookCardForListing(book) {
-    const categoryKey = book.categoryKey;
-    const catLabel = window.imsaUtils.categoryLabel(categoryKey);
-    const stars = window.imsaUtils.formatStars(book.rating);
-    const title = window.imsaUtils.escapeHtml(book.title);
-    const author = window.imsaUtils.escapeHtml(book.author);
-    const summary = window.imsaUtils.escapeHtml(book.shortSummary || "");
-    const cover = book.coverUrl;
-
-    const isNew = !!book.isNew;
-    const newBadge = isNew
-      ? `<span class="badge badge-new position-absolute top-0 end-0 m-2">NOUVEAU</span>`
-      : "";
-
-    const viewHref = `livre.html?id=${encodeURIComponent(book.id)}`;
-    const borrowHref = viewHref;
-
     const card = document.createElement("div");
-    card.className = "card book-card h-100";
-    card.setAttribute("data-id", book.id);
-    card.setAttribute("data-category", categoryKey);
-    card.setAttribute("data-author", book.author);
-    card.innerHTML = `
-      <div class="book-cover-wrap">
-        ${newBadge}
-        <img src="${cover}" alt="Couverture de ${title}" class="book-cover" loading="lazy" />
-        <div class="book-cover-overlay">
-          <span class="badge badge-category ${window.imsaUtils.categoryBadgeClass(categoryKey)}">${window.imsaUtils.escapeHtml(catLabel)}</span>
-        </div>
-      </div>
-      <div class="card-body p-3 d-flex flex-column">
-        <h3 class="book-title clamp-2" style="font-size:16px;">${title}</h3>
-        <div class="book-author text-muted small mt-1">${author}</div>
-        <div class="book-summary clamp-3 small mt-2">${summary}</div>
-        <div class="d-flex align-items-center justify-content-between mt-2">
-          <div class="small text-muted fw-semibold">Année: ${window.imsaUtils.escapeHtml(book.year)}</div>
-        </div>
-        <div class="mt-2 book-rating">${stars}</div>
-        <div class="mt-auto">
-          <a href="${viewHref}" class="btn btn-blue-dark w-100 mt-3 book-detail-link" role="button" data-action="catalog" data-book-id="${window.imsaUtils.escapeHtml(book.id)}">
-            Voir le catalogue
-          </a>
-          <a href="${borrowHref}" class="btn btn-orange-outline w-100 mt-2 book-borrow-link"
-             role="button"
-             data-action="borrow"
-             data-book-id="${window.imsaUtils.escapeHtml(book.id)}"
-             data-category="${window.imsaUtils.escapeHtml(categoryKey)}"
-             data-user-id="">
-            Emprunter
-          </a>
-        </div>
-      </div>
-    `;
+    card.className = "col-12 col-md-6 col-lg-3";
+    card.innerHTML = window.imsaUtils.renderBookCardHTML(book, { 
+      showNewBadge: true, 
+      showBorrowButton: true, 
+      showCategoryChip: true, 
+      linkReadMore: true 
+    });
     return card;
   }
 

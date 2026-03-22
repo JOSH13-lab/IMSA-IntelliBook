@@ -203,6 +203,26 @@
     });
   }
 
+  // Charge les couvertures depuis notre API back-end (nouvelle version)
+  async function loadAllBookCovers() {
+    const cards = document.querySelectorAll('[data-id]');
+    for (const card of cards) {
+      const bookId = card.dataset.id;
+      const img = card.querySelector('img.book-cover-img, img');
+      if (!img || !bookId) continue;
+      try {
+        const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
+        const data = await res.json();
+        if (data.success && data.coverUrl) {
+          img.src = data.coverUrl;
+          img.style.display = 'block';
+          const fallback = card.querySelector('.book-cover-fallback');
+          if (fallback) fallback.style.display = 'none';
+        }
+      } catch(e) {}
+    }
+  }
+
   // ═══════════════════════════════════════
   // GESTION DES COUVERTURES DE LIVRES
   // ═══════════════════════════════════════
@@ -254,6 +274,7 @@
     initAnchorSmoothScroll();
     initBookCovers();
     loadAllCovers();
+    loadAllBookCovers();
 
     // Ferme l'offcanvas après navigation mobile.
     document.querySelectorAll("[data-bs-toggle='offcanvas']").forEach((tog) => {

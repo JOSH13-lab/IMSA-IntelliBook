@@ -138,16 +138,24 @@
 }
 
 /* Uniformiser la hauteur/dimension des items carrousel (optionnel) */
+/* Dans css/index.css */
 .carousel-card {
-  width: 180px;
+  width: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
 }
 
 .carousel-card .book-cover-container {
-  height: 260px;
+  padding-top: 133.33%; /* ratio 3:4 strict */
   width: 100%;
+}
+
+/* Sur desktop, hauteur fixe pour uniformité */
+@media (min-width: 768px) {
+  .carousel-card {
+    width: 180px;
+  }
 }
 
 /* Hero fade-in */

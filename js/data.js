@@ -13,35 +13,31 @@ window.IMSA_CATEGORIES = {
 
 const booksRaw = {
   romans: [
-    { id: "livre-001", title: "L'Enfant Noir", author: "Camara Laye", year: 1953, rating: 4.8, ratingCount: 245, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://covers.openlibrary.org/b/isbn/9782266181488-L.jpg", shortSummary: "Un classique de la littérature africaine, récit d'enfance et d'initiation en Guinée.", tags: ["Guinée", "Classique", "Autobiographie"] },
-    { id: "livre-002", title: "Le Monde s'effondre", author: "Chinua Achebe", year: 1958, rating: 4.9, ratingCount: 312, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://covers.openlibrary.org/b/isbn/9782708705357-L.jpg", shortSummary: "Le choc entre la culture traditionnelle Igbo et l'arrivée des missionnaires au Nigeria.", tags: ["Nigeria", "Classique", "Choc des cultures"] },
-    { id: "livre-003", title: "La Saison des Tam-Tams", author: "Léonie Beka", year: 2016, rating: 4.7, ratingCount: 76, language: "Français", availableCount: 4, isNew: true, coverUrl: "https://picsum.photos/seed/romans-saison-tam-tams/300/400", shortSummary: "Dans un village du Gabon, les tambours annoncent plus qu’une fête. Ils ouvrent une enquête intime sur l’amour, le courage et les secrets familiaux.", tags: ["Gabon", "Tradition", "Roman"] },
-    { id: "livre-004", title: "L’ombre du Baobab", author: "Calixthe Beyala", year: 2002, rating: 4.2, ratingCount: 189, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-ombre-baobab/300/400", shortSummary: "Une narratrice au franc-parler explore la ville comme un labyrinthe d’émotions. Entre humour et lucidité, le roman interroge les illusions du bonheur.", tags: ["Ville", "Afrique", "Roman"] },
-    { id: "livre-005", title: "Demain j'aurai vingt ans", author: "Alain Mabanckou", year: 2010, rating: 4.5, ratingCount: 210, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://covers.openlibrary.org/b/isbn/9782070446957-L.jpg", shortSummary: "L'enfance de Michel à Pointe-Noire, entre chroniques familiales et bouleversements politiques.", tags: ["Congo", "Enfance", "Roman"] },
-    { id: "livre-006", title: "Les Couleurs de la Nuit", author: "Véronique Tadjo", year: 2014, rating: 4.6, ratingCount: 123, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-couleurs-nuit/300/400", shortSummary: "Une traversée entre rêves et réalités révèle les mémoires trouées. Le récit fait dialoguer l’Afrique et l’espoir de demain.", tags: ["Rêves", "Afrique", "Roman"] },
-    { id: "livre-007", title: "Le Courage des Villes", author: "Chimamanda Ngozi Adichie", year: 2013, rating: 4.3, ratingCount: 154, language: "Français", availableCount: 5, isNew: false, coverUrl: "https://picsum.photos/seed/romans-courage-villes/300/400", shortSummary: "Une génération apprend à dire non aux destinées toutes tracées. À travers des relations complexes, le roman célèbre la liberté.", tags: ["Génération", "Nigeria", "Roman"] },
-    { id: "livre-008", title: "Le Voyage des Voix", author: "Ahmadou Kourouma", year: 2008, rating: 4.1, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/romans-voyage-voix/300/400", shortSummary: "Un enfant écoute le monde et comprend trop tard les lois de la peur. Le roman transforme la parole en résistance, de l’ombre à la lumière.", tags: ["Parole", "Afrique", "Roman"] },
-    { id: "livre-009", title: "Courants d’Ébène", author: "Nana Ekow Daniels", year: 2017, rating: 4.4, ratingCount: 61, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/romans-courants-ebene/300/400", shortSummary: "Entre pêche et souvenirs, une famille suit les courants comme on suit les secrets. Le suspense révèle la mémoire des terres.", tags: ["Côte", "Roman", "Gabon"] },
-    { id: "livre-010", title: "La Pluie qui Parle", author: "Dieudonné Gnammankou", year: 2012, rating: 4.0, ratingCount: 73, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-pluie-parle/300/400", shortSummary: "Quand la pluie tombe, les vies s’ouvrent comme des livres. Le récit explore les relations et la réparation au sein des communautés.", tags: ["Pluie", "Afrique centrale", "Roman"] },
-    { id: "livre-017", title: "Les Jardins de Lambaréné", author: "Rosalie Moukoko", year: 2010, rating: 4.4, ratingCount: 129, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-jardins-lambarene/300/400", shortSummary: "À Lambaréné, un jardin devient lieu de mémoire et de guérison. Le roman met en scène l’attention aux autres, sans illusion.", tags: ["Lambaréné", "Gabon", "Roman"] },
-    { id: "livre-018", title: "Le Dernier Voyage de l’Aube", author: "Sékou Traoré", year: 2016, rating: 4.2, ratingCount: 67, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/romans-dernier-voyage-aube/300/400", shortSummary: "Une expédition recommence quand tout semblait fini. Le récit montre comment on reconstruit après la perte.", tags: ["Aube", "Afrique", "Roman"] },
-    { id: "livre-019", title: "Cœur de Port-Gentil", author: "Jean N’Goma", year: 2014, rating: 4.5, ratingCount: 112, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/romans-coeur-portgentil/300/400", shortSummary: "Au rythme des quais, des rencontres redessinent les destins. Le roman fait dialoguer travail maritime, amours et espoirs.", tags: ["Port-Gentil", "Gabon", "Roman"] },
-    { id: "livre-020", title: "Le Serment du Palmier", author: "Esther Assogba", year: 2013, rating: 4.0, ratingCount: 57, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-serment-palmier/300/400", shortSummary: "Dans un village, le palmier abrite plus qu’une récolte : un pacte. Le roman explore les conséquences d’un choix tardif.", tags: ["Village", "Roman", "Gabon"] },
-    { id: "livre-021", title: "La Ville sous les Palmes", author: "Mokhtar Bemba", year: 2011, rating: 4.3, ratingCount: 93, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-ville-sous-palmes/300/400", shortSummary: "Entre ruelles et rires, une ville révèle ses contradictions. Le roman raconte comment la solidarité survit aux crises.", tags: ["Ville", "Afrique centrale", "Roman"] },
-    { id: "livre-022", title: "Le Secret des Masques", author: "Rosine Makoumbou", year: 2017, rating: 4.6, ratingCount: 80, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/romans-secret-masques/300/400", shortSummary: "Un masque ancien ouvre une enquête sur les légendes d’un quartier. Le roman mêle mystère et valeurs communautaires.", tags: ["Masques", "Gabon", "Roman"] },
-    { id: "livre-023", title: "Les Ombres de l’Aquarium", author: "Joël Nkoua", year: 2012, rating: 4.2, ratingCount: 61, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/romans-ombres-aquarium/300/400", shortSummary: "L’eau reflète les regrets et les promesses. Un roman sur l’apprentissage de la vérité et la reconstruction intérieure.", tags: ["Eau", "Roman", "Afrique"] },
-    { id: "livre-024", title: "La Danse des Héritiers", author: "Kossi-Jean Atta", year: 2009, rating: 4.4, ratingCount: 74, language: "Français", availableCount: 5, isNew: true, coverUrl: "https://picsum.photos/seed/romans-danse-heritiers/300/400", shortSummary: "Quand l’héritage divise, la danse devient langage. Le roman révèle la complexité des familles et des choix.", tags: ["Héritage", "Gabon", "Roman"] },
-    { id: "livre-025", title: "La Traversée du Désir", author: "Amina Bada", year: 2018, rating: 4.1, ratingCount: 52, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/romans-traversee-desir/300/400", shortSummary: "Deux amis se confrontent à leurs rêves en silence. Le roman examine le désir comme moteur de transformation personnelle.", tags: ["Désir", "Afrique", "Roman"] },
-    { id: "livre-026", title: "Le Tribunal des Souvenirs", author: "Dieudonné Tchibamba", year: 2015, rating: 4.7, ratingCount: 66, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/romans-tribunal-souvenirs/300/400", shortSummary: "On y juge des faits, mais aussi des émotions. Le roman interroge la mémoire collective et ses responsabilités.", tags: ["Mémoire", "Justice", "Roman"] },
-    { id: "livre-027", title: "Les Voix du Ciel", author: "Tendayi Vusimuzi", year: 2016, rating: 4.3, ratingCount: 59, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/romans-voix-ciel/300/400", shortSummary: "Une famille écoute le ciel pour comprendre ses propres choix. Le roman fait vibrer les liens entre nature et destinée.", tags: ["Ciel", "Afrique", "Roman"] },
-    { id: "livre-028", title: "L’Année des Pluies Sage", author: "Mavis Amey", year: 2011, rating: 4.0, ratingCount: 90, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/romans-annee-pluies-sage/300/400", shortSummary: "Entre récoltes et apprentissage, une année change les habitudes. Le roman met en avant les gestes du quotidien et la résilience.", tags: ["Résilience", "Roman", "Gabon"] },
-    { id: "livre-029", title: "La Lettre du Professeur", author: "Nadine Moukeng", year: 2019, rating: 4.5, ratingCount: 48, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/romans-lettre-professeur/300/400", shortSummary: "Une correspondance révèle une génération d’enseignants et leurs combats. Le roman rend hommage au savoir comme avenir.", tags: ["Éducation", "Gabon", "Roman"] },
-    { id: "livre-030", title: "Le Bal des Esprits Calmés", author: "Fabrice Nguema", year: 2012, rating: 4.2, ratingCount: 71, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/romans-bal-esprits/300/400", shortSummary: "Une fête trouble l’ordre établi et fait remonter les silences. Le roman montre comment la communauté réapprend la parole.", tags: ["Esprits", "Culture", "Roman"] }
+    { id: 'livre-001', title: 'Things Fall Apart', author: 'Chinua Achebe', year: 1958, rating: 4.8, ratingCount: 245, language: 'Anglais', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg', shortSummary: 'Le chef-d\'œuvre d\'Achebe sur le choc des cultures au Nigeria.', tags: ['Nigeria', 'Classique'] },
+    { id: 'livre-002', title: 'Purple Hibiscus', author: 'Chimamanda Ngozi Adichie', year: 2003, rating: 4.6, ratingCount: 180, language: 'Anglais', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9781616202415-L.jpg', shortSummary: 'L\'éveil émotionnel d\'une jeune fille dans un Nigeria en crise.', tags: ['Nigeria', 'Contemporain'] },
+    { id: 'livre-003', title: 'Half of a Yellow Sun', author: 'Chimamanda Ngozi Adichie', year: 2006, rating: 4.7, ratingCount: 210, language: 'Anglais', availableCount: 4, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9781400095209-L.jpg', shortSummary: 'Une fresque historique puissante sur la guerre du Biafra.', tags: ['Nigeria', 'Guerre', 'Histoire'] },
+    { id: 'livre-004', title: 'Americanah', author: 'Chimamanda Ngozi Adichie', year: 2013, rating: 4.5, ratingCount: 312, language: 'Anglais', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780307271082-L.jpg', shortSummary: 'Une histoire d\'amour et d\'immigration entre le Nigeria et les USA.', tags: ['Nigeria', 'Immigration'] },
+    { id: 'livre-005', title: 'Allah n\'est pas obligé', author: 'Ahmadou Kourouma', year: 2000, rating: 4.4, ratingCount: 156, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020417464-L.jpg', shortSummary: 'Le récit poignant d\'un enfant soldat en Afrique de l\'Ouest.', tags: ['Côte d\'Ivoire', 'Enfant soldat'] },
+    { id: 'livre-006', title: 'Les Soleils des indépendances', author: 'Ahmadou Kourouma', year: 1968, rating: 4.3, ratingCount: 120, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020023931-L.jpg', shortSummary: 'Une critique acerbe des régimes post-coloniaux.', tags: ['Afrique', 'Politique'] },
+    { id: 'livre-007', title: 'Verre Cassé', author: 'Alain Mabanckou', year: 2005, rating: 4.2, ratingCount: 98, language: 'Français', availableCount: 5, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020868761-L.jpg', shortSummary: 'Une chronique truculente d\'un bar de Brazzaville.', tags: ['Congo', 'Humour'] },
+    { id: 'livre-008', title: 'Mémoires de porc-épic', author: 'Alain Mabanckou', year: 2006, rating: 4.5, ratingCount: 145, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020888233-L.jpg', shortSummary: 'Le double maléfique d\'un homme raconte ses méfaits.', tags: ['Congo', 'Conte'] },
+    { id: 'livre-009', title: 'Black Bazar', author: 'Alain Mabanckou', year: 2009, rating: 4.1, ratingCount: 88, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020894968-L.jpg', shortSummary: 'Une immersion dans le Paris africain.', tags: ['Paris', 'Afrique'] },
+    { id: 'livre-010', title: 'Loin de mon père', author: 'Véronique Tadjo', year: 2010, rating: 4.0, ratingCount: 73, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226205131-L.jpg', shortSummary: 'Le retour au pays après la mort du père.', tags: ['Côte d\'Ivoire', 'Famille'] },
+    { id: 'livre-011', title: 'L\'Ombre d\'Imana', author: 'Véronique Tadjo', year: 2000, rating: 4.4, ratingCount: 129, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782742731114-L.jpg', shortSummary: 'Voyage au bout du Rwanda après le génocide.', tags: ['Rwanda', 'Mémoire'] },
+    { id: 'livre-012', title: 'C\'est le soleil qui m\'a brûlée', author: 'Calixthe Beyala', year: 1987, rating: 4.2, ratingCount: 67, language: 'Français', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782253053347-L.jpg', shortSummary: 'La quête de liberté d\'une femme dans un quartier pauvre.', tags: ['Cameroun', 'Femme'] },
+    { id: 'livre-013', title: 'Tu t\'appelleras Tanga', author: 'Calixthe Beyala', year: 1988, rating: 4.5, ratingCount: 112, language: 'Français', availableCount: 4, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782070411931-L.jpg', shortSummary: 'L\'amitié entre deux femmes dans une cellule.', tags: ['Cameroun', 'Amitié'] },
+    { id: 'livre-014', title: 'So Long a Letter', author: 'Mariama Bâ', year: 1979, rating: 4.8, ratingCount: 340, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780435905521-L.jpg', shortSummary: 'Une épître majeure sur la condition féminine au Sénégal.', tags: ['Sénégal', 'Femme', 'Classique'] },
+    { id: 'livre-015', title: 'Weep Not Child', author: 'Ngũgĩ wa Thiong\'o', year: 1964, rating: 4.3, ratingCount: 95, language: 'Anglais', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg', shortSummary: 'L\'impact de l\'insurrection Mau Mau sur une famille kenyane.', tags: ['Kenya', 'Histoire'] },
+    { id: 'livre-016', title: 'A Grain of Wheat', author: 'Ngũgĩ wa Thiong\'o', year: 1967, rating: 4.6, ratingCount: 120, language: 'Anglais', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780143039181-L.jpg', shortSummary: 'Les tensions à la veille de l\'indépendance du Kenya.', tags: ['Kenya', 'Indépendance'] },
+    { id: 'livre-017', title: 'Season of Migration to the North', author: 'Tayeb Salih', year: 1966, rating: 4.5, ratingCount: 150, language: 'Arabe', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780894771552-L.jpg', shortSummary: 'Un pont complexe entre l\'Orient et l\'Occident.', tags: ['Soudan', 'Classique'] },
+    { id: 'livre-018', title: 'Petite Piment', author: 'Alain Mabanckou', year: 2015, rating: 4.2, ratingCount: 110, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782070147410-L.jpg', shortSummary: 'L\'odyssée d\'un orphelin dans le Congo des années 70.', tags: ['Congo', 'Enfance'] },
+    { id: 'livre-019', title: 'Le Ventre de l\'Atlantique', author: 'Fatou Diome', year: 2003, rating: 4.4, ratingCount: 180, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782253109310-L.jpg', shortSummary: 'Le rêve d\'émigration par le football au Sénégal.', tags: ['Sénégal', 'Immigration'] },
+    { id: 'livre-020', title: 'Rebelle', author: 'Fatou Keïta', year: 1998, rating: 4.3, ratingCount: 90, language: 'Français', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782747011501-L.jpg', shortSummary: 'Le combat d\'une femme contre les traditions pesantes.', tags: ['Côte d\'Ivoire', 'Femme'] }
   ],
 
   histoire: [
-    { id: "livre-031", title: "Mémoire d'une année électorale", author: "Mbourou", year: 2014, rating: 4.7, ratingCount: 130, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://covers.openlibrary.org/b/isbn/9782343022208-L.jpg", shortSummary: "Une analyse profonde des enjeux politiques et sociaux lors d'une année électorale au Gabon.", tags: ["Gabon", "Politique", "Histoire"] },
-    { id: "livre-032", title: "Myène : voix de l’ombre et du chant", author: "Nicolas Metegue N'Nah", year: 2017, rating: 4.4, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-miene-voix/300/400", shortSummary: "Entre traditions orales et analyses, l’ouvrage explore l’univers Myène. La musique et les récits structurent une histoire vivante.", tags: ["Myène", "Gabon", "Patrimoine"] },
+    { id: 'livre-031', title: 'Histoire générale de l\'Afrique Vol.1', author: 'UNESCO', year: 1980, rating: 4.7, ratingCount: 130, language: 'Français', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9789232017093-L.jpg', shortSummary: 'Le premier volume de la fresque monumentale de l\'UNESCO.', tags: ['Afrique', 'Histoire', 'Classique'] },
+    { id: 'livre-032', title: 'Afrique, histoire d\'un continent', author: 'John Reader', year: 1997, rating: 4.4, ratingCount: 88, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226099167-L.jpg', shortSummary: 'Une synthèse brillante sur l\'histoire du continent.', tags: ['Afrique', 'Histoire'] },
     { id: "livre-033", title: "Bwiti : initiation, éthique et modernité", author: "Joseph Tonda", year: 2013, rating: 4.6, ratingCount: 119, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-bwiti-initiation/300/400", shortSummary: "Le Bwiti est présenté comme une institution culturelle et morale. L’auteur discute les transformations contemporaines et la continuité des valeurs.", tags: ["Bwiti", "Culture", "Gabon"] },
     { id: "livre-034", title: "Colonisation : fragments de 1900 à 1960", author: "Lucie Mba", year: 2010, rating: 4.2, ratingCount: 152, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-colonisation-fragments/300/400", shortSummary: "Une lecture historique des ruptures et des résistances. Les documents contextualisés révèlent l’impact sur les sociétés gabonaises.", tags: ["Colonisation", "Indépendance", "Gabon"] },
     { id: "livre-035", title: "L’Indépendance expliquée aux jeunes", author: "Aline N’Dinga", year: 2018, rating: 4.5, ratingCount: 64, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-indep-explications/300/400", shortSummary: "Un ouvrage pédagogique pour comprendre la période-clé de 1960. On y trouve des repères simples, des cartes et des récits.", tags: ["1960", "Gabon", "Pédagogie"] },
@@ -73,7 +69,7 @@ const booksRaw = {
   ],
 
   sciences: [
-    { id: "livre-061", title: "Médecines traditionnelles au Gabon", author: "Awa N’Guessan", year: 2016, rating: 4.6, ratingCount: 104, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-medecines-trad/300/400", shortSummary: "Le livre décrit des pratiques de soins ancrées dans la culture. Il aborde aussi les enjeux de sécurité, d’éthique et de recherche.", tags: ["Santé", "Gabon", "Médecine"] },
+    { id: 'livre-061', title: 'Sapiens', author: 'Yuval Noah Harari', year: 2011, rating: 4.8, ratingCount: 2100, language: 'Français', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226257017-L.jpg', shortSummary: 'Une brève histoire de l\'humanité.', tags: ['Sciences', 'Histoire', 'Best-seller'] },
     { id: "livre-062", title: "Mathématiques pour comprendre l’Afrique", author: "Aimé Ouedraogo", year: 2018, rating: 4.4, ratingCount: 76, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-maths-afrique/300/400", shortSummary: "Des problèmes concrets relient les mathématiques aux réalités africaines. Les solutions montrent comment modéliser et décider.", tags: ["Mathématiques", "Afrique", "Formation"] },
     { id: "livre-063", title: "Laboratoires et terrain : guide de recherche", author: "Christine Nkoghe", year: 2015, rating: 4.3, ratingCount: 92, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-labo-terrain/300/400", shortSummary: "Un guide pour mener une recherche utile et rigoureuse. L’ouvrage explique les étapes, de l’hypothèse à l’analyse.", tags: ["Recherche", "Méthode", "Sciences"] },
     { id: "livre-064", title: "Épidémies : prévenir avec science", author: "Joseph Tonda", year: 2012, rating: 4.5, ratingCount: 118, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-epidemies-prevenir/300/400", shortSummary: "Comprendre les dynamiques des maladies pour agir plus vite. Le livre propose des stratégies de prévention adaptées aux contextes locaux.", tags: ["Épidémies", "Santé", "Afrique"] },
@@ -167,6 +163,7 @@ const booksRaw = {
     { id: "livre-154", title: "Droit de la preuve : convaincre avec rigueur", author: "Nadine Moukeng", year: 2018, rating: 4.6, ratingCount: 44, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-preuve/300/400", shortSummary: "Présenter les preuves demande méthode et rigueur. L’ouvrage explique comment construire une argumentation crédible.", tags: ["Preuve", "Procédure", "Droit"] },
     { id: "livre-241", title: "Droit constitutionnel : équilibre des pouvoirs", author: "Étienne Nkoua", year: 2021, rating: 4.5, ratingCount: 52, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-constitutionnel-equilibre/300/400", shortSummary: "Le livre montre comment les pouvoirs se contrôlent pour éviter les dérives. Il propose une lecture claire des institutions et des mécanismes de stabilité.", tags: ["Constitution", "Gabon", "Institutions"] },
     { id: "livre-242", title: "OHADA : arbitrer les litiges commerciaux", author: "Doris Idiata", year: 2020, rating: 4.2, ratingCount: 61, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/droit-ohada-arbitrage/300/400", shortSummary: "La résolution des conflits commerciaux exige rapidité et confiance. L’ouvrage explique les procédures et les bonnes pratiques pour sécuriser les transactions.", tags: ["OHADA", "Commerce", "Arbitrage"] },
+    { id: 'livre-151', title: 'Kirikou et la sorcière', author: 'Michel Ocelot', year: 1998, rating: 4.8, ratingCount: 245, language: 'Français', availableCount: 5, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782211050937-L.jpg', shortSummary: 'L\'histoire épique du tout petit mais courageux Kirikou.', tags: ['Jeunesse', 'Conte', 'Classique'] },
     { id: "livre-243", title: "Gouvernance locale : droits et responsabilités", author: "Patricia Leyama", year: 2019, rating: 4.4, ratingCount: 49, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-gouvernance-locale/300/400", shortSummary: "Quelles règles guident les collectivités et leurs acteurs ? Le livre articule compétences, contrôle et participation citoyenne.", tags: ["Gouvernance", "Collectivités", "Droit"] },
     { id: "livre-244", title: "Contrats publics : sécuriser la procédure", author: "Aline N’Dinga", year: 2022, rating: 4.6, ratingCount: 38, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-contrats-publics/300/400", shortSummary: "Un bon contrat public commence par une procédure solide. L’ouvrage détaille les étapes, les risques fréquents et les moyens de prévention.", tags: ["Marchés publics", "Procédure", "Gabon"] }
   ],
@@ -441,17 +438,10 @@ window.imsaUtils = {
   }
 };
 
-// Enrichit les livres avec leur categoryKey (utile côté rendu).
-Object.keys(window.booksData).forEach((categoryKey) => {
-  window.booksData[categoryKey] = window.booksData[categoryKey].map((b) => ({
-    ...b,
-    categoryKey
-  }));
-});
+// ═══════════════════════════════════════
+// INITIALISATION & ENRICHISSEMENT
+// ═══════════════════════════════════════
 
-// ═══════════════════════════════════════
-// COUVERTURES — Open Library (URLs)
-// ═══════════════════════════════════════
 function imsaHashString(str) {
   let h = 0;
   const s = String(str || "");
@@ -460,56 +450,73 @@ function imsaHashString(str) {
 }
 
 function generateISBN13LikeFromId(bookId) {
-  // Génère un ISBN13 "plausible" (peut ne pas exister côté Open Library).
-  // Le système fallback CSS évite toute image cassée.
   const h = imsaHashString(bookId);
   const suffix10 = String(h % 10000000000).padStart(10, "0");
   return `978${suffix10}`;
 }
 
 const coverOverrides = {
-  // Romans — exemples fournis
-  "livre-001": { title: "Things Fall Apart", author: "Chinua Achebe", coverUrl: "https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg" },
-  "livre-002": { title: "Purple Hibiscus", author: "Chimamanda Ngozi Adichie", coverUrl: "https://covers.openlibrary.org/b/isbn/9781616202415-L.jpg" },
-  "livre-003": { title: "Half of a Yellow Sun", author: "Chimamanda Ngozi Adichie", coverUrl: "https://covers.openlibrary.org/b/isbn/9781400095209-L.jpg" },
-  "livre-004": { title: "Americanah", author: "Chimamanda Ngozi Adichie", coverUrl: "https://covers.openlibrary.org/b/isbn/9780307271082-L.jpg" },
-  "livre-005": { title: "Allah n’est pas obligé", author: "Ahmadou Kourouma", coverUrl: "https://covers.openlibrary.org/b/isbn/9782020417464-L.jpg" },
-  "livre-006": { title: "Les Soleils des indépendances", author: "Ahmadou Kourouma", coverUrl: "https://covers.openlibrary.org/b/isbn/9782020023931-L.jpg" },
-  "livre-007": { title: "Verre Cassé", author: "Alain Mabanckou", coverUrl: "https://covers.openlibrary.org/b/isbn/9782020868761-L.jpg" },
-  "livre-008": { title: "Mémoires de porc-épic", author: "Alain Mabanckou", coverUrl: "https://covers.openlibrary.org/b/isbn/9782020888233-L.jpg" },
-  "livre-009": { title: "Black Bazar", author: "Alain Mabanckou", coverUrl: "https://covers.openlibrary.org/b/isbn/9782020894968-L.jpg" },
-  "livre-010": { title: "Loin de mon père", author: "Véronique Tadjo", coverUrl: "https://covers.openlibrary.org/b/isbn/9782226205131-L.jpg" },
-  "livre-011": { title: "L’Ombre d’Imana", author: "Véronique Tadjo", coverUrl: "https://covers.openlibrary.org/b/isbn/9782742731114-L.jpg" },
-  "livre-012": { title: "C’est le soleil qui m’a brûlée", author: "Calixthe Beyala", coverUrl: "https://covers.openlibrary.org/b/isbn/9782253053347-L.jpg" },
-  "livre-013": { title: "Tu t’appelleras Tanga", author: "Calixthe Beyala", coverUrl: "https://covers.openlibrary.org/b/isbn/9782070411931-L.jpg" },
-  "livre-014": { title: "So Long a Letter", author: "Mariama Bâ", coverUrl: "https://covers.openlibrary.org/b/isbn/9780435905521-L.jpg" },
-  "livre-015": { title: "Weep Not Child", author: "Ngũgĩ wa Thiong’ò", coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg" },
-  "livre-016": { title: "A Grain of Wheat", author: "Ngũgĩ wa Thiong’ò", coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039181-L.jpg" },
-  "livre-017": { title: "Season of Migration to the North", author: "Tayeb Salih", coverUrl: "https://covers.openlibrary.org/b/isbn/9780894771552-L.jpg" },
-  "livre-018": { title: "Petite Piment", author: "Alain Mabanckou", coverUrl: "https://covers.openlibrary.org/b/isbn/9782070147410-L.jpg" },
-  "livre-019": { title: "Le Ventre de l’Atlantique", author: "Fatou Diome", coverUrl: "https://covers.openlibrary.org/b/isbn/9782253109310-L.jpg" },
-  "livre-020": { title: "Rebelle", author: "Fatou Keïta", coverUrl: "https://covers.openlibrary.org/b/isbn/9782747011501-L.jpg" },
-
-  // Histoire & Patrimoine — exemples
-  "livre-031": { title: "Histoire générale de l’Afrique Vol.1", author: "UNESCO", coverUrl: "https://covers.openlibrary.org/b/isbn/9789232017093-L.jpg" },
-  "livre-032": { title: "Afrique, histoire d’un continent", author: "John Reader", coverUrl: "https://covers.openlibrary.org/b/isbn/9782226099167-L.jpg" },
-
-  // Sciences — exemple
-  "livre-061": { title: "Sapiens", author: "Yuval Noah Harari", coverUrl: "https://covers.openlibrary.org/b/isbn/9782226257017-L.jpg" },
-
-  // Jeunesse — exemple
-  "livre-151": { title: "Kirikou et la sorcière", author: "Michel Ocelot", coverUrl: "https://covers.openlibrary.org/b/isbn/9782211050937-L.jpg" }
+  // Romans
+  "livre-001": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg" },
+  "livre-002": { coverUrl: "https://covers.openlibrary.org/b/isbn/9781616202415-L.jpg" },
+  "livre-003": { coverUrl: "https://covers.openlibrary.org/b/isbn/9781400095209-L.jpg" },
+  "livre-004": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780307271082-L.jpg" },
+  "livre-005": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020417464-L.jpg" },
+  "livre-006": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020023931-L.jpg" },
+  "livre-007": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020868761-L.jpg" },
+  "livre-008": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020888233-L.jpg" },
+  "livre-009": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020894968-L.jpg" },
+  "livre-010": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226205131-L.jpg" },
+  "livre-011": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782742731114-L.jpg" },
+  "livre-012": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782253053347-L.jpg" },
+  "livre-013": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782070411931-L.jpg" },
+  "livre-014": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780435905521-L.jpg" },
+  "livre-015": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg" },
+  "livre-016": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039181-L.jpg" },
+  "livre-017": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780894771552-L.jpg" },
+  "livre-018": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782070147410-L.jpg" },
+  "livre-019": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782253109310-L.jpg" },
+  "livre-020": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782747011501-L.jpg" },
+  // Histoire
+  "livre-031": { coverUrl: "https://covers.openlibrary.org/b/isbn/9789232017093-L.jpg" },
+  "livre-032": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226099167-L.jpg" },
+  // Sciences
+  "livre-061": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226257017-L.jpg" },
+  // Jeunesse
+  "livre-151": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782211050937-L.jpg" }
 };
 
-Object.keys(window.booksData).forEach((catKey) => {
-  window.booksData[catKey] = window.booksData[catKey].map((b) => {
-    // Si l'URL contient déjà covers.openlibrary.org (on vient de l'injecter manuellement), on garde
-    if (b.coverUrl && b.coverUrl.includes("covers.openlibrary.org")) {
-      return b;
+// Traitement global : categoryKey + real coverUrl fallback
+Object.keys(booksRaw).forEach((catKey) => {
+  booksRaw[catKey] = booksRaw[catKey].map((book) => {
+    let finalCoverUrl = book.coverUrl;
+
+    // 1. Déjà un lien OpenLibrary valide ? On garde.
+    const isAlreadyOL = finalCoverUrl && finalCoverUrl.includes("covers.openlibrary.org");
+
+    // 2. Si pas OL ou si picsum (fallback temporaire), on check les overrides ou on génère.
+    if (!isAlreadyOL || (finalCoverUrl && finalCoverUrl.includes("picsum.photos"))) {
+      if (coverOverrides[book.id]) {
+        finalCoverUrl = coverOverrides[book.id].coverUrl;
+      } else {
+        const isbn13 = generateISBN13LikeFromId(book.id);
+        finalCoverUrl = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg`;
+      }
     }
-    // Sinon : Open Library via un ISBN13 "plausible"
-    const isbn13 = generateISBN13LikeFromId(b.id);
-    return { ...b, coverUrl: `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg` };
+
+    return {
+      ...book,
+      categoryKey: catKey,
+      coverUrl: finalCoverUrl
+    };
   });
 });
+
+window.booksData = booksRaw;
+
+// Stats pour debug
+window.__booksCountByCat = Object.keys(window.booksData).reduce((acc, k) => {
+  acc[k] = window.booksData[k].length;
+  return acc;
+}, {});
 

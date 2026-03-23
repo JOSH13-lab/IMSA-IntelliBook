@@ -169,18 +169,33 @@
     }
   }
 
-  function renderHomeCategoryCarousels() {
+  async function renderHomeCategoryCarousels() {
     const placeholders = document.querySelectorAll("[data-imsa-home-carousel-key]");
     if (!placeholders.length) return;
 
-    placeholders.forEach((root) => {
-      const key = root.getAttribute("data-imsa-home-carousel-key");
-      const perCategoryBooks = (window.booksData && window.booksData[key]) ? window.booksData[key] : [];
+    const API_BASE = 'http://localhost:5000/api';
 
-      const five = perCategoryBooks.slice(0, 5);
+    for (const root of placeholders) {
+      const key = root.getAttribute("data-imsa-home-carousel-key");
+      let books = [];
+      
+      try {
+        const res = await fetch(`${API_BASE}/books?category=${encodeURIComponent(key)}&per_page=10`);
+        const json = await res.json();
+        if (json.success && json.data && json.data.length > 0) {
+          books = json.data;
+        } else {
+          books = (window.booksData && window.booksData[key]) ? window.booksData[key] : [];
+        }
+      } catch (err) {
+        books = (window.booksData && window.booksData[key]) ? window.booksData[key] : [];
+      }
+
+      const top = books.slice(0, 8);
       const track = root.querySelector(".imsa-carousel-track");
-      if (!track) return;
-      track.innerHTML = five
+      if (!track) continue;
+      
+      track.innerHTML = top
         .map((b) =>
           window.imsaUtils.renderBookCardHTML(b, {
             variant: "default",
@@ -190,11 +205,19 @@
           })
         )
         .join("");
-    });
+        
+      // Re-init layout for this carousel
+      const carouselNode = root.closest('.imsa-carousel');
+      if (carouselNode && window.__imsaCarousels) {
+         const instance = window.__imsaCarousels.find(c => c.container === carouselNode);
+         if (instance) instance.updateLayout();
+      }
+    }
   }
 
   function initCarouselsOnPage() {
     const nodes = document.querySelectorAll(".imsa-carousel[data-imsa-carousel='home']");
+    window.__imsaCarousels = [];
     nodes.forEach((n) => {
       const perDesktop = Number(n.getAttribute("data-perview-desktop") || "5");
       const perMobile = Number(n.getAttribute("data-perview-mobile") || "2");
@@ -205,6 +228,7 @@
         perViewMobile: perMobile
       });
       c.init();
+      window.__imsaCarousels.push(c);
     });
   }
 

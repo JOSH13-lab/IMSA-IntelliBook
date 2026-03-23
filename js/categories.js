@@ -2,28 +2,15 @@
 (function () {
   const DEFAULT_CATEGORY_KEY = "romans";
 
-  const API_BASE = 'http://localhost:5000/api';
-
   async function fetchBooks(categoryKey) {
     try {
-      // Priorité au Backend: GET /api/books?category=...
-      const url = categoryKey === 'toutes' 
-        ? `${API_BASE}/books?per_page=100` 
-        : `${API_BASE}/books?category=${encodeURIComponent(categoryKey)}&per_page=100`;
-        
-      const res = await fetch(url);
-      const json = await res.json();
-      
-      if (json.success && json.data && json.data.length > 0) {
-        console.log(`📚 ${json.data.length} livres chargés depuis l'API pour: ${categoryKey}`);
-        return json.data;
-      }
-      
-      // Fallback sur les données statiques si l'API est vide ou échoue
+      // BACKEND: GET /api/books?category=...
+      // const res = await fetch(`/api/books?category=${encodeURIComponent(categoryKey)}`);
+      // return await res.json();
       return window.imsaUtils.getBooksByCategory(categoryKey);
     } catch (err) {
-      console.warn("API indisponible, repli sur les données statiques (js/data.js)");
-      return window.imsaUtils.getBooksByCategory(categoryKey);
+      console.error(err);
+      return [];
     }
   }
 
@@ -41,16 +28,16 @@
   function renderBookCardForListing(book) {
     const card = document.createElement("div");
     card.className = "col-12 col-md-6 col-lg-3";
-    card.innerHTML = window.imsaUtils.renderBookCardHTML(book, { 
-      showNewBadge: true, 
-      showBorrowButton: true, 
-      showCategoryChip: true, 
-      linkReadMore: true 
+    card.innerHTML = window.imsaUtils.renderBookCardHTML(book, {
+      showNewBadge: true,
+      showBorrowButton: true,
+      showCategoryChip: true,
+      linkReadMore: true
     });
     return card;
   }
 
-  async function openPanel(categoryKey) {
+  function openPanel(categoryKey) {
     const panel = document.getElementById("categoryPanelContainer");
     const title = document.getElementById("categoryPanelTitle");
     const booksWrap = document.getElementById("categoryPanelBooks");
@@ -59,10 +46,8 @@
     title.textContent = window.imsaUtils.categoryLabel(categoryKey);
     panel.classList.remove("d-none");
 
-    booksWrap.innerHTML = "<div class='text-center w-100 p-5'><i class='fa-solid fa-spinner fa-spin fa-2x text-orange'></i></div>";
-    
-    const books = await fetchBooks(categoryKey);
-    
+    booksWrap.innerHTML = "";
+    const books = window.booksData[categoryKey] || [];
     booksWrap.innerHTML = books
       .map(
         (b) => `

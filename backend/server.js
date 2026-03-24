@@ -1,25 +1,25 @@
 require('dotenv').config();
-const express    = require('express');
-const cors       = require('cors');
-const helmet     = require('helmet');
-const morgan     = require('morgan');
-const path       = require('path');
-const rateLimit  = require('express-rate-limit');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const path = require('path');
+const rateLimit = require('express-rate-limit');
 
-const { pool }   = require('./config/db');
+const { pool } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
 // Routes
-const authRoutes       = require('./routes/auth.routes');
-const usersRoutes      = require('./routes/users.routes');
-const booksRoutes      = require('./routes/books.routes');
+const authRoutes = require('./routes/auth.routes');
+const usersRoutes = require('./routes/users.routes');
+const booksRoutes = require('./routes/books.routes');
 const categoriesRoutes = require('./routes/categories.routes');
-const borrowsRoutes    = require('./routes/borrows.routes');
-const favoritesRoutes  = require('./routes/favorites.routes');
-const reviewsRoutes    = require('./routes/reviews.routes');
-const readingRoutes    = require('./routes/reading.routes');
+const borrowsRoutes = require('./routes/borrows.routes');
+const favoritesRoutes = require('./routes/favorites.routes');
+const reviewsRoutes = require('./routes/reviews.routes');
+const readingRoutes = require('./routes/reading.routes');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Sécurité ──
@@ -43,7 +43,7 @@ app.use(cors({
 // ── Rate limiting (anti-spam) ──
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
+  max: 1000,
   message: { success: false, message: 'Trop de requêtes. Réessayez dans 15 minutes.' }
 });
 app.use('/api/', limiter);
@@ -84,13 +84,13 @@ app.get('/api/health', async (req, res) => {
 });
 
 // ── Routes API ──
-app.use('/api/auth',             authLimiter, authRoutes);
-app.use('/api/users',            usersRoutes);
-app.use('/api/books',            booksRoutes);
-app.use('/api/categories',       categoriesRoutes);
-app.use('/api/borrows',          borrowsRoutes);
-app.use('/api/favorites',        favoritesRoutes);
-app.use('/api/reviews',          reviewsRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/books', booksRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/borrows', borrowsRoutes);
+app.use('/api/favorites', favoritesRoutes);
+app.use('/api/reviews', reviewsRoutes);
 app.use('/api/reading-progress', readingRoutes);
 
 // ── 404 ──

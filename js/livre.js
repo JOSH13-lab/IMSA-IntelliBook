@@ -151,7 +151,7 @@
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length) return parsed;
-      } catch {}
+      } catch { }
     }
     return generateSampleReviews(book);
   }

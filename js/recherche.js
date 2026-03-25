@@ -11,6 +11,22 @@
     };
   }
 
+  function renderCategoryFilters() {
+    const container = document.querySelector("#searchFiltersForm .d-grid.gap-2");
+    if (!container) return;
+    
+    const categories = Object.values(window.IMSA_CATEGORIES);
+    container.innerHTML = "";
+    categories.forEach(cat => {
+      container.innerHTML += `
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="categories" value="${cat.key}" data-filter="category" />
+          ${cat.label}
+        </label>
+      `;
+    });
+  }
+
   function escape(str) {
     return window.imsaUtils.escapeHtml(str);
   }
@@ -323,7 +339,15 @@
     viewMode: "grid"
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Render dynamic filters
+    renderCategoryFilters();
+
+    // S'assurer que les données sont chargées
+    if (window.imsaApi && (!window.booksData || Object.values(window.booksData).every(arr => arr.length === 0))) {
+      await window.imsaApi.fetchAllBooksByCategories();
+    }
+    
     const params = getSearchParams();
 
     // Pré-remplissage depuis URL

@@ -232,14 +232,29 @@
   function renderRelatedBooks(book) {
     const row = document.getElementById("relatedRow");
     if (!row) return;
-    const all = window.imsaUtils.getAllBooks();
-    const same = all.filter((b) => b.categoryKey === book.categoryKey && b.id !== book.id);
-    const picks = same.slice(0, 6);
+    
+    // Utiliser les livres similaires du backend s'ils existent
+    let picks = book.similar_books || [];
+    
+    // Sinon fallback sur imsaUtils (nécessite d'avoir chargé les autres livres)
+    if (picks.length === 0) {
+      const all = window.imsaUtils.getAllBooks();
+      const same = all.filter((b) => b.categoryKey === book.categoryKey && b.id !== book.id);
+      picks = same.slice(0, 6);
+    }
+
     row.innerHTML = "";
     picks.forEach((b) => {
+      // Normalisation pour renderBookCardHTML
+      const normalized = {
+        ...b,
+        categoryKey: b.categoryKey || book.categoryKey,
+        rating: b.average_rating || b.rating || 0
+      };
+
       const wrap = document.createElement("div");
       wrap.style.minWidth = "260px";
-      wrap.innerHTML = window.imsaUtils.renderBookCardHTML(b, {
+      wrap.innerHTML = window.imsaUtils.renderBookCardHTML(normalized, {
         variant: "compact",
         showNewBadge: false,
         showBorrowButton: false,
@@ -279,8 +294,9 @@
     document.getElementById("authorLink").textContent = book.author;
     document.getElementById("authorLink").href = `recherche.html?author=${encodeURIComponent(book.author)}`;
 
-    if (container) {
-      container.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(book);
+    const coverWrap = document.getElementById("bookCoverContainer");
+    if (coverWrap) {
+      coverWrap.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(book);
     }
 
     // Breadcrumb current
@@ -292,41 +308,47 @@
     document.getElementById("categoryBadge").className = `badge badge-category ${window.imsaUtils.categoryBadgeClass(book.categoryKey)}`;
     document.getElementById("categoryYear").textContent = `${book.year}`;
 
-    // Availability (démo)
+    // Availability
     const badge = document.getElementById("availabilityBadge");
     const count = document.getElementById("availableCountText");
     if (badge) {
-      const available = Number(book.availableCount) > 0;
+      const available = (book.available_count !== undefined) ? (Number(book.available_count) > 0) : (Number(book.availableCount) > 0);
       badge.classList.toggle("text-bg-success", available);
       badge.classList.toggle("text-bg-danger", !available);
       badge.textContent = available ? "DISPONIBLE" : "INDISPONIBLE";
     }
-    if (count) count.textContent = `${book.availableCount} exemplaires disponibles`;
+    if (count) count.textContent = `${book.available_count || book.availableCount || 0} exemplaires disponibles`;
 
     // Meta card
     const meta = generateMeta(book);
-    document.getElementById("metaISBN").textContent = meta.isbn;
-    document.getElementById("metaEditor").textContent = meta.editor;
-    document.getElementById("metaLang").textContent = meta.langue;
-    document.getElementById("metaPages").textContent = String(meta.pages);
-    document.getElementById("metaYear").textContent = String(meta.year);
+    document.getElementById("metaISBN").textContent = book.isbn || meta.isbn;
+    document.getElementById("metaEditor").textContent = book.publisher || meta.editor;
+    document.getElementById("metaLang").textContent = book.language || meta.langue;
+    document.getElementById("metaPages").textContent = String(book.page_count || book.pages || meta.pages);
+    document.getElementById("metaYear").textContent = String(book.year || meta.year);
     document.getElementById("metaFormat").textContent = meta.format;
 
     // Summary & tags
     const longSummary = document.getElementById("longSummary");
     if (longSummary) {
-      const paras = generateLongSummary(book);
-      longSummary.innerHTML = paras.map((p) => `<p class="mb-3">${escape(p)}</p>`).join("");
+      const summaryText = book.description || book.summary || book.shortSummary;
+      if (summaryText && summaryText.length > 200) {
+        longSummary.innerHTML = `<p class="mb-3">${escape(summaryText)}</p>`;
+      } else {
+        const paras = generateLongSummary(book);
+        longSummary.innerHTML = paras.map((p) => `<p class="mb-3">${escape(p)}</p>`).join("");
+      }
     }
     const tags = document.getElementById("tagsWrap");
     if (tags) {
-      tags.innerHTML = (book.tags || []).slice(0, 8).map((t) => {
+      const bookTags = book.tags || [];
+      tags.innerHTML = bookTags.slice(0, 8).map((t) => {
         return `<a href="recherche.html?tag=${encodeURIComponent(t)}" class="tag-chip">${escape(t)}</a>`;
       }).join("");
     }
 
     // Reviews
-    const reviews = loadReviews(book);
+    const reviews = (book.reviews && book.reviews.length) ? book.reviews : loadReviews(book);
     renderStarsAverage(book, reviews);
     renderBreakdown(reviews);
     renderReviews(reviews);
@@ -466,16 +488,26 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     const bookId = getBookIdFromUrl();
     if (!bookId) {
       window.imsaToast && window.imsaToast("Livre introuvable.", "error");
       return;
     }
 
-    const book = window.imsaUtils.getBookById(bookId);
+    // Charger le livre via l'API
+    let book = null;
+    if (window.imsaApi) {
+      book = await window.imsaApi.fetchBookById(bookId);
+    }
+    
+    // Fallback if API fails or not yet loaded properly
+    if (!book && window.imsaUtils) {
+      book = window.imsaUtils.getBookById(bookId);
+    }
+
     if (!book) {
-      window.imsaToast && window.imsaToast("Livre introuvable.", "error");
+      window.imsaToast && window.imsaToast("Livre introuvable au catalogue.", "error");
       return;
     }
 

@@ -2,18 +2,6 @@
 (function () {
   const DEFAULT_CATEGORY_KEY = "romans";
 
-  async function fetchBooks(categoryKey) {
-    try {
-      // BACKEND: GET /api/books?category=...
-      // const res = await fetch(`/api/books?category=${encodeURIComponent(categoryKey)}`);
-      // return await res.json();
-      return window.imsaUtils.getBooksByCategory(categoryKey);
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  }
-
   async function borrowBook(bookId, userId = "") {
     try {
       // BACKEND: POST /api/borrows
@@ -25,57 +13,67 @@
     }
   }
 
-  function buildBookCardHTML(book) {
-    const title = window.imsaUtils.escapeHtml(book.title || "");
-    const author = window.imsaUtils.escapeHtml(book.author || "");
-    const year = window.imsaUtils.escapeHtml(book.year || "");
-    const summary = window.imsaUtils.escapeHtml(book.short_summary || book.shortSummary || "");
-    const categoryKey = book.category_key || book.categoryKey || "";
-    const catLabel = window.imsaUtils.categoryLabel(categoryKey);
-    const stars = window.imsaUtils.formatStars(book.rating);
-    const rating = book.rating ? Number(book.rating).toFixed(1) : "—";
-    const ratingCount = book.rating_count || book.ratingCount || 0;
-    const viewHref = `livre.html?id=${encodeURIComponent(book.id)}`;
+  function renderCategories() {
+    const filterContainer = document.querySelector("[role='tablist']");
+    const gridContainer = document.getElementById("categoriesGrid");
+    if (!filterContainer || !gridContainer) return;
 
-    return `
-      <div class="card book-card h-100 position-relative" data-id="${window.imsaUtils.escapeHtml(book.id)}">
-        ${book.is_new || book.isNew ? '<span class="badge badge-new position-absolute top-0 end-0 m-2" style="z-index:2;">NOUVEAU</span>' : ""}
-        <div class="card-body p-0 d-flex flex-column">
-          <div class="book-cover-wrap">
-            <img 
-              src="${book.cover_url || book.coverUrl}" 
-              alt="${title}"
-              class="book-cover-img"
-              style="width:100%;height:100%;object-fit:cover;"
-              onerror="this.src='https://books.google.com/books/content?q=${encodeURIComponent(title)}&printsec=frontcover&img=1&zoom=1'"
-            />
-          </div>
-          <div class="book-info p-3 d-flex flex-column flex-grow-1">
-            <div class="book-cat mb-2">${window.imsaUtils.escapeHtml(catLabel)}</div>
-            <h3 class="book-title clamp-2" style="font-size:16px;">${title}</h3>
-            <div class="book-author text-muted small mt-1">${author} · ${year}</div>
-            <div class="book-rating mt-2">
-              <div class="stars">${stars}</div>
-              <div class="small text-muted mt-1">
-                ${rating} <span class="text-muted">(${ratingCount} avis)</span>
+    const categories = Object.values(window.IMSA_CATEGORIES);
+    
+    // 1. Filter Pills
+    filterContainer.innerHTML = `<button class="btn btn-sm btn-orange-outline filter-pill active" type="button" data-category-filter="toutes">Toutes</button>`;
+    categories.forEach(cat => {
+      const shortLabel = cat.label.replace("SAN — ", "").replace("BAV — ", "").replace("GIN — ", "").replace("GIF — ", "");
+      filterContainer.innerHTML += `<button class="btn btn-sm btn-orange-outline filter-pill" type="button" data-category-filter="${cat.key}">${shortLabel}</button>`;
+    });
+
+    // 2. Grid
+    gridContainer.innerHTML = "";
+    categories.forEach(cat => {
+      const gradientClass = window.imsaUtils.coverGradientClass(cat.key);
+      const iconMap = {
+        romans: "fa-feather-pointed",
+        histoire: "fa-landmark",
+        sciences: "fa-flask",
+        informatique: "fa-laptop-code",
+        droit: "fa-scale-balanced",
+        jeunesse: "fa-star",
+        arts: "fa-palette",
+        economie: "fa-chart-line",
+        "san-bms": "fa-dna",
+        "san-sso": "fa-users",
+        "san-ema": "fa-baby",
+        "san-sin": "fa-stethoscope",
+        "bav-s2a": "fa-seedling",
+        "bav-hse": "fa-shield-halved",
+        "bav-sha": "fa-fish",
+        "gin-pmi": "fa-gear",
+        "gin-gel": "fa-bolt",
+        "gif-rtl": "fa-network-wired",
+        "gif-glo": "fa-code"
+      };
+      const icon = iconMap[cat.key] || "fa-book";
+
+      gridContainer.innerHTML += `
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="category-card h-100 p-3" role="button" tabindex="0" data-category="${cat.key}" aria-label="Ouvrir ${cat.label}">
+            <div class="d-flex align-items-start gap-3">
+              <div class="category-icon ${gradientClass}">
+                <i class="fa-solid ${icon}"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h3 class="h5 mb-1">${cat.label}</h3>
+                <p class="text-muted mb-0 small">Explorez notre catalogue d'ouvrages spécialisés.</p>
               </div>
             </div>
-            <p class="book-summary clamp-3 mt-2 small">${summary}</p>
-            <div class="mt-auto">
-              <a href="${viewHref}" class="btn btn-blue-dark w-100 mt-2">Voir le catalogue</a>
-              <a href="${viewHref}" class="btn btn-orange-outline w-100 mt-2" data-action="borrow" data-book-id="${window.imsaUtils.escapeHtml(book.id)}">Emprunter</a>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="badge bg-orange-subtle text-orange border border-0">Catalogue</span>
+              <a href="#" class="btn btn-orange-outline btn-sm">Voir les livres →</a>
             </div>
           </div>
         </div>
-      </div>
-    `;
-  }
-
-  function renderBookCardForListing(book) {
-    const card = document.createElement("div");
-    card.className = "col-12 col-md-6 col-lg-3";
-    card.innerHTML = buildBookCardHTML(book);
-    return card;
+      `;
+    });
   }
 
   async function openPanel(categoryKey) {
@@ -92,26 +90,35 @@
     try {
       const response = await fetch(`http://localhost:5000/api/categories/${categoryKey}/books`);
       const result = await response.json();
-      const books = result.data || [];
+      let books = result.data || [];
+
+      // Mapper les propriétés du backend vers le format attendu par imsaUtils si nécessaire
+      books = books.map(b => ({
+        ...b,
+        categoryKey: categoryKey,
+        rating: b.average_rating || 0,
+        ratingCount: b.total_reviews || 0,
+        shortSummary: b.summary || ""
+      }));
 
       booksWrap.innerHTML = books
         .map(
           (b) => `
           <div class="col-12 col-md-6 col-lg-3">
-            ${buildBookCardHTML(b)}
+            ${window.imsaUtils.renderBookCardHTML(b, { showBorrowButton: true, showCategoryChip: false })}
           </div>
         `
         )
         .join("");
     } catch (err) {
       console.error("Erreur lors du chargement des livres:", err);
-      // Fallback data if API fails (optional but good for UX)
-      const books = window.booksData[categoryKey] || [];
+      // Fallback data if API fails
+      const books = window.imsaUtils.getBooksByCategory(categoryKey);
       booksWrap.innerHTML = books
         .map(
           (b) => `
           <div class="col-12 col-md-6 col-lg-3">
-            ${buildBookCardHTML(b)}
+            ${window.imsaUtils.renderBookCardHTML(b, { showBorrowButton: true, showCategoryChip: false })}
           </div>
         `
         )
@@ -192,16 +199,18 @@
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
+    // 0. Render everything
+    renderCategories();
+
     const closeBtn = document.getElementById("categoryPanelCloseBtn");
     if (closeBtn) closeBtn.addEventListener("click", closePanel);
 
-    // Panneau ouverture
+    // Dynamic listeners
     document.querySelectorAll("[data-category]").forEach((card) => {
       card.addEventListener("click", () => openPanel(card.getAttribute("data-category")));
       card.addEventListener("keydown", (ev) => {
         if (ev.key === "Enter" || ev.key === " ") openPanel(card.getAttribute("data-category"));
       });
-      // Bouton "Voir les livres" ne navigue pas.
       const btn = card.querySelector("a.btn");
       if (btn) {
         btn.addEventListener("click", (e) => {
@@ -211,7 +220,6 @@
       }
     });
 
-    // Pills
     document.querySelectorAll("[data-category-filter]").forEach((pill) => {
       pill.addEventListener("click", () => {
         setFilterPills(pill.getAttribute("data-category-filter"));
@@ -219,7 +227,6 @@
       });
     });
 
-    // Recherche temps réel
     const input = document.getElementById("categorySearchInput");
     if (input) input.addEventListener("input", applyCategoryCardFilters);
 

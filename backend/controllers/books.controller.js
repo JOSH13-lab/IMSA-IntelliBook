@@ -125,25 +125,22 @@ exports.getBookCover = async (req, res, next) => {
     }
 
     // 2. Chercher via ISBN13 en priorité
-    let coverUrl = null;
+    let coverData = null;
     if (book.isbn13) {
-      coverUrl = await coversService.getCoverByISBN(book.isbn13);
+      coverData = await coversService.getCoverByISBN(book.isbn13, book.title, book.author);
     }
 
     // 3. Sinon via ISBN
-    if (!coverUrl && book.isbn) {
-      coverUrl = await coversService.getCoverByISBN(book.isbn);
+    if (!coverData && book.isbn) {
+      coverData = await coversService.getCoverByISBN(book.isbn, book.title, book.author);
     }
 
     // 4. Sinon via titre + auteur
-    if (!coverUrl) {
-      coverUrl = await coversService.getCoverByTitle(book.title, book.author);
+    if (!coverData) {
+      coverData = await coversService.getCoverByTitle(book.title, book.author);
     }
 
-    // 5. URL directe Google Books (fallback garanti)
-    if (!coverUrl && (book.isbn13 || book.isbn)) {
-      coverUrl = coversService.getDirectCoverUrl(book.isbn13 || book.isbn);
-    }
+    let coverUrl = coverData?.url || null;
 
     // Sauvegarder en base pour éviter de refaire l'appel API
     if (coverUrl) {
@@ -153,8 +150,113 @@ exports.getBookCover = async (req, res, next) => {
     res.json({
       success: true,
       coverUrl: coverUrl || null,
+      source: coverData?.source || null,
       message: coverUrl ? 'Couverture trouvée' : 'Aucune couverture disponible'
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/books/batch/covers — Récupérer plusieurs couvertures en une requête
+// Endpoint optimisé pour charger les couvertures d'une liste de livres
+// Body: { books: [ { id, isbn, isbn13, title, author }, ... ] }
+exports.getBooksCoversBatch = async (req, res, next) => {
+  try {
+    const { bookIds } = req.body;
+
+    if (!bookIds || !Array.isArray(bookIds) || bookIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Veuillez fournir un tableau de book IDs: { bookIds: ["id1", "id2", ...] }'
+      });
+    }
+
+    // Limiter à 50 livres par requête
+    if (bookIds.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Maximum 50 livres par requête'
+      });
+    }
+
+    // Récupérer les livres depuis la BD
+    const placeholders = bookIds.map((_, i) => `$${i + 1}`).join(',');
+    const { rows: books } = await query(
+      `SELECT id, legacy_id, isbn, isbn13, title, author, cover_url FROM books 
+       WHERE id::text IN (${placeholders}) OR legacy_id IN (${placeholders})`,
+      [...bookIds, ...bookIds]
+    );
+
+    if (books.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Aucun livre trouvé'
+      });
+    }
+
+    // Préparer les requêtes pour le service de couvertures
+    const booksToFetch = books
+      .filter(b => !b.cover_url || !b.cover_url.startsWith('http'))
+      .map(b => ({
+        id: b.id,
+        isbn: b.isbn13 || b.isbn,
+        title: b.title,
+        author: b.author
+      }));
+
+    // Récupérer les couvertures en parallèle
+    let results = [];
+    if (booksToFetch.length > 0) {
+      results = await coversService.getCoversBatch(booksToFetch);
+    }
+
+    // Construire la réponse
+    const response = {
+      success: true,
+      total: books.length,
+      covers: []
+    };
+
+    for (const book of books) {
+      // Si on a déjà une URL en base
+      if (book.cover_url && book.cover_url.startsWith('http')) {
+        response.covers.push({
+          id: book.id,
+          legacy_id: book.legacy_id,
+          coverUrl: book.cover_url,
+          source: 'cached',
+          cached: true
+        });
+      } else {
+        // Sinon chercher dans les résultats du batch
+        const result = results.find(r => r.isbn === (book.isbn13 || book.isbn));
+        if (result?.result) {
+          const coverUrl = result.result.url;
+          // Sauvegarder en base pour les prochaines fois
+          await query('UPDATE books SET cover_url = $1 WHERE id::text = $2', [coverUrl, book.id]);
+
+          response.covers.push({
+            id: book.id,
+            legacy_id: book.legacy_id,
+            coverUrl: coverUrl,
+            source: result.result.source,
+            quality: result.result.quality,
+            cached: false
+          });
+        } else {
+          response.covers.push({
+            id: book.id,
+            legacy_id: book.legacy_id,
+            coverUrl: null,
+            source: null,
+            cached: false
+          });
+        }
+      }
+    }
+
+    res.json(response);
   } catch (err) {
     next(err);
   }

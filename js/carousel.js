@@ -169,9 +169,14 @@
     }
   }
 
-  function renderHomeCategoryCarousels() {
+  async function renderHomeCategoryCarousels() {
     const placeholders = document.querySelectorAll("[data-imsa-home-carousel-key]");
     if (!placeholders.length) return;
+
+    // S'assurer que les données sont chargées
+    if (window.imsaApi && (!window.booksData || Object.values(window.booksData).every(arr => arr.length === 0))) {
+      await window.imsaApi.fetchAllBooksByCategories();
+    }
 
     placeholders.forEach((root) => {
       const key = root.getAttribute("data-imsa-home-carousel-key");
@@ -191,7 +196,7 @@
         )
         .join("");
     });
-  } g
+  }
 
   function initCarouselsOnPage() {
     const nodes = document.querySelectorAll(".imsa-carousel[data-imsa-carousel='home']");
@@ -208,9 +213,11 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    if (window.booksData && window.imsaUtils) renderHomeCategoryCarousels();
-    initCarouselsOnPage();
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (window.imsaUtils) {
+      await renderHomeCategoryCarousels();
+      initCarouselsOnPage();
+    }
   });
 
   window.Carousel = Carousel;

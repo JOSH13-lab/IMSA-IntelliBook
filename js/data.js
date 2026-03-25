@@ -1,5 +1,6 @@
-/* IMSA IntelliBook - Données front (démo) */
-// Note: les livres ci-dessous sont volontairement "fictionnels mais plausibles" pour la maquette.
+/* IMSA IntelliBook - Données & API Bridge */
+
+// Configuration des catégories
 window.IMSA_CATEGORIES = {
   romans: { key: "romans", label: "Romans Africains", badgeClass: "badge-romans" },
   histoire: { key: "histoire", label: "Histoire & Patrimoine Gabonais", badgeClass: "badge-histoire" },
@@ -8,277 +9,90 @@ window.IMSA_CATEGORIES = {
   droit: { key: "droit", label: "Droit & Sciences Politiques", badgeClass: "badge-droit" },
   jeunesse: { key: "jeunesse", label: "Littérature Jeunesse Africaine", badgeClass: "badge-jeunesse" },
   arts: { key: "arts", label: "Arts, Musique & Culture", badgeClass: "badge-arts" },
-  economie: { key: "economie", label: "Économie & Développement", badgeClass: "badge-economie" }
+  economie: { key: "economie", label: "Économie & Développement", badgeClass: "badge-economie" },
+  // Nouvelles filières IMSA
+  "san-bms": { key: "san-bms", label: "SAN — Biologie Médicale", badgeClass: "badge-san-bms" },
+  "san-sso": { key: "san-sso", label: "SAN — Sciences Sociales", badgeClass: "badge-san-sso" },
+  "san-ema": { key: "san-ema", label: "SAN — Études de Maïeutique", badgeClass: "badge-san-ema" },
+  "san-sin": { key: "san-sin", label: "SAN — Soins Infirmiers", badgeClass: "badge-san-sin" },
+  "bav-s2a": { key: "bav-s2a", label: "BAV — Sciences Agronomiques", badgeClass: "badge-bav-s2a" },
+  "bav-hse": { key: "bav-hse", label: "BAV — Hygiène Sécurité", badgeClass: "badge-bav-hse" },
+  "bav-sha": { key: "bav-sha", label: "BAV — Sciences Halieutiques", badgeClass: "badge-bav-sha" },
+  "gin-pmi": { key: "gin-pmi", label: "GIN — Production & Maintenance", badgeClass: "badge-gin-pmi" },
+  "gin-gel": { key: "gin-gel", label: "GIN — Génie Électrique", badgeClass: "badge-gin-gel" },
+  "gif-rtl": { key: "gif-rtl", label: "GIF — Réseaux & Télécoms", badgeClass: "badge-gif-rtl" },
+  "gif-glo": { key: "gif-glo", label: "GIF — Génie Logiciel", badgeClass: "badge-gif-glo" }
 };
 
-const booksRaw = {
-  romans: [
-    { id: 'livre-001', title: 'Things Fall Apart', author: 'Chinua Achebe', year: 1958, rating: 4.8, ratingCount: 245, language: 'Anglais', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg', shortSummary: 'Le chef-d\'œuvre d\'Achebe sur le choc des cultures au Nigeria.', tags: ['Nigeria', 'Classique'] },
-    { id: 'livre-002', title: 'Purple Hibiscus', author: 'Chimamanda Ngozi Adichie', year: 2003, rating: 4.6, ratingCount: 180, language: 'Anglais', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9781616202415-L.jpg', shortSummary: 'L\'éveil émotionnel d\'une jeune fille dans un Nigeria en crise.', tags: ['Nigeria', 'Contemporain'] },
-    { id: 'livre-003', title: 'Half of a Yellow Sun', author: 'Chimamanda Ngozi Adichie', year: 2006, rating: 4.7, ratingCount: 210, language: 'Anglais', availableCount: 4, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9781400095209-L.jpg', shortSummary: 'Une fresque historique puissante sur la guerre du Biafra.', tags: ['Nigeria', 'Guerre', 'Histoire'] },
-    { id: 'livre-004', title: 'Americanah', author: 'Chimamanda Ngozi Adichie', year: 2013, rating: 4.5, ratingCount: 312, language: 'Anglais', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780307271082-L.jpg', shortSummary: 'Une histoire d\'amour et d\'immigration entre le Nigeria et les USA.', tags: ['Nigeria', 'Immigration'] },
-    { id: 'livre-005', title: 'Allah n\'est pas obligé', author: 'Ahmadou Kourouma', year: 2000, rating: 4.4, ratingCount: 156, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020417464-L.jpg', shortSummary: 'Le récit poignant d\'un enfant soldat en Afrique de l\'Ouest.', tags: ['Côte d\'Ivoire', 'Enfant soldat'] },
-    { id: 'livre-006', title: 'Les Soleils des indépendances', author: 'Ahmadou Kourouma', year: 1968, rating: 4.3, ratingCount: 120, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020023931-L.jpg', shortSummary: 'Une critique acerbe des régimes post-coloniaux.', tags: ['Afrique', 'Politique'] },
-    { id: 'livre-007', title: 'Verre Cassé', author: 'Alain Mabanckou', year: 2005, rating: 4.2, ratingCount: 98, language: 'Français', availableCount: 5, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020868761-L.jpg', shortSummary: 'Une chronique truculente d\'un bar de Brazzaville.', tags: ['Congo', 'Humour'] },
-    { id: 'livre-008', title: 'Mémoires de porc-épic', author: 'Alain Mabanckou', year: 2006, rating: 4.5, ratingCount: 145, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020888233-L.jpg', shortSummary: 'Le double maléfique d\'un homme raconte ses méfaits.', tags: ['Congo', 'Conte'] },
-    { id: 'livre-009', title: 'Black Bazar', author: 'Alain Mabanckou', year: 2009, rating: 4.1, ratingCount: 88, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782020894968-L.jpg', shortSummary: 'Une immersion dans le Paris africain.', tags: ['Paris', 'Afrique'] },
-    { id: 'livre-010', title: 'Loin de mon père', author: 'Véronique Tadjo', year: 2010, rating: 4.0, ratingCount: 73, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226205131-L.jpg', shortSummary: 'Le retour au pays après la mort du père.', tags: ['Côte d\'Ivoire', 'Famille'] },
-    { id: 'livre-011', title: 'L\'Ombre d\'Imana', author: 'Véronique Tadjo', year: 2000, rating: 4.4, ratingCount: 129, language: 'Français', availableCount: 2, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782742731114-L.jpg', shortSummary: 'Voyage au bout du Rwanda après le génocide.', tags: ['Rwanda', 'Mémoire'] },
-    { id: 'livre-012', title: 'C\'est le soleil qui m\'a brûlée', author: 'Calixthe Beyala', year: 1987, rating: 4.2, ratingCount: 67, language: 'Français', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782253053347-L.jpg', shortSummary: 'La quête de liberté d\'une femme dans un quartier pauvre.', tags: ['Cameroun', 'Femme'] },
-    { id: 'livre-013', title: 'Tu t\'appelleras Tanga', author: 'Calixthe Beyala', year: 1988, rating: 4.5, ratingCount: 112, language: 'Français', availableCount: 4, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782070411931-L.jpg', shortSummary: 'L\'amitié entre deux femmes dans une cellule.', tags: ['Cameroun', 'Amitié'] },
-    { id: 'livre-014', title: 'So Long a Letter', author: 'Mariama Bâ', year: 1979, rating: 4.8, ratingCount: 340, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780435905521-L.jpg', shortSummary: 'Une épître majeure sur la condition féminine au Sénégal.', tags: ['Sénégal', 'Femme', 'Classique'] },
-    { id: 'livre-015', title: 'Weep Not Child', author: 'Ngũgĩ wa Thiong\'o', year: 1964, rating: 4.3, ratingCount: 95, language: 'Anglais', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg', shortSummary: 'L\'impact de l\'insurrection Mau Mau sur une famille kenyane.', tags: ['Kenya', 'Histoire'] },
-    { id: 'livre-016', title: 'A Grain of Wheat', author: 'Ngũgĩ wa Thiong\'o', year: 1967, rating: 4.6, ratingCount: 120, language: 'Anglais', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780143039181-L.jpg', shortSummary: 'Les tensions à la veille de l\'indépendance du Kenya.', tags: ['Kenya', 'Indépendance'] },
-    { id: 'livre-017', title: 'Season of Migration to the North', author: 'Tayeb Salih', year: 1966, rating: 4.5, ratingCount: 150, language: 'Arabe', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9780894771552-L.jpg', shortSummary: 'Un pont complexe entre l\'Orient et l\'Occident.', tags: ['Soudan', 'Classique'] },
-    { id: 'livre-018', title: 'Petite Piment', author: 'Alain Mabanckou', year: 2015, rating: 4.2, ratingCount: 110, language: 'Français', availableCount: 3, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782070147410-L.jpg', shortSummary: 'L\'odyssée d\'un orphelin dans le Congo des années 70.', tags: ['Congo', 'Enfance'] },
-    { id: 'livre-019', title: 'Le Ventre de l\'Atlantique', author: 'Fatou Diome', year: 2003, rating: 4.4, ratingCount: 180, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782253109310-L.jpg', shortSummary: 'Le rêve d\'émigration par le football au Sénégal.', tags: ['Sénégal', 'Immigration'] },
-    { id: 'livre-020', title: 'Rebelle', author: 'Fatou Keïta', year: 1998, rating: 4.3, ratingCount: 90, language: 'Français', availableCount: 1, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782747011501-L.jpg', shortSummary: 'Le combat d\'une femme contre les traditions pesantes.', tags: ['Côte d\'Ivoire', 'Femme'] }
-  ],
+// Cet objet sera peuplé de manière asynchrone par l'API.
+window.booksData = {};
+Object.keys(window.IMSA_CATEGORIES).forEach(k => {
+  window.booksData[k] = [];
+});
 
-  histoire: [
-    { id: 'livre-031', title: 'Histoire générale de l\'Afrique Vol.1', author: 'UNESCO', year: 1980, rating: 4.7, ratingCount: 130, language: 'Français', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9789232017093-L.jpg', shortSummary: 'Le premier volume de la fresque monumentale de l\'UNESCO.', tags: ['Afrique', 'Histoire', 'Classique'] },
-    { id: 'livre-032', title: 'Afrique, histoire d\'un continent', author: 'John Reader', year: 1997, rating: 4.4, ratingCount: 88, language: 'Français', availableCount: 2, isNew: false, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226099167-L.jpg', shortSummary: 'Une synthèse brillante sur l\'histoire du continent.', tags: ['Afrique', 'Histoire'] },
-    { id: "livre-033", title: "Bwiti : initiation, éthique et modernité", author: "Joseph Tonda", year: 2013, rating: 4.6, ratingCount: 119, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-bwiti-initiation/300/400", shortSummary: "Le Bwiti est présenté comme une institution culturelle et morale. L’auteur discute les transformations contemporaines et la continuité des valeurs.", tags: ["Bwiti", "Culture", "Gabon"] },
-    { id: "livre-034", title: "Colonisation : fragments de 1900 à 1960", author: "Lucie Mba", year: 2010, rating: 4.2, ratingCount: 152, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-colonisation-fragments/300/400", shortSummary: "Une lecture historique des ruptures et des résistances. Les documents contextualisés révèlent l’impact sur les sociétés gabonaises.", tags: ["Colonisation", "Indépendance", "Gabon"] },
-    { id: "livre-035", title: "L’Indépendance expliquée aux jeunes", author: "Aline N’Dinga", year: 2018, rating: 4.5, ratingCount: 64, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-indep-explications/300/400", shortSummary: "Un ouvrage pédagogique pour comprendre la période-clé de 1960. On y trouve des repères simples, des cartes et des récits.", tags: ["1960", "Gabon", "Pédagogie"] },
-    { id: "livre-036", title: "Omar Bongo et la fabrique d’un État", author: "Etienne Nkoua", year: 2012, rating: 4.1, ratingCount: 97, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-bongo-fabrique/300/400", shortSummary: "Ce livre examine les politiques et les institutions au fil des décennies. Il propose une lecture nuancée des choix et de leurs effets.", tags: ["Bongo", "Institutions", "Gabon"] },
-    { id: "livre-037", title: "Parcours des familles à Libreville", author: "Christine Nkoghe", year: 2011, rating: 4.4, ratingCount: 72, language: "Français", availableCount: 5, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-libreville-familles/300/400", shortSummary: "Les quartiers se racontent à travers les mémoires familiales. L’ouvrage reconstitue l’évolution urbaine et sociale.", tags: ["Libreville", "Ville", "Histoire"] },
-    { id: "livre-038", title: "Port-Gentil : du port à la ville", author: "Bertrand Mouketou", year: 2015, rating: 4.6, ratingCount: 83, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-portgentil-portville/300/400", shortSummary: "Une histoire du développement maritime et économique. On suit les acteurs, les infrastructures et les transformations culturelles.", tags: ["Port-Gentil", "Économie", "Gabon"] },
-    { id: "livre-039", title: "Lambaréné : santé, parcours et légendes", author: "Jean-Pierre Owono", year: 2016, rating: 4.0, ratingCount: 55, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-lambarene-sante/300/400", shortSummary: "Ce récit historique mêle trajectoires sanitaires et récits populaires. Il montre comment la santé devient patrimoine.", tags: ["Lambaréné", "Santé", "Gabon"] },
-    { id: "livre-040", title: "Oyem : traditions, échanges et frontières", author: "Pauline Obiang", year: 2013, rating: 4.3, ratingCount: 69, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-oyem-traditions/300/400", shortSummary: "Une exploration des échanges et de la vie communautaire dans le nord. L’ouvrage relie géographie et histoire des pratiques.", tags: ["Oyem", "Nord", "Gabon"] },
-    { id: "livre-041", title: "Mouila : terroirs et récits d’avenir", author: "Roland Nguema", year: 2017, rating: 4.2, ratingCount: 60, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-mouila-terroirs/300/400", shortSummary: "Les terroirs se lisent comme des archives. Le livre documente les pratiques et les dynamiques locales.", tags: ["Mouila", "Terroirs", "Gabon"] },
-    { id: "livre-042", title: "L’orateur Fang : art de convaincre", author: "Sébastien N’Dinga", year: 2014, rating: 4.5, ratingCount: 74, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-orateur-fang/300/400", shortSummary: "Du rythme des discours à la structure des arguments, l’ouvrage décortique l’art oratoire. Il montre comment les mots organisent la cité.", tags: ["Fang", "Oralité", "Gabon"] },
-    { id: "livre-043", title: "Les routes de l’évangélisation", author: "Colette Moussavou", year: 2011, rating: 4.1, ratingCount: 91, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-routes-evangelisation/300/400", shortSummary: "Une histoire des contacts, des résistances et des adaptations. Le livre restitue les dynamiques entre missionnaires et populations.", tags: ["Christianisme", "Contacts", "Afrique"] },
-    { id: "livre-044", title: "Statues, masques et territoires", author: "Marie-Louise Ondo", year: 2018, rating: 4.6, ratingCount: 58, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-statues-masques/300/400", shortSummary: "L’art sculpté se déploie comme un langage territorial. L’ouvrage relie objets, cérémonies et identités collectives.", tags: ["Art", "Masques", "Patrimoine"] },
-    { id: "livre-045", title: "Indépendance : promesses et désillusions", author: "Nadège Ovono", year: 2012, rating: 4.3, ratingCount: 110, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-indep-promesses/300/400", shortSummary: "Le livre met en récit les attentes de 1960 et leurs trajectoires. Il examine les politiques publiques et leurs réalités.", tags: ["1960", "Politiques", "Gabon"] },
-    { id: "livre-046", title: "Les archives de la ville : méthodes", author: "Étienne Nkoua", year: 2015, rating: 4.0, ratingCount: 49, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-archives-ville-methodes/300/400", shortSummary: "Un guide pour comprendre comment constituer et lire des archives urbaines. L’ouvrage propose des démarches concrètes et accessibles.", tags: ["Archives", "Méthode", "Histoire"] },
-    { id: "livre-047", title: "Patrimoine & éducation : transmettre au quotidien", author: "Lucie Mba", year: 2019, rating: 4.2, ratingCount: 65, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-patrimoine-education/300/400", shortSummary: "Comment parler du patrimoine aux jeunes générations ? Le livre propose des activités et des repères pour l’école et la communauté.", tags: ["Éducation", "Patrimoine", "Gabon"] },
-    { id: "livre-048", title: "Mythes de l’estuaire : récits et savoirs", author: "Aminata Koumba", year: 2010, rating: 4.4, ratingCount: 79, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-estuaire-mythes/300/400", shortSummary: "Les récits de l’estuaire portent des savoirs cachés. Ce livre analyse les mythes et leur rôle dans la transmission.", tags: ["Estuaire", "Mythes", "Gabon"] },
-    { id: "livre-049", title: "Les rites du Bwiti expliqués", author: "Joseph Tonda", year: 2011, rating: 4.6, ratingCount: 141, language: "Français", availableCount: 5, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-bwiti-expliques/300/400", shortSummary: "Une explication claire et respectueuse des pratiques du Bwiti. Le livre explore symboles, temporalités et significations.", tags: ["Bwiti", "Rites", "Patrimoine"] },
-    { id: "livre-050", title: "La mémoire des forêts sacrées", author: "Sylvie Nkoghe", year: 2016, rating: 4.3, ratingCount: 73, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-forets-sacrees/300/400", shortSummary: "Les forêts sacrées structurent l’équilibre entre humains et monde invisible. L’ouvrage montre comment les pratiques protègent la vie.", tags: ["Forêts sacrées", "Gabon", "Histoire"] },
-    { id: "livre-051", title: "Fang & modernité : continuités", author: "Bertrand Mouketou", year: 2017, rating: 4.2, ratingCount: 62, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-fang-modernite/300/400", shortSummary: "Le livre observe les continuités culturelles dans un monde en mutation. Il discute les formes de modernité sans effacement total.", tags: ["Fang", "Modernité", "Gabon"] },
-    { id: "livre-052", title: "Colonisation : enjeux économiques", author: "Patricia Leyama", year: 2013, rating: 4.1, ratingCount: 88, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-colonisation-economie/300/400", shortSummary: "Une analyse des ressources et des infrastructures mises en place à l’époque coloniale. Le livre relie économie, pouvoir et territoires.", tags: ["Économie", "Colonisation", "Gabon"] },
-    { id: "livre-053", title: "Les institutions régionales expliquées", author: "Nicolas Metegue N'Nah", year: 2015, rating: 4.0, ratingCount: 54, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-institutions-regionales/300/400", shortSummary: "Un panorama lisible des institutions et des accords qui structurent l’Afrique centrale. L’ouvrage aide à comprendre les enjeux contemporains.", tags: ["Régional", "Institutions", "Afrique"] },
-    { id: "livre-054", title: "Indépendance : archives et témoignages", author: "Doris Idiata", year: 2012, rating: 4.5, ratingCount: 121, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-indep-archives-temoignages/300/400", shortSummary: "Le livre croise récits et archives pour retracer les dynamiques de 1955 à 1965. Il met en valeur des témoignages trop souvent oubliés.", tags: ["Témoignages", "Archives", "Gabon"] },
-    { id: "livre-055", title: "Les chants de la paix", author: "Christelle Ondo", year: 2019, rating: 4.4, ratingCount: 49, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-chants-paix/300/400", shortSummary: "Un recueil commenté de chants et de significations sociales. Le livre montre comment la paix s’apprend par la musique.", tags: ["Chants", "Culture", "Gabon"] },
-    { id: "livre-056", title: "Lambaréné : hôpital et mémoire", author: "Jean-Pierre Owono", year: 2012, rating: 4.2, ratingCount: 77, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-hopital-memoire/300/400", shortSummary: "L’histoire de l’hôpital se confond avec celle des familles et des soignants. Ce livre rend visible une mémoire de soin.", tags: ["Santé", "Mémoire", "Lambaréné"] },
-    { id: "livre-057", title: "Oyem : la place du dialogue", author: "Aline N’Dinga", year: 2014, rating: 4.1, ratingCount: 63, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-oyem-dialogue/300/400", shortSummary: "À travers des récits et des pratiques locales, l’ouvrage décrit l’art du dialogue. Il montre comment les conflits se résolvent socialement.", tags: ["Dialogue", "Oyem", "Gabon"] },
-    { id: "livre-058", title: "Mouila : artisanat et identités", author: "Roland Nguema", year: 2016, rating: 4.6, ratingCount: 80, language: "Français", availableCount: 4, isNew: true, coverUrl: "https://picsum.photos/seed/histoire-mouila-artisanat/300/400", shortSummary: "Le travail manuel est présenté comme une école de la culture. Le livre documente les techniques et l’identité des artisans.", tags: ["Artisanat", "Mouila", "Patrimoine"] },
-    { id: "livre-059", title: "Les symboles Fang au quotidien", author: "Sébastien N’Dinga", year: 2018, rating: 4.3, ratingCount: 55, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-symboles-fang/300/400", shortSummary: "Un inventaire commenté des symboles et de leur usage social. L’ouvrage aide à lire les gestes et objets du quotidien.", tags: ["Symboles", "Fang", "Gabon"] },
-    { id: "livre-060", title: "Archives orales : enquêter en Afrique", author: "Marie-Louise Ondo", year: 2015, rating: 4.0, ratingCount: 58, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/histoire-archives-orales/300/400", shortSummary: "Méthode et déontologie pour construire des archives orales. Le livre fournit des outils pour écouter, enregistrer et restituer.", tags: ["Méthode", "Oralité", "Afrique"] }
-  ],
+// Interface API IMSA
+window.imsaApi = {
+  API_BASE: 'http://localhost:5000/api',
 
-  sciences: [
-    { id: 'livre-061', title: 'Sapiens', author: 'Yuval Noah Harari', year: 2011, rating: 4.8, ratingCount: 2100, language: 'Français', availableCount: 3, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782226257017-L.jpg', shortSummary: 'Une brève histoire de l\'humanité.', tags: ['Sciences', 'Histoire', 'Best-seller'] },
-    { id: "livre-062", title: "Mathématiques pour comprendre l’Afrique", author: "Aimé Ouedraogo", year: 2018, rating: 4.4, ratingCount: 76, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-maths-afrique/300/400", shortSummary: "Des problèmes concrets relient les mathématiques aux réalités africaines. Les solutions montrent comment modéliser et décider.", tags: ["Mathématiques", "Afrique", "Formation"] },
-    { id: "livre-063", title: "Laboratoires et terrain : guide de recherche", author: "Christine Nkoghe", year: 2015, rating: 4.3, ratingCount: 92, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-labo-terrain/300/400", shortSummary: "Un guide pour mener une recherche utile et rigoureuse. L’ouvrage explique les étapes, de l’hypothèse à l’analyse.", tags: ["Recherche", "Méthode", "Sciences"] },
-    { id: "livre-064", title: "Épidémies : prévenir avec science", author: "Joseph Tonda", year: 2012, rating: 4.5, ratingCount: 118, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-epidemies-prevenir/300/400", shortSummary: "Comprendre les dynamiques des maladies pour agir plus vite. Le livre propose des stratégies de prévention adaptées aux contextes locaux.", tags: ["Épidémies", "Santé", "Afrique"] },
-    { id: "livre-065", title: "Astronomie africaine : cartes du ciel", author: "Koffi Mensah", year: 2017, rating: 4.2, ratingCount: 68, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-astronomie/300/400", shortSummary: "L’ouvrage relie observations, culture et apprentissage. Il donne des repères pour apprendre le ciel depuis l’Afrique.", tags: ["Astronomie", "Culture", "Afrique"] },
-    { id: "livre-066", title: "Biologie des plantes utiles au quotidien", author: "Doris Idiata", year: 2013, rating: 4.6, ratingCount: 59, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-plantes-utiles/300/400", shortSummary: "Une plongée dans les plantes et leurs usages. Le livre explique les bases biologiques et les applications responsables.", tags: ["Biologie", "Plantes", "Gabon"] },
-    { id: "livre-067", title: "Chimie verte : produire sans détruire", author: "Aminata Koumba", year: 2019, rating: 4.7, ratingCount: 83, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-chimie-verte/300/400", shortSummary: "La chimie verte réduit les impacts et améliore l’efficacité. Le livre montre comment concevoir des procédés plus propres.", tags: ["Chimie", "Environnement", "Afrique"] },
-    { id: "livre-068", title: "Géologie des bassins africains", author: "Blaise Nguema", year: 2011, rating: 4.1, ratingCount: 77, language: "Français", availableCount: 0, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-geologie-bassins/300/400", shortSummary: "Explorer la Terre pour comprendre ses ressources et ses risques. L’ouvrage propose une lecture accessible des bassins africains.", tags: ["Géologie", "Ressources", "Afrique"] },
-    { id: "livre-069", title: "Le cerveau et la réussite scolaire", author: "Nadine Moukeng", year: 2014, rating: 4.4, ratingCount: 95, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-cerveau-reussite/300/400", shortSummary: "Le livre relie neurosciences et apprentissages. Des conseils fondés sur la science aident à mieux étudier et mémoriser.", tags: ["Neurosciences", "Éducation", "Afrique"] },
-    { id: "livre-070", title: "Statistiques : lire les données africaines", author: "Mireille N’tchama", year: 2018, rating: 4.0, ratingCount: 61, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-statistiques-donnees/300/400", shortSummary: "Comprendre les chiffres pour éviter les erreurs de lecture. Le livre enseigne comment interpréter des données en contexte.", tags: ["Statistiques", "Données", "Méthode"] },
-    { id: "livre-071", title: "Microbiologie des eaux : enjeux de santé", author: "Sylvie Nkoghe", year: 2016, rating: 4.5, ratingCount: 84, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-microbiologie-eaux/300/400", shortSummary: "Les eaux du quotidien portent des risques invisibles. Ce livre explique les analyses microbiologiques et la prévention.", tags: ["Eau", "Santé", "Afrique"] },
-    { id: "livre-072", title: "Méthodes d’imagerie en santé", author: "Laure-Ines Obiang", year: 2017, rating: 4.3, ratingCount: 57, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-imagerie-sante/300/400", shortSummary: "Un tour d’horizon des techniques d’imagerie accessibles aux étudiants. Le livre relie principes physiques et applications médicales.", tags: ["Imagerie", "Santé", "Formation"] },
-    { id: "livre-073", title: "Climat : comprendre pour agir au Gabon", author: "Roland Nguema", year: 2019, rating: 4.6, ratingCount: 73, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-climat-gabon/300/400", shortSummary: "Le climat local influence l’agriculture et la santé. L’ouvrage explique les mécanismes et propose des pistes d’adaptation.", tags: ["Climat", "Gabon", "Environnement"] },
-    { id: "livre-074", title: "Recherche en santé : protocole et rigueur", author: "Pierre-André Nzamba", year: 2015, rating: 4.2, ratingCount: 88, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-recherche-sante/300/400", shortSummary: "De la question de recherche aux résultats, le protocole guide tout. Le livre aide à structurer une étude solide et éthique.", tags: ["Protocole", "Santé", "Recherche"] },
-    { id: "livre-075", title: "Incertitude et décision : le bon usage des modèles", author: "Koffi Mensah", year: 2012, rating: 4.1, ratingCount: 64, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-incertitude-modeles/300/400", shortSummary: "Les modèles éclairent mais ne remplacent pas le jugement. L’ouvrage apprend à évaluer les incertitudes et à décider.", tags: ["Modèles", "Décision", "Sciences"] },
-    { id: "livre-076", title: "Sciences de la terre : risques et résilience", author: "Blaise Nguema", year: 2014, rating: 4.4, ratingCount: 70, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-terre-risques/300/400", shortSummary: "Comprendre les risques naturels pour mieux se préparer. Le livre relie observation, prévention et résilience communautaire.", tags: ["Risques", "Résilience", "Afrique"] },
-    { id: "livre-077", title: "Nutrition et bien-être en Afrique centrale", author: "Awa N’Guessan", year: 2018, rating: 4.7, ratingCount: 91, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-nutrition-bienetre/300/400", shortSummary: "Le livre aborde la nutrition comme base du développement. Il propose des repères pratiques pour améliorer la qualité de vie.", tags: ["Nutrition", "Bien-être", "Gabon"] },
-    { id: "livre-078", title: "Les enjeux de la recherche ouverte", author: "Aimé Ouedraogo", year: 2020, rating: 4.2, ratingCount: 45, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-recherche-ouverte/300/400", shortSummary: "Partager les résultats augmente l’impact et la transparence. L’ouvrage explique les principes de la recherche ouverte et les risques.", tags: ["Open science", "Transparence", "Recherche"] },
-    { id: "livre-079", title: "Une introduction à la biostatistique", author: "Nadine Moukeng", year: 2013, rating: 4.0, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-biostatistique/300/400", shortSummary: "Construire des analyses rigoureuses pour la santé et l’environnement. Le livre présente les méthodes essentielles avec des exemples africains.", tags: ["Biostatistique", "Santé", "Méthode"] },
-    { id: "livre-080", title: "Ingénierie biologique : vers des solutions locales", author: "Aminata Koumba", year: 2017, rating: 4.5, ratingCount: 66, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-ingenierie-bio/300/400", shortSummary: "L’ouvrage explore des approches de biotechnologie adaptées aux besoins. Il insiste sur l’évaluation, la durabilité et l’appropriation.", tags: ["Biotechnologies", "Solutions locales", "Afrique"] },
-    { id: "livre-081", title: "Méthodes de laboratoire : sécurité et qualité", author: "Christine Nkoghe", year: 2019, rating: 4.3, ratingCount: 53, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-securite-labo/300/400", shortSummary: "La sécurité protège les personnes et la qualité des résultats. Le livre formalise des pratiques simples et vérifiables.", tags: ["Laboratoire", "Sécurité", "Qualité"] },
-    { id: "livre-082", title: "Quand l’algorithme aide le diagnostic", author: "Sylvie Nkoghe", year: 2021, rating: 4.6, ratingCount: 39, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-algorithme-diagnostic/300/400", shortSummary: "L’intelligence artificielle en santé doit être fiable et responsable. Le livre présente des principes et des cas d’usage prudents.", tags: ["IA santé", "Diagnostic", "Recherche"] },
-    { id: "livre-083", title: "Éducation scientifique : donner le goût", author: "Laure-Ines Obiang", year: 2015, rating: 4.2, ratingCount: 82, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-education-gout/300/400", shortSummary: "Le livre propose des approches pédagogiques pour stimuler la curiosité. Les activités sont pensées pour des classes aux ressources variées.", tags: ["Pédagogie", "Science", "Éducation"] },
-    { id: "livre-084", title: "Chimie des sols : comprendre la fertilité", author: "Blaise Nguema", year: 2012, rating: 4.4, ratingCount: 65, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-chimie-sols/300/400", shortSummary: "Les sols conditionnent les cultures et la sécurité alimentaire. L’ouvrage explique les paramètres clés et les tests simples.", tags: ["Sols", "Agriculture", "Afrique"] },
-    { id: "livre-085", title: "Physique de l’énergie : éclairer l’avenir", author: "Roland Nguema", year: 2016, rating: 4.1, ratingCount: 72, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-physique-energie/300/400", shortSummary: "Comprendre l’énergie pour mieux planifier les besoins futurs. Le livre relie principes et applications dans les services essentiels.", tags: ["Énergie", "Physique", "Développement"] },
-    { id: "livre-086", title: "Écologie urbaine : santé des villes africaines", author: "Awa N’Guessan", year: 2018, rating: 4.5, ratingCount: 84, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-ecologie-urbaine/300/400", shortSummary: "Air, bruit et espaces verts influencent le bien-être. L’ouvrage explique des indicateurs et propose des actions réalisables.", tags: ["Ville", "Écologie", "Santé"] },
-    { id: "livre-087", title: "Chasse aux biais : améliorer les études", author: "Aimé Ouedraogo", year: 2020, rating: 4.0, ratingCount: 41, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-biais-etudes/300/400", shortSummary: "Les biais peuvent fausser les conclusions. Le livre montre comment les détecter, les réduire et les déclarer.", tags: ["Biais", "Méthode", "Recherche"] },
-    { id: "livre-088", title: "Botanique utile : repérer les plantes", author: "Doris Idiata", year: 2011, rating: 4.6, ratingCount: 59, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-botanique-utile/300/400", shortSummary: "Un guide illustré pour reconnaître les plantes courantes. L’ouvrage relie description, usages et précautions.", tags: ["Botanique", "Plantes", "Afrique"] },
-    { id: "livre-089", title: "Systèmes complexes : penser l’interdépendance", author: "Koffi Mensah", year: 2019, rating: 4.3, ratingCount: 50, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/sciences-systemes-complexes/300/400", shortSummary: "Les problèmes modernes sont rarement simples. Le livre explique les principes des systèmes complexes avec des exemples concrets.", tags: ["Complexité", "Modélisation", "Afrique"] },
-    { id: "livre-090", title: "Le manuel du chercheur éthique", author: "Joseph Tonda", year: 2014, rating: 4.7, ratingCount: 86, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/sciences-ethique-chercheur/300/400", shortSummary: "Le livre présente les principes d’éthique de la recherche. Il propose aussi des checklists pour sécuriser les projets.", tags: ["Ethique", "Recherche", "Sciences"] }
-  ],
+  async fetchBooksByCategory(categoryKey) {
+    try {
+      const res = await fetch(`${this.API_BASE}/categories/${categoryKey}/books`);
+      const result = await res.json();
+      return result.data || [];
+    } catch (err) {
+      console.error(`Erreur chargement catégorie ${categoryKey}:`, err);
+      return [];
+    }
+  },
 
-  informatique: [
-    { id: "livre-091", title: "Silicon Savannah : startups et impacts", author: "Aimable Gahunde", year: 2021, rating: 4.6, ratingCount: 133, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/tech-silicon-savannah/300/400", shortSummary: "Le livre explore l’écosystème numérique africain et ses effets sur la société. Il détaille les défis, les modèles économiques et les bonnes pratiques.", tags: ["Startups", "Afrique", "Technologies"] },
-    { id: "livre-092", title: "Mobile Banking : confiance et adoption", author: "Marie-Louise Ondo", year: 2020, rating: 4.4, ratingCount: 95, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-mobile-banking/300/400", shortSummary: "Comment convaincre les utilisateurs ? Le livre analyse les mécanismes de confiance, l’UX et la sécurité des transactions.", tags: ["Paiement mobile", "Sécurité", "Afrique"] },
-    { id: "livre-093", title: "IA responsable pour les services publics", author: "Awa N’Guessan", year: 2022, rating: 4.7, ratingCount: 58, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/tech-ia-responsable/300/400", shortSummary: "L’intelligence artificielle doit rester au service des citoyens. L’ouvrage propose des principes de transparence, d’équité et de contrôle.", tags: ["IA", "Services publics", "Éthique"] },
-    { id: "livre-094", title: "Réseaux et cybersécurité : fondamentaux", author: "Blaise Nguema", year: 2019, rating: 4.3, ratingCount: 121, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/tech-reseaux-cybersecurite/300/400", shortSummary: "Comprendre les réseaux pour mieux protéger les systèmes. Le livre présente des bases concrètes et des scénarios réalistes.", tags: ["Réseaux", "Sécurité", "Informatique"] },
-    { id: "livre-095", title: "Data pour décider : du tableau de bord au terrain", author: "Sylvie Nkoghe", year: 2021, rating: 4.5, ratingCount: 66, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-data-decider/300/400", shortSummary: "Transformer les données en décisions utiles nécessite une méthode. Le livre guide la création de tableaux de bord et de KPI.", tags: ["Data", "Décision", "Développement"] },
-    { id: "livre-096", title: "Cloud léger : déployer même sans gros moyens", author: "Koffi Mensah", year: 2020, rating: 4.2, ratingCount: 79, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/tech-cloud-leger/300/400", shortSummary: "L’ouvrage montre comment déployer des applications de façon pragmatique. Il insiste sur l’automatisation et l’observabilité.", tags: ["Cloud", "Déploiement", "Pragmatisme"] },
-    { id: "livre-097", title: "Développer en équipes : agilité et discipline", author: "Pierre-André Nzamba", year: 2018, rating: 4.1, ratingCount: 57, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-developper-equipes/300/400", shortSummary: "Un guide pour mieux collaborer : cadrage, rituels, qualité et livraison. Le livre traite aussi la gestion du changement en production.", tags: ["Agilité", "Équipe", "Qualité"] },
-    { id: "livre-098", title: "Interfaces inclusives : UX pour tous", author: "Nadine Moukeng", year: 2022, rating: 4.6, ratingCount: 42, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/tech-ux-inclusives/300/400", shortSummary: "L’accessibilité améliore l’adoption et la dignité des utilisateurs. Le livre propose des principes UI/UX concrets et testables.", tags: ["UX", "Accessibilité", "Produit"] },
-    { id: "livre-099", title: "Blockchain : mythes, réalités et cas d’usage", author: "Rodrigue Bouanga", year: 2021, rating: 4.0, ratingCount: 88, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/tech-blockchain/300/400", shortSummary: "Comprendre la technologie sans hype. Le livre détaille les cas d’usage pertinents, les limites et la sécurité.", tags: ["Blockchain", "Cas d’usage", "Afrique"] },
-    { id: "livre-100", title: "Rendre les données ouvertes : principes", author: "Laure-Ines Obiang", year: 2019, rating: 4.4, ratingCount: 51, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-donnees-ouvertes/300/400", shortSummary: "Le livre explique comment produire des jeux de données réutilisables. Il couvre documentation, licences et qualité.", tags: ["Données ouvertes", "Gouvernance", "Transparence"] },
-    { id: "livre-101", title: "Développeurs et réseaux : TCP/IP expliqué", author: "Aimable Gahunde", year: 2017, rating: 4.2, ratingCount: 73, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/tech-tcpip-explique/300/400", shortSummary: "Un cours accessible sur TCP/IP et le fonctionnement réel des réseaux. Le livre relie théorie et débogage.", tags: ["TCP/IP", "Réseaux", "Fondamentaux"] },
-    { id: "livre-102", title: "Mobile-first : performance et images", author: "N’Goma Patrice", year: 2020, rating: 4.6, ratingCount: 65, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/tech-mobile-first/300/400", shortSummary: "Optimiser une interface pour les connexions variables. L’ouvrage traite des images, du caching et des métriques.", tags: ["Performance", "Web", "Mobile"] },
-    { id: "livre-103", title: "Sécurité applicative : prévenir plutôt que réparer", author: "Blaise Nguema", year: 2022, rating: 4.5, ratingCount: 44, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/tech-securite-app/300/400", shortSummary: "Le livre présente des patterns pour réduire les vulnérabilités. Il s’appuie sur des exemples réalistes et des bonnes pratiques.", tags: ["Sécurité", "Application", "DevSecOps"] },
-    { id: "livre-104", title: "Automatisation : scripts utiles au quotidien", author: "Christine Nkoghe", year: 2018, rating: 4.1, ratingCount: 88, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/tech-automation-scripts/300/400", shortSummary: "Automatiser économise du temps et réduit les erreurs. Le livre propose des scripts et des workflows réutilisables.", tags: ["Automatisation", "Productivité", "Scripts"] },
-    { id: "livre-105", title: "IA pour l’agriculture : analyser les champs", author: "Aminata Koumba", year: 2019, rating: 4.4, ratingCount: 62, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-ia-agriculture/300/400", shortSummary: "Des images et des mesures pour aider les agriculteurs à décider. Le livre explique les étapes de pipeline et les limites.", tags: ["Agriculture", "IA", "Afrique"] },
-    { id: "livre-106", title: "Principe de l’API : concevoir pour durer", author: "Pierre-André Nzamba", year: 2021, rating: 4.6, ratingCount: 57, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/tech-api-concevoir/300/400", shortSummary: "Une API claire facilite l’intégration et réduit les coûts. L’ouvrage guide la conception : versioning, contrats et erreurs.", tags: ["API", "Design", "Qualité"] },
-    { id: "livre-107", title: "UX des services de santé : cas africains", author: "Laure-Ines Obiang", year: 2020, rating: 4.2, ratingCount: 71, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/tech-ux-sante/300/400", shortSummary: "Concevoir des interfaces qui respectent le temps des patients. Le livre met en avant la simplicité et la clarté.", tags: ["Santé", "UX", "Produit"] },
-    { id: "livre-108", title: "Déboguer efficacement : du signal au code", author: "Rodrigue Bouanga", year: 2018, rating: 4.3, ratingCount: 98, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-deboguer/300/400", shortSummary: "Le livre apprend à analyser les symptômes et à reproduire les bugs. On y trouve aussi des méthodes pour écrire des tests.", tags: ["Débogage", "Tests", "Qualité"] },
-    { id: "livre-109", title: "Écrire des tests pour sécuriser le futur", author: "Nana Ekow Daniels", year: 2019, rating: 4.5, ratingCount: 53, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/tech-tests/300/400", shortSummary: "Les tests protègent les équipes contre les régressions. Le livre guide l’écriture de tests pertinents et le maintien.", tags: ["Tests", "Qualité", "Équipe"] },
-    { id: "livre-110", title: "Réseaux sociaux & contenu : modérer avec responsabilité", author: "Sylvie Nkoghe", year: 2022, rating: 4.0, ratingCount: 47, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/tech-moderation/300/400", shortSummary: "Le livre explore les principes de modération et de lutte contre les abus. Il insiste sur la transparence et les processus d’appel.", tags: ["Modération", "Sécurité", "Responsabilité"] },
-    { id: "livre-111", title: "Le guide du développeur web : accessibilité", author: "Nadine Moukeng", year: 2017, rating: 4.6, ratingCount: 80, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/tech-accessibilite/300/400", shortSummary: "Rendre le web utilisable par tous est essentiel. Le livre propose des checklists et des techniques simples.", tags: ["Accessibilité", "Web", "UI"] },
-    { id: "livre-112", title: "La cybersécurité expliquée en histoires", author: "Blaise Nguema", year: 2021, rating: 4.1, ratingCount: 61, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/tech-cyber-histoires/300/400", shortSummary: "Des scénarios narratifs pour apprendre la sécurité. Le livre relie habitudes quotidiennes et risques réels.", tags: ["Cybersécurité", "Sensibilisation", "Sécurité"] },
-    { id: "livre-113", title: "Data engineering : nettoyer, structurer, servir", author: "Aimable Gahunde", year: 2019, rating: 4.4, ratingCount: 58, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/tech-data-engineering/300/400", shortSummary: "Transformer des données brutes en informations utiles. L’ouvrage explique les étapes ETL et l’observabilité.", tags: ["Data", "Engineering", "Qualité"] },
-    { id: "livre-114", title: "Atelier de conception d’applications", author: "Koffi Mensah", year: 2018, rating: 4.2, ratingCount: 95, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/tech-atelier-conception/300/400", shortSummary: "De l’idée au prototype : méthodes et décisions clés. Le livre insiste sur l’itération et la validation par les utilisateurs.", tags: ["Conception", "Prototype", "Produit"] },
-    { id: "livre-115", title: "Interopérabilité : faire parler les systèmes", author: "Pierre-André Nzamba", year: 2020, rating: 4.5, ratingCount: 52, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-interoperabilite/300/400", shortSummary: "L’interopérabilité réduit les silos et améliore les services. L’ouvrage détaille standards, contrats et intégrations.", tags: ["Interopérabilité", "Standards", "Systèmes"] },
-    { id: "livre-116", title: "Électronique & objets connectés : le terrain", author: "Laure-Ines Obiang", year: 2019, rating: 4.3, ratingCount: 47, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/tech-iot-terrain/300/400", shortSummary: "Le monde IoT devient utile lorsqu’on comprend le terrain. Le livre traite capteurs, contraintes, et conception durable.", tags: ["IoT", "Terrain", "Technologies"] },
-    { id: "livre-117", title: "Sélectionner un framework sans perdre de temps", author: "Rodrigue Bouanga", year: 2017, rating: 4.0, ratingCount: 63, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-framework-selection/300/400", shortSummary: "Choisir un framework demande des critères clairs. Le livre propose une méthode de décision et un plan d’adoption.", tags: ["Frameworks", "Décision", "Dev"] },
-    { id: "livre-118", title: "Le monde des données : cataloguer pour réussir", author: "Christine Nkoghe", year: 2022, rating: 4.6, ratingCount: 41, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/tech-cataloguer-donnees/300/400", shortSummary: "Sans catalogue, les équipes perdent du temps et de la confiance. L’ouvrage propose une gouvernance des données accessible.", tags: ["Gouvernance", "Données", "Organisation"] },
-    { id: "livre-119", title: "Sécurité mobile : protéger les comptes", author: "Nadine Moukeng", year: 2021, rating: 4.2, ratingCount: 60, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/tech-securite-mobile/300/400", shortSummary: "Les attaques mobiles exploitent les usages quotidiens. Le livre donne des conseils concrets et des stratégies de réduction.", tags: ["Mobile", "Sécurité", "Comptes"] },
-    { id: "livre-120", title: "Architecture front : composants et performance", author: "Koffi Mensah", year: 2020, rating: 4.4, ratingCount: 72, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/tech-architecture-front/300/400", shortSummary: "Créer des interfaces rapides et maintenables est un art. L’ouvrage propose une architecture front pour les projets modernes.", tags: ["Front-end", "Performance", "Composants"] }
-  ],
+  async fetchBookById(bookId) {
+    try {
+      const res = await fetch(`${this.API_BASE}/books/${bookId}`);
+      const result = await res.json();
+      const b = result.data;
+      if (!b) return null;
+      // Normalisation minimaliste
+      return {
+        ...b,
+        categoryKey: b.category_slug || b.categoryKey,
+        rating: b.average_rating || 0,
+        ratingCount: b.total_reviews || 0,
+        shortSummary: b.summary || "",
+        coverUrl: b.cover_url || b.coverUrl || `https://books.google.com/books/content?q=intitle:${encodeURIComponent(b.title)}+inauthor:${encodeURIComponent(b.author || '')}&printsec=frontcover&img=1&zoom=1&source=gbs_api`
+      };
+    } catch (err) {
+      console.error(`Erreur chargement livre ${bookId}:`, err);
+      return null;
+    }
+  },
 
-  droit: [
-    { id: "livre-129", title: "Droit gabonais : repères essentiels", author: "Nicolas Metegue N'Nah", year: 2016, rating: 4.5, ratingCount: 112, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/droit-gabonais-reperes/300/400", shortSummary: "Un panorama lisible des notions juridiques fondamentales. Le livre aide à comprendre les principes et leur application.", tags: ["Gabon", "Droit", "Institutions"] },
-    { id: "livre-130", title: "Constitutions africaines : comparaisons", author: "Joseph Tonda", year: 2014, rating: 4.2, ratingCount: 86, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-conv-compare/300/400", shortSummary: "Comparer les textes constitutionnels éclaire les trajectoires politiques. L’ouvrage propose une lecture méthodique des différences.", tags: ["Constitution", "Afrique", "Politique"] },
-    { id: "livre-131", title: "OHADA : comprendre pour agir", author: "Aimé Ouedraogo", year: 2018, rating: 4.6, ratingCount: 61, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/droit-ohada/300/400", shortSummary: "Le livre explique les règles OHADA avec des cas d’entreprise. Il vise une compréhension pratique pour les professionnels.", tags: ["OHADA", "Commerce", "Droit"] },
-    { id: "livre-132", title: "CEMAC : institutions et politiques", author: "Rodrigue Bouanga", year: 2017, rating: 4.3, ratingCount: 54, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-cemac/300/400", shortSummary: "Un guide des institutions de la CEMAC et des politiques régionales. Le livre montre comment les décisions influencent les États.", tags: ["CEMAC", "Régional", "Institutions"] },
-    { id: "livre-133", title: "État de droit : principes et limites", author: "Sylvie Nkoghe", year: 2019, rating: 4.4, ratingCount: 79, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-etat-droit/300/400", shortSummary: "Qu’est-ce qui rend l’état de droit effectif ? L’ouvrage discute les institutions, la justice et l’accès.", tags: ["État de droit", "Justice", "Gouvernance"] },
-    { id: "livre-134", title: "Libertés publiques : comprendre les droits", author: "Laure-Ines Obiang", year: 2015, rating: 4.2, ratingCount: 92, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/droit-libertes-publiques/300/400", shortSummary: "Un livre pour comprendre la portée des libertés publiques. Il combine notions et exemples concrets.", tags: ["Libertés", "Droits", "Gabon"] },
-    { id: "livre-135", title: "Droit du travail en Afrique centrale", author: "Patricia Leyama", year: 2016, rating: 4.1, ratingCount: 88, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-travail-afrique-centrale/300/400", shortSummary: "Le livre aborde les relations de travail, les obligations et les recours. Il vise la compréhension pour réduire les conflits.", tags: ["Travail", "Recours", "Afrique centrale"] },
-    { id: "livre-136", title: "Responsabilité et contrats : cas pratiques", author: "Nadine Moukeng", year: 2020, rating: 4.6, ratingCount: 52, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-responsabilite-contrats/300/400", shortSummary: "Comprendre les contrats permet de prévenir les litiges. Le livre propose des cas pratiques et des solutions expliquées.", tags: ["Contrats", "Responsabilité", "Droit"] },
-    { id: "livre-137", title: "Droit pénal : principes et garanties", author: "Colette Moussavou", year: 2013, rating: 4.0, ratingCount: 73, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-penal-principes/300/400", shortSummary: "Le livre détaille les principes de base du droit pénal. Il insiste sur les garanties et les procédures équitables.", tags: ["Pénal", "Procédure", "Gabon"] },
-    { id: "livre-138", title: "Droit des affaires : structurer l’activité", author: "Pierre-André Nzamba", year: 2018, rating: 4.3, ratingCount: 66, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/droit-affaires-structurer/300/400", shortSummary: "L’ouvrage guide les entrepreneurs dans la structuration de l’activité. Il traite des formes juridiques et des obligations.", tags: ["Affaires", "Entrepreneuriat", "Droit"] },
-    { id: "livre-139", title: "Droit de l’environnement : protéger sans bloquer", author: "Roland Nguema", year: 2017, rating: 4.5, ratingCount: 59, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-env-proteger/300/400", shortSummary: "Le livre explique les mécanismes juridiques de protection. Il cherche un équilibre entre développement et responsabilité.", tags: ["Environnement", "Responsabilité", "Afrique"] },
-    { id: "livre-140", title: "Justice & médiation : résoudre autrement", author: "Aline N’Dinga", year: 2019, rating: 4.2, ratingCount: 48, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-mediation/300/400", shortSummary: "La médiation peut réduire la durée et le coût des litiges. L’ouvrage présente des outils et des exemples d’application.", tags: ["Médiation", "Justice", "Droit"] },
-    { id: "livre-141", title: "Économie juridique : comprendre les incitations", author: "Koffi Mensah", year: 2020, rating: 4.4, ratingCount: 40, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-economie-juridique/300/400", shortSummary: "Les règles influencent les comportements économiques. Le livre relie droit et incitations pour mieux comprendre les décisions.", tags: ["Économie", "Incitations", "Droit"] },
-    { id: "livre-142", title: "Données personnelles : cadres et pratiques", author: "Nadine Moukeng", year: 2021, rating: 4.3, ratingCount: 44, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/droit-donnees-personnelles/300/400", shortSummary: "Le livre présente les principes de protection des données. Il aborde les risques et les bonnes pratiques côté organisations.", tags: ["Données", "Confidentialité", "RGPD-like"] },
-    { id: "livre-143", title: "Institutions publiques : transparence et contrôle", author: "Sylvie Nkoghe", year: 2016, rating: 4.1, ratingCount: 71, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-institutions-transparence/300/400", shortSummary: "La transparence renforce la confiance. L’ouvrage explique les mécanismes de contrôle et les obligations.", tags: ["Transparence", "Contrôle", "Institutions"] },
-    { id: "livre-144", title: "Droit administratif : décisions et recours", author: "Nicolas Metegue N'Nah", year: 2015, rating: 4.5, ratingCount: 87, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/droit-admin-decisions/300/400", shortSummary: "Une introduction au fonctionnement des décisions administratives. Le livre clarifie la logique des recours et des procédures.", tags: ["Administratif", "Recours", "Droit"] },
-    { id: "livre-145", title: "Droit de la famille : protéger les liens", author: "Christine Nkoghe", year: 2019, rating: 4.2, ratingCount: 53, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-famille/300/400", shortSummary: "Le livre explore les règles liées à la famille. Il insiste sur les protections et le respect des droits.", tags: ["Famille", "Droit", "Afrique centrale"] },
-    { id: "livre-146", title: "Politique publique : évaluer avant d’agir", author: "Joseph Tonda", year: 2018, rating: 4.4, ratingCount: 41, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/droit-politiques-publiques-evaluer/300/400", shortSummary: "Évaluer une politique publique améliore la qualité des décisions. L’ouvrage présente des outils d’analyse et des exemples régionaux.", tags: ["Politiques publiques", "Évaluation", "Régional"] },
-    { id: "livre-147", title: "Constitutionnalisme en Afrique centrale", author: "Colette Moussavou", year: 2012, rating: 4.0, ratingCount: 67, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-constitutionnalisme-afrique-centrale/300/400", shortSummary: "Le livre propose une lecture du constitutionnalisme dans la région. Il examine l’équilibre entre pouvoir et droits.", tags: ["Constitutionnalisme", "Afrique", "Droit"] },
-    { id: "livre-148", title: "Droit et médias : informer avec cadre", author: "Patricia Leyama", year: 2020, rating: 4.3, ratingCount: 35, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-medias/300/400", shortSummary: "Les médias ont des responsabilités juridiques. L’ouvrage explique les règles pour publier en respectant les droits.", tags: ["Médias", "Liberté", "Droit"] },
-    { id: "livre-149", title: "Droit commercial : préparer un audit", author: "Pierre-André Nzamba", year: 2016, rating: 4.1, ratingCount: 58, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/droit-commercial-audit/300/400", shortSummary: "Un manuel pour comprendre les étapes d’un audit juridique. Le livre met en avant la prévention et la cohérence contractuelle.", tags: ["Commercial", "Audit", "Droit"] },
-    { id: "livre-150", title: "Droit des marchés publics : réussir les projets", author: "Roland Nguema", year: 2017, rating: 4.5, ratingCount: 63, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-marches-publics/300/400", shortSummary: "Le livre clarifie les règles des marchés publics. Il propose des exemples pour réduire les erreurs de procédure.", tags: ["Marchés publics", "Gouvernance", "Gabon"] },
-    { id: "livre-151", title: "Droits numériques : protéger les créations", author: "Awa N’Guessan", year: 2021, rating: 4.4, ratingCount: 39, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-numerique-creations/300/400", shortSummary: "Les créations numériques ont des protections spécifiques. L’ouvrage explore la propriété intellectuelle et ses usages.", tags: ["Propriété intellectuelle", "Numérique", "Droit"] },
-    { id: "livre-152", title: "Droit public : finances et choix budgétaires", author: "Aline N’Dinga", year: 2019, rating: 4.0, ratingCount: 46, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-public-finances/300/400", shortSummary: "Un livre pour comprendre les mécanismes budgétaires. Il explique les enjeux financiers et la logique de contrôle.", tags: ["Finances publiques", "Droit public", "Gabon"] },
-    { id: "livre-153", title: "Droit et territoires : comprendre les conflits", author: "Christine Nkoghe", year: 2015, rating: 4.2, ratingCount: 60, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/droit-territoires-conflits/300/400", shortSummary: "Le livre analyse les conflits fonciers et les cadres de résolution. Il cherche des approches équilibrées pour protéger tous les acteurs.", tags: ["Territoires", "Foncier", "Médiation"] },
-    { id: "livre-154", title: "Droit de la preuve : convaincre avec rigueur", author: "Nadine Moukeng", year: 2018, rating: 4.6, ratingCount: 44, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/droit-preuve/300/400", shortSummary: "Présenter les preuves demande méthode et rigueur. L’ouvrage explique comment construire une argumentation crédible.", tags: ["Preuve", "Procédure", "Droit"] },
-    { id: "livre-241", title: "Droit constitutionnel : équilibre des pouvoirs", author: "Étienne Nkoua", year: 2021, rating: 4.5, ratingCount: 52, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-constitutionnel-equilibre/300/400", shortSummary: "Le livre montre comment les pouvoirs se contrôlent pour éviter les dérives. Il propose une lecture claire des institutions et des mécanismes de stabilité.", tags: ["Constitution", "Gabon", "Institutions"] },
-    { id: "livre-242", title: "OHADA : arbitrer les litiges commerciaux", author: "Doris Idiata", year: 2020, rating: 4.2, ratingCount: 61, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/droit-ohada-arbitrage/300/400", shortSummary: "La résolution des conflits commerciaux exige rapidité et confiance. L’ouvrage explique les procédures et les bonnes pratiques pour sécuriser les transactions.", tags: ["OHADA", "Commerce", "Arbitrage"] },
-    { id: 'livre-151', title: 'Kirikou et la sorcière', author: 'Michel Ocelot', year: 1998, rating: 4.8, ratingCount: 245, language: 'Français', availableCount: 5, isNew: true, coverUrl: 'https://covers.openlibrary.org/b/isbn/9782211050937-L.jpg', shortSummary: 'L\'histoire épique du tout petit mais courageux Kirikou.', tags: ['Jeunesse', 'Conte', 'Classique'] },
-    { id: "livre-243", title: "Gouvernance locale : droits et responsabilités", author: "Patricia Leyama", year: 2019, rating: 4.4, ratingCount: 49, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/droit-gouvernance-locale/300/400", shortSummary: "Quelles règles guident les collectivités et leurs acteurs ? Le livre articule compétences, contrôle et participation citoyenne.", tags: ["Gouvernance", "Collectivités", "Droit"] },
-    { id: "livre-244", title: "Contrats publics : sécuriser la procédure", author: "Aline N’Dinga", year: 2022, rating: 4.6, ratingCount: 38, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/droit-contrats-publics/300/400", shortSummary: "Un bon contrat public commence par une procédure solide. L’ouvrage détaille les étapes, les risques fréquents et les moyens de prévention.", tags: ["Marchés publics", "Procédure", "Gabon"] }
-  ],
-
-  jeunesse: [
-    { id: "livre-155", title: "Kirikou au Village des Mots", author: "Sylvie Nkoghe", year: 2018, rating: 4.7, ratingCount: 210, language: "Français", availableCount: 5, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-kirikou-mots/300/400", shortSummary: "Kirikou apprend que les mots peuvent soigner quand on les utilise avec gentillesse. Avec des devinettes et des chants, l’histoire donne du courage aux enfants.", tags: ["Enfants", "Gabon", "Fables"] },
-    { id: "livre-156", title: "Le Petit Chasseur et la Forêt Sacrée", author: "Doris Idiata", year: 2016, rating: 4.4, ratingCount: 120, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-chasseur-foret/300/400", shortSummary: "Un enfant suit des traces lumineuses et découvre le respect des anciens. La forêt enseigne la patience et la protection de la nature.", tags: ["Forêt", "Sagesse", "Afrique"] },
-    { id: "livre-157", title: "Tina la Bateaux-Étoile", author: "Laure-Ines Obiang", year: 2019, rating: 4.6, ratingCount: 89, language: "Français", availableCount: 4, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-tina-bateau-etoile/300/400", shortSummary: "Tina écoute la mer et apprend à rêver sans perdre le sens du réel. Un récit tendre sur l’amitié et l’imagination utile.", tags: ["Amitié", "Mer", "Gabon"] },
-    { id: "livre-158", title: "Le Lion qui Partageait son Pain", author: "Chantal Moukoko", year: 2015, rating: 4.2, ratingCount: 150, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-lion-partageait/300/400", shortSummary: "Un lion découvre que partager rend plus fort que gagner. Une fable africaine pour apprendre la solidarité dès aujourd’hui.", tags: ["Fable", "Solidarité", "Afrique"] },
-    { id: "livre-159", title: "Les Curieux de Libreville", author: "Jean N’Goma", year: 2017, rating: 4.5, ratingCount: 77, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-curieux-libreville/300/400", shortSummary: "Quatre enfants explorent la ville et posent des questions sans peur. Chaque découverte devient une leçon pour grandir.", tags: ["Libreville", "Découverte", "Enfants"] },
-    { id: "livre-160", title: "Le Tambour et la Lumière", author: "Léonie Beka", year: 2020, rating: 4.7, ratingCount: 66, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-tambour-lumiere/300/400", shortSummary: "Le tambour raconte une histoire que la nuit oublie. Un conte sur la persévérance et la confiance en soi.", tags: ["Conte", "Musique", "Gabon"] },
-    { id: "livre-161", title: "Aminata et l’Arbre des Vœux", author: "Aminata Koumba", year: 2018, rating: 4.4, ratingCount: 92, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-arbre-vœux/300/400", shortSummary: "Aminata plante un arbre et apprend à formuler des vœux utiles. L’histoire rappelle que les actes comptent autant que les prières.", tags: ["Vœux", "Leçon", "Afrique"] },
-    { id: "livre-162", title: "Le Serpent Patient", author: "Rodrigue Bouanga", year: 2014, rating: 4.1, ratingCount: 130, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-serpent-patient/300/400", shortSummary: "Un serpent apprend que la patience ouvre des chemins. Une aventure courte pour apprendre à attendre et à écouter.", tags: ["Patience", "Aventure", "Enfants"] },
-    { id: "livre-163", title: "La Chèvre et le Marché", author: "Mireille N’tchama", year: 2019, rating: 4.6, ratingCount: 84, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-chèvre-marche/300/400", shortSummary: "Au marché de Port-Gentil, la chèvre apprend à négocier avec respect. Une histoire amusante sur le commerce équitable.", tags: ["Marché", "Port-Gentil", "Leçon"] },
-    { id: "livre-164", title: "Le Fantôme de Franceville", author: "Pierre-André Nzamba", year: 2016, rating: 4.3, ratingCount: 101, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-fantome-franceville/300/400", shortSummary: "Un fantôme gentil aide les enfants à résoudre un mystère. Une histoire drôle qui encourage l’entraide.", tags: ["Franceville", "Mystère", "Enfants"] },
-    { id: "livre-165", title: "La Galette du Bwiti", author: "Joseph Tonda", year: 2017, rating: 4.2, ratingCount: 73, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-galette-bwiti/300/400", shortSummary: "Une fête commence, et chacun reçoit un rôle important. Le conte valorise le respect, les rituels et la joie partagée.", tags: ["Bwiti", "Conte", "Gabon"] },
-    { id: "livre-166", title: "Le Petit Atlas des Villes du Gabon", author: "Christelle Ondo", year: 2018, rating: 4.5, ratingCount: 59, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-atlas-villes/300/400", shortSummary: "Un atlas imagé pour découvrir Libreville, Port-Gentil et les autres villes. Chaque page invite à regarder, lire et poser des questions.", tags: ["Gabon", "Découverte", "Atlas"] },
-    { id: "livre-167", title: "Le Griot et le Tambourin", author: "Chantal Moukoko", year: 2015, rating: 4.6, ratingCount: 81, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-griot-tambourin/300/400", shortSummary: "Le griot raconte des histoires qui se transforment en chansons. Les enfants apprennent l’écoute et le rythme.", tags: ["Griot", "Musique", "Afrique"] },
-    { id: "livre-168", title: "L’Œuf d’Or et le Soleil du Matin", author: "Aline N’Dinga", year: 2020, rating: 4.4, ratingCount: 57, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-oeuf-or/300/400", shortSummary: "Un œuf tombe et déclenche une aventure au lever du jour. Un conte pour apprendre à repartir malgré les peurs.", tags: ["Matin", "Aventure", "Enfants"] },
-    { id: "livre-169", title: "Le Goût des Plantes", author: "Doris Idiata", year: 2016, rating: 4.1, ratingCount: 64, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-gout-plantes/300/400", shortSummary: "Un enfant apprend à reconnaître les plantes utiles. L’histoire lie nature, curiosité et prudence.", tags: ["Plantes", "Nature", "Leçon"] },
-    { id: "livre-170", title: "La Règle d’Or du Partage", author: "Nana Ekow Daniels", year: 2019, rating: 4.7, ratingCount: 45, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-regle-or-partage/300/400", shortSummary: "Une règle simple transforme les disputes en projets. L’ouvrage propose une morale claire pour la vie de groupe.", tags: ["Partage", "Vie scolaire", "Fable"] },
-    { id: "livre-171", title: "Le Voyage de Nko : l’amitié", author: "Rodrigue Bouanga", year: 2018, rating: 4.3, ratingCount: 66, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-voyage-nko/300/400", shortSummary: "Nko voyage de village en village en cherchant une amitié vraie. Son chemin apprend la confiance et le respect.", tags: ["Amitié", "Voyage", "Afrique"] },
-    { id: "livre-172", title: "Le Chat de Lambaréné", author: "Jean-Pierre Owono", year: 2017, rating: 4.5, ratingCount: 80, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-chat-lambarene/300/400", shortSummary: "Le chat aide les enfants à trouver un chemin dans le brouillard. Une histoire réconfortante sur l’espoir et l’entraide.", tags: ["Lambaréné", "Esprit", "Enfants"] },
-    { id: "livre-173", title: "Les Aventures d’Okouma le Sage", author: "Mireille N’tchama", year: 2014, rating: 4.2, ratingCount: 72, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-okouma-sage/300/400", shortSummary: "Okouma explique les choses avec simplicité et patience. Les enfants apprennent à réfléchir avant d’agir.", tags: ["Sagesse", "Leçon", "Afrique"] },
-    { id: "livre-174", title: "La Chanson des Cercles", author: "Christelle Ondo", year: 2020, rating: 4.6, ratingCount: 39, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-chanson-cercles/300/400", shortSummary: "Autour d’un cercle, tout le monde a un rôle à jouer. Le livre célèbre la communauté et la coopération.", tags: ["Coopération", "Culture", "Enfants"] },
-    { id: "livre-175", title: "Le Compagnon de la Nuit Blanche", author: "Awa N’Guessan", year: 2016, rating: 4.4, ratingCount: 55, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-compagnon-nuit-blanche/300/400", shortSummary: "La nuit blanche devient un terrain d’exploration douce. Une histoire pour calmer les peurs et encourager la curiosité.", tags: ["Nuit", "Courage", "Enfants"] },
-    { id: "livre-176", title: "La Terre et les Semences", author: "Aminata Koumba", year: 2019, rating: 4.1, ratingCount: 62, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-terre-semences/300/400", shortSummary: "On apprend la plantation comme on apprend la patience. Le conte met en avant la responsabilité envers la nature.", tags: ["Semences", "Nature", "Leçon"] },
-    { id: "livre-177", title: "Le Mystère du Bracelet Rouge", author: "Laure-Ines Obiang", year: 2017, rating: 4.6, ratingCount: 58, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-mystere-bracelet-rouge/300/400", shortSummary: "Un bracelet rouge déclenche une enquête amicale entre enfants. L’histoire apprend à écouter, observer et respecter les autres.", tags: ["Mystère", "Enquête", "Gabon"] },
-    { id: "livre-178", title: "La Petite Robe des Fêtes", author: "Chantal Moukoko", year: 2015, rating: 4.2, ratingCount: 73, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-petite-robe-fetes/300/400", shortSummary: "Une petite robe traverse plusieurs fêtes et inspire la joie. Le livre insiste sur la bienveillance et la gratitude.", tags: ["Joie", "Fêtes", "Afrique"] },
-    { id: "livre-179", title: "Le Serpent et l’Arc-en-ciel", author: "Rodrigue Bouanga", year: 2018, rating: 4.5, ratingCount: 46, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-serpent-arc-en-ciel/300/400", shortSummary: "Un serpent suit l’arc-en-ciel pour retrouver une promesse. Une histoire qui apprend la persévérance et le respect.", tags: ["Arc-en-ciel", "Promesse", "Enfants"] },
-    { id: "livre-180", title: "La Bibliothèque des Petits Géants", author: "Sylvie Nkoghe", year: 2021, rating: 4.7, ratingCount: 33, language: "Français", availableCount: 4, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-bibliotheque-petits-geants/300/400", shortSummary: "Dans une bibliothèque cachée, les histoires deviennent grandes. L’ouvrage encourage la lecture et la créativité des enfants.", tags: ["Lecture", "Bibliothèque", "Enfants"] },
-    { id: "livre-181", title: "Le Voyage de la Petite Grue", author: "Mireille N’tchama", year: 2014, rating: 4.3, ratingCount: 70, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-voyage-petite-grue/300/400", shortSummary: "Une grue guide un enfant vers un lieu de partage. Une histoire tendre pour apprendre la confiance en soi.", tags: ["Oiseau", "Confiance", "Afrique"] },
-    { id: "livre-182", title: "Le Pardon du Tambour", author: "Joseph Tonda", year: 2017, rating: 4.4, ratingCount: 54, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-pardon-tambour/300/400", shortSummary: "Quand une dispute grandit, un tambour sonne le pardon. Le conte apprend à réparer et à avancer ensemble.", tags: ["Pardon", "Culture", "Fable"] },
-    { id: "livre-183", title: "Le Petit Atlas du Respect", author: "Aline N’Dinga", year: 2019, rating: 4.6, ratingCount: 41, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/jeunesse-atlas-respect/300/400", shortSummary: "Respecter les autres, c’est aussi respecter les lieux et les cultures. Le livre propose des scènes simples à comprendre et partager.", tags: ["Respect", "Leçon", "Afrique"] },
-    { id: "livre-184", title: "Le Roi du Silence Bienveillant", author: "Doris Idiata", year: 2020, rating: 4.1, ratingCount: 49, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/jeunesse-roi-silence/300/400", shortSummary: "Le silence peut être doux quand il protège les autres. Une histoire pour apprendre l’écoute et la responsabilité.", tags: ["Écoute", "Bienveillance", "Enfants"] }
-  ],
-
-  arts: [
-    { id: "livre-190", title: "Iboga : plantes, rituels et transmissions", author: "Doris Idiata", year: 2016, rating: 4.6, ratingCount: 101, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/arts-iboga/300/400", shortSummary: "Ce livre explore l’Iboga comme symbole culturel et mémoire vivante. Il présente aussi les dimensions artistiques et les pratiques de transmission.", tags: ["Iboga", "Gabon", "Culture"] },
-    { id: "livre-191", title: "Masques Fang : formes, usages, symboles", author: "Nicolas Metegue N'Nah", year: 2017, rating: 4.5, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-masques-fang/300/400", shortSummary: "L’ouvrage décrit les masques Fang et leur rôle social. Chaque forme devient indice d’une histoire et d’un rituel.", tags: ["Masques", "Fang", "Patrimoine"] },
-    { id: "livre-192", title: "Sculpture contemporaine au Gabon", author: "Rodrigue Bouanga", year: 2019, rating: 4.4, ratingCount: 67, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/arts-sculpture-contemporaine/300/400", shortSummary: "Une lecture des démarches d’artistes actuels et de leurs inspirations. Le livre relie matériaux, héritages et modernité.", tags: ["Sculpture", "Gabon", "Contemporain"] },
-    { id: "livre-193", title: "Bwiti & tambours : une esthétique du sacré", author: "Joseph Tonda", year: 2014, rating: 4.6, ratingCount: 74, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/arts-bwiti-tambours/300/400", shortSummary: "Les tambours ne rythment pas seulement : ils structurent une vision. L’ouvrage analyse l’esthétique du sacré et ses résonances.", tags: ["Bwiti", "Musique", "Culture"] },
-    { id: "livre-194", title: "Cinéma africain : récits et images", author: "Patricia Leyama", year: 2018, rating: 4.3, ratingCount: 92, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-cinema-africain/300/400", shortSummary: "Le livre parcourt les mouvements du cinéma africain et ses thèmes. Il montre comment l’image devient récit politique et culturel.", tags: ["Cinéma", "Afrique", "Récit"] },
-    { id: "livre-195", title: "Photographie documentaire : raconter le terrain", author: "Christine Nkoghe", year: 2016, rating: 4.4, ratingCount: 60, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/arts-photographie-documentaire/300/400", shortSummary: "Un guide pour photographier avec respect et intention. L’ouvrage aborde éthique, cadrage et narration visuelle.", tags: ["Photographie", "Documentaire", "Éthique"] },
-    { id: "livre-196", title: "Chants de ville : musiques de Libreville", author: "Sylvie Nkoghe", year: 2020, rating: 4.7, ratingCount: 44, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/arts-chants-ville-libreville/300/400", shortSummary: "Libreville vibre : les chansons racontent la vie et les tensions. Le livre analyse les styles et la place des artistes.", tags: ["Libreville", "Musiques", "Culture"] },
-    { id: "livre-197", title: "Costumes, couleurs et cérémonies", author: "Laure-Ines Obiang", year: 2015, rating: 4.2, ratingCount: 71, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/arts-costumes-couleurs/300/400", shortSummary: "Les couleurs portent des significations et des codes sociaux. L’ouvrage invite à observer et comprendre les cérémonies.", tags: ["Costumes", "Cérémonies", "Afrique"] },
-    { id: "livre-198", title: "Art et éducation : ateliers pour tous", author: "Aminata Koumba", year: 2019, rating: 4.5, ratingCount: 59, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/arts-art-education/300/400", shortSummary: "Un livre pour monter des ateliers artistiques inclusifs. Il propose des activités progressives et accessibles aux écoles.", tags: ["Éducation", "Ateliers", "Création"] },
-    { id: "livre-199", title: "La musique comme mémoire", author: "Mireille N’tchama", year: 2017, rating: 4.6, ratingCount: 48, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-musique-memoire/300/400", shortSummary: "Les chansons gardent les traces du passé et les transforment. Le livre explore comment la musique devient archives affectives.", tags: ["Mémoire", "Musiques", "Afrique"] },
-    { id: "livre-200", title: "Percussions et rythmes : apprendre en jouant", author: "Donatien Mboumba", year: 2016, rating: 4.4, ratingCount: 90, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/arts-percussions-rythmes/300/400", shortSummary: "Un cours pratique pour comprendre les rythmes et leur logique. L’ouvrage propose des exercices et des repères simples.", tags: ["Percussions", "Formation", "Culture"] },
-    { id: "livre-201", title: "Architecture vernaculaire : formes du quotidien", author: "Koffi Mensah", year: 2018, rating: 4.1, ratingCount: 52, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-architecture-vernaculaire/300/400", shortSummary: "Le livre analyse les formes traditionnelles et leur adaptation au climat. Il met en avant les savoir-faire locaux et la durabilité.", tags: ["Architecture", "Vernaculaire", "Afrique"] },
-    { id: "livre-202", title: "Récits et légendes : l’art du conte", author: "Christelle Ondo", year: 2014, rating: 4.5, ratingCount: 66, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/arts-art-du-conte/300/400", shortSummary: "Un recueil commenté pour retrouver le plaisir du conte. Le livre encourage la créativité orale et la mise en scène.", tags: ["Conte", "Oralité", "Culture"] },
-    { id: "livre-203", title: "Cinéma et mémoire : archives filmées", author: "Pierre-André Nzamba", year: 2019, rating: 4.2, ratingCount: 47, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/arts-cinema-memoire/300/400", shortSummary: "Le film comme archive : le livre explore les images qui gardent le souvenir. Il propose une méthode pour lire les traces visuelles.", tags: ["Cinéma", "Archives", "Mémoire"] },
-    { id: "livre-204", title: "Danse : chorégraphies et sens social", author: "Rosalie Moukoko", year: 2017, rating: 4.6, ratingCount: 58, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/arts-danse-sens-social/300/400", shortSummary: "La danse est une narration corporelle. L’ouvrage relie mouvements, communauté et significations culturelles.", tags: ["Danse", "Culture", "Afrique"] },
-    { id: "livre-205", title: "Artisanat de Mouila : matières et savoir", author: "Roland Nguema", year: 2016, rating: 4.3, ratingCount: 60, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-artisanat-mouila/300/400", shortSummary: "Mouila se raconte à travers les matières et les gestes. Le livre met en valeur les techniques et la transmission artisanale.", tags: ["Mouila", "Artisanat", "Gabon"] },
-    { id: "livre-206", title: "Peinture : palettes africaines contemporaines", author: "Donatien Mboumba", year: 2020, rating: 4.7, ratingCount: 39, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/arts-peinture-palettes/300/400", shortSummary: "Le livre explore comment les artistes composent des palettes singulières. Il relie couleurs, héritage et narration personnelle.", tags: ["Peinture", "Couleur", "Contemporain"] },
-    { id: "livre-207", title: "Musique et développement : mesurer l’impact", author: "Awa N’Guessan", year: 2021, rating: 4.2, ratingCount: 44, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/arts-musique-developpement/300/400", shortSummary: "La culture peut soutenir l’économie et la cohésion sociale. Le livre propose des indicateurs d’impact et des études de cas.", tags: ["Musique", "Développement", "Économie"] },
-    { id: "livre-208", title: "Masques & théâtre : scènes du patrimoine", author: "Marie-Louise Ondo", year: 2015, rating: 4.4, ratingCount: 59, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/arts-masques-theatre/300/400", shortSummary: "Le théâtre donne une seconde vie aux objets rituels. L’ouvrage explore la mise en scène et les significations.", tags: ["Théâtre", "Masques", "Patrimoine"] },
-    { id: "livre-209", title: "Chants d’espérance : du village à la scène", author: "Sylvie Nkoghe", year: 2018, rating: 4.5, ratingCount: 47, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-chants-esperance/300/400", shortSummary: "Les chants transportent des messages d’avenir. Le livre raconte comment la scène amplifie les valeurs communes.", tags: ["Espérance", "Chants", "Afrique"] },
-    { id: "livre-210", title: "Architecture sonore : écouter autrement", author: "Koffi Mensah", year: 2019, rating: 4.1, ratingCount: 38, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/arts-architecture-sonore/300/400", shortSummary: "Le son structure l’espace et l’attention. L’ouvrage propose des exercices d’écoute et des repères créatifs.", tags: ["Son", "Écoute", "Création"] },
-    { id: "livre-211", title: "Le design des affiches culturelles", author: "Patricia Leyama", year: 2021, rating: 4.6, ratingCount: 30, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/arts-design-affiches/300/400", shortSummary: "Créer une affiche, c’est choisir un rythme visuel. Le livre propose des principes typographiques et des exemples.", tags: ["Design", "Affiches", "Culture"] },
-    { id: "livre-212", title: "Trésors de Port-Gentil : regards d’artistes", author: "Rodrigue Bouanga", year: 2014, rating: 4.3, ratingCount: 55, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-tresors-portgentil/300/400", shortSummary: "Port-Gentil inspire des œuvres vibrantes. Le livre regroupe des analyses de regards et de styles artistiques.", tags: ["Port-Gentil", "Art", "Gabon"] },
-    { id: "livre-213", title: "Culture Iboga : guide de visite respectueuse", author: "Doris Idiata", year: 2022, rating: 4.4, ratingCount: 22, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/arts-guide-iboga/300/400", shortSummary: "Un guide pour mieux comprendre sans réduire la culture à un décor. Le livre insiste sur le respect et la compréhension contextuelle.", tags: ["Iboga", "Guide", "Patrimoine"] },
-    { id: "livre-214", title: "Culture urbaine : styles et identités", author: "Mireille N’tchama", year: 2020, rating: 4.2, ratingCount: 41, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/arts-culture-urbaine/300/400", shortSummary: "Les styles urbains racontent des histoires de vie et de dépassement. Le livre explore les codes vestimentaires et musicaux.", tags: ["Urbain", "Identité", "Afrique"] },
-    { id: "livre-215", title: "Sculptures miniatures : travailler la matière", author: "Donatien Mboumba", year: 2017, rating: 4.5, ratingCount: 33, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/arts-sculptures-miniatures/300/400", shortSummary: "Un atelier en lecture : comment sculpter avec patience. Le livre donne des étapes et des repères sur la matière.", tags: ["Sculpture", "Atelier", "Création"] },
-    { id: "livre-216", title: "Art & mémoire : reconstruire par l’image", author: "Christine Nkoghe", year: 2018, rating: 4.6, ratingCount: 26, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/arts-art-memoire/300/400", shortSummary: "L’image reconstruit ce qui a été perdu. Le livre explore comment les artistes travaillent la mémoire collective.", tags: ["Mémoire", "Image", "Culture"] },
-    { id: "livre-217", title: "Rythmes du nord : Oyem en chansons", author: "Aline N’Dinga", year: 2015, rating: 4.3, ratingCount: 48, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/arts-rythmes-oyem/300/400", shortSummary: "Les rythmes du nord racontent une géographie émotionnelle. L’ouvrage présente des chants et des pratiques communautaires.", tags: ["Oyem", "Musiques", "Gabon"] },
-    { id: "livre-218", title: "La photographie des archives familiales", author: "Pierre-André Nzamba", year: 2021, rating: 4.2, ratingCount: 28, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/arts-photographie-archives/300/400", shortSummary: "Retrouver et préserver des photos permet de relier les générations. Le livre donne des méthodes pour numériser et annoter.", tags: ["Archives", "Famille", "Photo"] },
-    { id: "livre-219", title: "Théâtre scolaire : jouer pour apprendre", author: "Laure-Ines Obiang", year: 2019, rating: 4.6, ratingCount: 36, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/arts-theatre-scolaire/300/400", shortSummary: "Le théâtre scolaire développe la confiance et la maîtrise du langage. L’ouvrage propose des scripts et des activités pour la classe.", tags: ["Théâtre", "Éducation", "Afrique"] }
-  ],
-
-  economie: [
-    { id: "livre-221", title: "Gabon 2030 : trajectoire et priorités", author: "Doris Idiata", year: 2020, rating: 4.6, ratingCount: 101, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/economie-gabon-2030/300/400", shortSummary: "Le livre explique les priorités et les mécanismes de transformation vers 2030. Il relie vision, projets et indicateurs pour suivre l’avancement.", tags: ["Gabon 2030", "Stratégie", "Développement"] },
-    { id: "livre-222", title: "Économie pétrolière : dépendance et alternatives", author: "Rodrigue Bouanga", year: 2019, rating: 4.4, ratingCount: 88, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-petrole/300/400", shortSummary: "Le pétrole influence les finances et les choix politiques. L’ouvrage discute la diversification et les options pour réduire les vulnérabilités.", tags: ["Pétrole", "Diversification", "Afrique"] },
-    { id: "livre-223", title: "Green economy : produire proprement en Afrique", author: "Aminata Koumba", year: 2021, rating: 4.7, ratingCount: 66, language: "Français", availableCount: 3, isNew: true, coverUrl: "https://picsum.photos/seed/economie-green/300/400", shortSummary: "L’économie verte vise à concilier croissance et protection de l’environnement. Le livre présente des exemples et des cadres d’action responsables.", tags: ["Économie verte", "Environnement", "Afrique"] },
-    { id: "livre-224", title: "Entreprises et emplois : comment accélérer", author: "Aimé Ouedraogo", year: 2018, rating: 4.3, ratingCount: 73, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-emplois/300/400", shortSummary: "Créer des emplois exige des incitations bien pensées et un environnement stable. Le livre explore des leviers concrets pour l’entrepreneuriat.", tags: ["Emplois", "Entrepreneuriat", "Développement"] },
-    { id: "livre-225", title: "Gouvernance économique : indicateurs et transparence", author: "Sylvie Nkoghe", year: 2017, rating: 4.1, ratingCount: 91, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/economie-gouvernance/300/400", shortSummary: "Un chapitre-clé : rendre les données compréhensibles pour tous. L’ouvrage montre comment mesurer la performance économique et améliorer la transparence.", tags: ["Gouvernance", "Indicateurs", "Transparence"] },
-    { id: "livre-226", title: "Commerce régional : CEMAC et intégration", author: "Nicolas Metegue N'Nah", year: 2020, rating: 4.5, ratingCount: 58, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/economie-commerce-regional/300/400", shortSummary: "L’intégration régionale facilite les échanges et réduit les coûts. Le livre présente des analyses et des pistes pour améliorer la coopération.", tags: ["CEMAC", "Commerce", "Intégration"] },
-    { id: "livre-227", title: "Financement du développement : priorités d’investissement", author: "Patricia Leyama", year: 2019, rating: 4.4, ratingCount: 44, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/economie-financement/300/400", shortSummary: "Investir mieux, c’est investir là où l’impact est durable. L’ouvrage explique des principes de sélection des projets.", tags: ["Financement", "Investissement", "Développement"] },
-    { id: "livre-228", title: "Tourisme durable au Gabon : créer de la valeur", author: "Laure-Ines Obiang", year: 2018, rating: 4.2, ratingCount: 66, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-tourisme-durable/300/400", shortSummary: "Un tourisme responsable peut soutenir les économies locales. Le livre propose des repères pour concilier attractivité, respect et retombées.", tags: ["Tourisme", "Durable", "Gabon"] },
-    { id: "livre-229", title: "Inflation, pouvoir d’achat et choix publics", author: "Koffi Mensah", year: 2021, rating: 4.0, ratingCount: 38, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-inflation/300/400", shortSummary: "Le livre explique comment l’inflation influence le quotidien. Il relie la politique économique aux arbitrages sociaux.", tags: ["Inflation", "Pouvoir d’achat", "Politique"] },
-    { id: "livre-230", title: "Énergie et productivité : éclairer l’économie", author: "Roland Nguema", year: 2017, rating: 4.5, ratingCount: 55, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/economie-energie-productivite/300/400", shortSummary: "Un accès à l’énergie améliore la productivité. L’ouvrage analyse les investissements et leurs impacts sur les secteurs.", tags: ["Énergie", "Productivité", "Afrique"] },
-    { id: "livre-231", title: "Économie circulaire : réduire, réutiliser, créer", author: "Awa N’Guessan", year: 2022, rating: 4.6, ratingCount: 29, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-circulaire/300/400", shortSummary: "La circularité transforme les déchets en ressources. Le livre propose des pistes applicables dans les villes et industries.", tags: ["Économie circulaire", "Environnement", "Innovation"] },
-    { id: "livre-232", title: "Investir dans l’éducation : rendement social", author: "Mireille N’tchama", year: 2020, rating: 4.4, ratingCount: 46, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-education-rendement/300/400", shortSummary: "L’éducation est un investissement qui produit des bénéfices durables. Le livre montre comment mesurer les effets et orienter les budgets.", tags: ["Éducation", "Social", "Rendement"] },
-    { id: "livre-233", title: "Afrique et Union Africaine : chantiers de développement", author: "Aimé Ouedraogo", year: 2016, rating: 4.1, ratingCount: 62, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/economie-ua/300/400", shortSummary: "Le livre clarifie les projets de l’Union Africaine et leurs objectifs. Il relie initiatives régionales et stratégies nationales.", tags: ["Union Africaine", "Projets", "Développement"] },
-    { id: "livre-234", title: "Marchés agricoles : améliorer les chaînes de valeur", author: "Aminata Koumba", year: 2019, rating: 4.5, ratingCount: 50, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/economie-marches-agricoles/300/400", shortSummary: "Le livre explore les étapes de la chaîne de valeur agricole. Il montre comment réduire les pertes et augmenter la valeur ajoutée.", tags: ["Agriculture", "Chaînes de valeur", "Afrique"] },
-    { id: "livre-235", title: "Commerce numérique : vendre et livrer autrement", author: "Christine Nkoghe", year: 2021, rating: 4.3, ratingCount: 33, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-commerce-numerique/300/400", shortSummary: "Les plateformes changent l’accès aux marchés. L’ouvrage analyse l’adoption et les risques, notamment logistiques et de confiance.", tags: ["Commerce", "Numérique", "Innovation"] },
-    { id: "livre-236", title: "Budget public : maîtriser pour construire", author: "Patricia Leyama", year: 2018, rating: 4.0, ratingCount: 41, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-budget-public/300/400", shortSummary: "Le livre explique la logique budgétaire et la priorisation. Il vise une lecture utile pour les citoyens et les gestionnaires.", tags: ["Budget", "Gouvernance", "Public"] },
-    { id: "livre-237", title: "Investissements verts : critères et projets", author: "Sylvie Nkoghe", year: 2020, rating: 4.6, ratingCount: 27, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/economie-investissements-verts/300/400", shortSummary: "Qu’est-ce qu’un investissement vert ? L’ouvrage propose des critères et des exemples de projets responsables.", tags: ["Verts", "Critères", "Durable"] },
-    { id: "livre-238", title: "Économie de la santé : coûts et accès", author: "Laure-Ines Obiang", year: 2017, rating: 4.2, ratingCount: 39, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-sante/300/400", shortSummary: "Le livre relie l’économie à l’accès aux soins. Il traite des arbitrages et de la qualité des services.", tags: ["Santé", "Coûts", "Accès"] },
-    { id: "livre-239", title: "Résilience économique : rebondir après crise", author: "Rodrigue Bouanga", year: 2022, rating: 4.5, ratingCount: 24, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-resilience/300/400", shortSummary: "Les crises révèlent les fragilités et les forces. L’ouvrage propose des approches pour rebondir avec méthode.", tags: ["Résilience", "Crises", "Développement"] },
-    { id: "livre-240", title: "Développement local : action et mesure", author: "Awa N’Guessan", year: 2016, rating: 4.1, ratingCount: 57, language: "Français", availableCount: 4, isNew: false, coverUrl: "https://picsum.photos/seed/economie-developpement-local/300/400", shortSummary: "Le développement local se construit avec des acteurs et des indicateurs clairs. Le livre propose une méthode pour agir et mesurer les progrès.", tags: ["Local", "Mesure", "Développement"] },
-    { id: "livre-245", title: "Gabon 2035 : économie numérique et emplois", author: "Aimable Gahunde", year: 2023, rating: 4.6, ratingCount: 27, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/economie-gabon-2035/300/400", shortSummary: "La transformation numérique doit créer des opportunités concrètes. Le livre analyse les secteurs porteurs et propose des stratégies d’emploi adaptées.", tags: ["Gabon 2035", "Numérique", "Emplois"] },
-    { id: "livre-246", title: "Transparence budgétaire : données ouvertes pour tous", author: "Sylvie Nkoghe", year: 2022, rating: 4.4, ratingCount: 34, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-transparence-budgets/300/400", shortSummary: "La transparence réduit les zones d’ombre et renforce la confiance. L’ouvrage montre comment ouvrir des données utiles et les rendre compréhensibles.", tags: ["Transparence", "Données", "Citoyens"] },
-    { id: "livre-247", title: "Économie bleue : ports, pêches et emplois", author: "Doris Idiata", year: 2021, rating: 4.3, ratingCount: 42, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/economie-bleue-ports-peches/300/400", shortSummary: "Le littoral peut devenir un levier de développement durable. Le livre explore les chaînes de valeur de la mer et leurs impacts sur les communautés.", tags: ["Économie bleue", "Ports", "Gabon"] },
-    { id: "livre-248", title: "Financer l’énergie renouvelable en Afrique centrale", author: "Roland Nguema", year: 2022, rating: 4.7, ratingCount: 29, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/economie-renouvelable-financement/300/400", shortSummary: "Produire de l’énergie propre exige des financements et des cadres solides. L’ouvrage présente des approches pour investir avec rigueur et réduire les risques.", tags: ["Énergies renouvelables", "Investissement", "Afrique centrale"] },
-    { id: "livre-249", title: "Agriculture intelligente : irrigation et productivité", author: "Aminata Koumba", year: 2020, rating: 4.5, ratingCount: 46, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-agriculture-intelligente/300/400", shortSummary: "Des pratiques adaptées améliorent la productivité et la sécurité alimentaire. Le livre explique les leviers techniques et économiques de l’agriculture intelligente.", tags: ["Agriculture", "Irrigation", "Productivité"] },
-    { id: "livre-250", title: "Économie sociale : coopératives et impacts", author: "Mireille N’tchama", year: 2019, rating: 4.2, ratingCount: 31, language: "Français", availableCount: 1, isNew: false, coverUrl: "https://picsum.photos/seed/economie-sociale-cooperatives/300/400", shortSummary: "Les coopératives peuvent transformer la vie locale quand elles sont bien accompagnées. L’ouvrage explique gouvernance, financement et mesure d’impact social.", tags: ["Coopératives", "Économie sociale", "Gabon"] },
-    { id: "livre-251", title: "Marchés du carbone : opportunités et risques", author: "Koffi Mensah", year: 2023, rating: 4.1, ratingCount: 24, language: "Français", availableCount: 2, isNew: true, coverUrl: "https://picsum.photos/seed/economie-carbone/300/400", shortSummary: "Le carbone peut financer des projets, mais exige des règles claires. Le livre explique comment évaluer les opportunités et éviter les dérives.", tags: ["Carbone", "Climat", "Afrique"] },
-    { id: "livre-252", title: "Entreprises publiques : moderniser la gestion", author: "Patricia Leyama", year: 2021, rating: 4.4, ratingCount: 27, language: "Français", availableCount: 3, isNew: false, coverUrl: "https://picsum.photos/seed/economie-entreprises-publiques/300/400", shortSummary: "Améliorer la gestion publique renforce la performance des services. L’ouvrage propose des réformes réalistes et des indicateurs de suivi.", tags: ["Entreprises publiques", "Performance", "Gouvernance"] },
-    { id: "livre-253", title: "Commerce intra-africain : logistique et corridors", author: "Christine Nkoghe", year: 2020, rating: 4.6, ratingCount: 33, language: "Français", availableCount: 2, isNew: false, coverUrl: "https://picsum.photos/seed/economie-commerce-intra-africain/300/400", shortSummary: "Le commerce se heurte souvent à la logistique. Le livre analyse les corridors, les coûts et les solutions pratiques pour fluidifier les échanges.", tags: ["Commerce", "Logistique", "Régional"] },
-    { id: "livre-254", title: "Résilience climatique : adapter l’économie", author: "Laure-Ines Obiang", year: 2022, rating: 4.3, ratingCount: 28, language: "Français", availableCount: 1, isNew: true, coverUrl: "https://picsum.photos/seed/economie-resilience-climatique/300/400", shortSummary: "Le climat impose des ajustements économiques indispensables. L’ouvrage présente des stratégies d’adaptation et des priorités d’investissement à moyen terme.", tags: ["Climat", "Résilience", "Investissement"] }
-  ]
+  async fetchAllBooksByCategories() {
+    const keys = Object.keys(window.IMSA_CATEGORIES);
+    const promises = keys.map(k => this.fetchBooksByCategory(k));
+    const results = await Promise.all(promises);
+    
+    keys.forEach((key, index) => {
+      window.booksData[key] = results[index].map(b => ({
+        ...b,
+        categoryKey: key, // Pour compatibilité avec les classes CSS
+        id: b.id, // Support UUID
+        rating: b.average_rating || 0,
+        ratingCount: b.total_reviews || 0,
+        shortSummary: b.summary || "",
+        coverUrl: b.cover_url || b.coverUrl || `https://books.google.com/books/content?q=intitle:${encodeURIComponent(b.title)}+inauthor:${encodeURIComponent(b.author || '')}&printsec=frontcover&img=1&zoom=1&source=gbs_api`
+      }));
+    });
+    
+    // Invalider l'index pour forcer sa reconstruction
+    window.__booksIndex = null;
+    return window.booksData;
+  }
 };
 
-// Vérification simple (démo) : comptage.
-const booksCountByCat = Object.keys(booksRaw).reduce((acc, k) => {
-  acc[k] = booksRaw[k].length;
-  return acc;
-}, {});
-window.__booksCountByCat = booksCountByCat;
-
-window.booksData = booksRaw;
-
+// Utilitaires IMSA (UI & Helpers)
 window.imsaUtils = {
   escapeHtml(str) {
+    if (!str) return "";
     return String(str)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
@@ -286,6 +100,7 @@ window.imsaUtils = {
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
   },
+
   getAllBooks() {
     const out = [];
     Object.keys(window.booksData).forEach((k) => {
@@ -293,10 +108,11 @@ window.imsaUtils = {
     });
     return out;
   },
+
   getBookById(bookId) {
     if (!bookId) return null;
     if (!window.__booksIndex) {
-      const all = window.imsaUtils.getAllBooks();
+      const all = this.getAllBooks();
       window.__booksIndex = all.reduce((map, b) => {
         map[b.id] = b;
         return map;
@@ -304,9 +120,11 @@ window.imsaUtils = {
     }
     return window.__booksIndex[bookId] || null;
   },
+
   getBooksByCategory(categoryKey) {
     return window.booksData[categoryKey] || [];
   },
+
   formatStars(rating) {
     const r = Number(rating || 0);
     const full = Math.floor(r);
@@ -319,32 +137,44 @@ window.imsaUtils = {
     for (let i = 0; i < empty; i++) html += `<i class="fa-regular fa-star ${orange}"></i>`;
     return html;
   },
+
   categoryLabel(categoryKey) {
     return window.IMSA_CATEGORIES[categoryKey]?.label || categoryKey;
   },
+
   categoryBadgeClass(categoryKey) {
     return window.IMSA_CATEGORIES[categoryKey]?.badgeClass || "";
   },
 
   coverGradientClass(categoryKey) {
-    return (
-      {
-        romans: "cover-romans",
-        histoire: "cover-histoire",
-        sciences: "cover-sciences",
-        informatique: "cover-info",
-        droit: "cover-droit",
-        jeunesse: "cover-jeunesse",
-        arts: "cover-arts",
-        economie: "cover-economie"
-      }[categoryKey] || "cover-romans"
-    );
+    const map = {
+      romans: "cover-romans",
+      histoire: "cover-histoire",
+      sciences: "cover-sciences",
+      informatique: "cover-info",
+      droit: "cover-droit",
+      jeunesse: "cover-jeunesse",
+      arts: "cover-arts",
+      economie: "cover-economie",
+      "san-bms": "cover-san-bms",
+      "san-sso": "cover-san-sso",
+      "san-ema": "cover-san-ema",
+      "san-sin": "cover-san-sin",
+      "bav-s2a": "cover-bav-s2a",
+      "bav-hse": "cover-bav-hse",
+      "bav-sha": "cover-bav-sha",
+      "gin-pmi": "cover-gin-pmi",
+      "gin-gel": "cover-gin-gel",
+      "gif-rtl": "cover-gif-rtl",
+      "gif-glo": "cover-gif-glo"
+    };
+    return map[categoryKey] || "cover-romans";
   },
 
   renderBookCoverContainerHTML(book) {
-    const title = window.imsaUtils.escapeHtml(book.title || "");
-    const author = window.imsaUtils.escapeHtml(book.author || "");
-    const gradient = window.imsaUtils.coverGradientClass(book.categoryKey);
+    const title = this.escapeHtml(book.title || "");
+    const author = this.escapeHtml(book.author || "");
+    const gradient = this.coverGradientClass(book.categoryKey);
     const coverUrl = book.coverUrl || "";
 
     return `
@@ -354,6 +184,7 @@ window.imsaUtils = {
           alt="Couverture de ${title}"
           class="book-cover-img"
           loading="lazy"
+          onload="this.classList.add('loaded')"
           onerror="this.style.display='none'"
         >
         <div class="book-cover-fallback">
@@ -364,10 +195,10 @@ window.imsaUtils = {
       </div>
     `;
   },
-  // Génère une petite card réutilisable (HTML string).
+
   renderBookCardHTML(book, opts = {}) {
     const {
-      variant = "default", // "default" | "compact"
+      variant = "default",
       showNewBadge = false,
       showBorrowButton = true,
       showCategoryChip = true,
@@ -375,55 +206,48 @@ window.imsaUtils = {
     } = opts;
 
     const categoryKey = book.categoryKey;
-    const catLabel = window.imsaUtils.categoryLabel(categoryKey);
-
-    const summary = window.imsaUtils.escapeHtml(book.shortSummary || "");
-    const title = window.imsaUtils.escapeHtml(book.title || "");
-    const author = window.imsaUtils.escapeHtml(book.author || "");
-
-    const stars = window.imsaUtils.formatStars(book.rating);
-
+    const catLabel = this.categoryLabel(categoryKey);
+    const summary = this.escapeHtml(book.shortSummary || "");
+    const title = this.escapeHtml(book.title || "");
+    const author = this.escapeHtml(book.author || "");
+    const stars = this.formatStars(book.rating);
     const viewHref = `livre.html?id=${encodeURIComponent(book.id)}`;
+    
     const borrowActionButton = showBorrowButton
       ? `<a href="${viewHref}" class="btn btn-orange-outline w-100 mt-2 book-borrow-link"
-            role="button"
             data-action="borrow"
-            data-book-id="${window.imsaUtils.escapeHtml(book.id)}"
-            data-category="${window.imsaUtils.escapeHtml(categoryKey)}"
-            data-user-id="">
+            data-book-id="${this.escapeHtml(book.id)}">
           Emprunter
         </a>`
       : "";
 
-    const seeCatalogButton = `<a href="${viewHref}" class="btn btn-blue-dark w-100 mt-2 book-detail-link"
-        role="button" data-action="catalog" data-book-id="${window.imsaUtils.escapeHtml(book.id)}">
+    const seeCatalogButton = `<a href="${viewHref}" class="btn btn-blue-dark w-100 mt-2 book-detail-link">
         Voir le catalogue
       </a>`;
 
     const compactClass = variant === "compact" ? "book-card-compact" : "";
-
-    const newBadge = showNewBadge && book.isNew
+    const newBadge = (showNewBadge && book.is_new)
       ? `<span class="badge badge-new position-absolute top-0 end-0 m-2" style="z-index:2;">NOUVEAU</span>`
       : "";
 
     const catPill = showCategoryChip
-      ? `<div class="book-cat mb-2">${window.imsaUtils.escapeHtml(catLabel)}</div>`
-      : `<div class="book-cat mb-2">${window.imsaUtils.escapeHtml(catLabel)}</div>`;
+      ? `<div class="book-cat mb-2">${this.escapeHtml(catLabel)}</div>`
+      : "";
 
     return `
-      <div class="card book-card ${compactClass} h-100 position-relative" data-id="${window.imsaUtils.escapeHtml(book.id)}" data-category="${window.imsaUtils.escapeHtml(categoryKey)}" data-author="${window.imsaUtils.escapeHtml(book.author)}">
+      <div class="card book-card ${compactClass} h-100 position-relative" data-id="${this.escapeHtml(book.id)}">
         ${newBadge}
         <div class="card-body p-0 d-flex flex-column">
-          ${window.imsaUtils.renderBookCoverContainerHTML(book)}
+          ${this.renderBookCoverContainerHTML(book)}
           <div class="book-info p-3 d-flex flex-column flex-grow-1">
             ${catPill}
             <h3 class="book-title clamp-2" style="font-size:16px;">${title}</h3>
-            <div class="book-author text-muted small mt-1">${author} · ${window.imsaUtils.escapeHtml(book.year)}</div>
+            <div class="book-author text-muted small mt-1">${author} · ${this.escapeHtml(book.year)}</div>
             <div class="book-rating mt-2">
               <div class="stars">${stars}</div>
               <div class="small text-muted mt-1">
-                ${book.rating ? window.imsaUtils.escapeHtml(Number(book.rating).toFixed(1)) : "—"}
-                <span class="text-muted">(${window.imsaUtils.escapeHtml(book.ratingCount || 0)} avis)</span>
+                ${book.rating ? Number(book.rating).toFixed(1) : "—"}
+                <span class="text-muted">(${this.escapeHtml(book.ratingCount || 0)} avis)</span>
               </div>
             </div>
             <p class="book-summary clamp-3 mt-2 small">${summary}</p>
@@ -437,86 +261,3 @@ window.imsaUtils = {
     `;
   }
 };
-
-// ═══════════════════════════════════════
-// INITIALISATION & ENRICHISSEMENT
-// ═══════════════════════════════════════
-
-function imsaHashString(str) {
-  let h = 0;
-  const s = String(str || "");
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return h;
-}
-
-function generateISBN13LikeFromId(bookId) {
-  const h = imsaHashString(bookId);
-  const suffix10 = String(h % 10000000000).padStart(10, "0");
-  return `978${suffix10}`;
-}
-
-const coverOverrides = {
-  // Romans
-  "livre-001": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg" },
-  "livre-002": { coverUrl: "https://covers.openlibrary.org/b/isbn/9781616202415-L.jpg" },
-  "livre-003": { coverUrl: "https://covers.openlibrary.org/b/isbn/9781400095209-L.jpg" },
-  "livre-004": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780307271082-L.jpg" },
-  "livre-005": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020417464-L.jpg" },
-  "livre-006": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020023931-L.jpg" },
-  "livre-007": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020868761-L.jpg" },
-  "livre-008": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020888233-L.jpg" },
-  "livre-009": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782020894968-L.jpg" },
-  "livre-010": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226205131-L.jpg" },
-  "livre-011": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782742731114-L.jpg" },
-  "livre-012": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782253053347-L.jpg" },
-  "livre-013": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782070411931-L.jpg" },
-  "livre-014": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780435905521-L.jpg" },
-  "livre-015": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg" },
-  "livre-016": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780143039181-L.jpg" },
-  "livre-017": { coverUrl: "https://covers.openlibrary.org/b/isbn/9780894771552-L.jpg" },
-  "livre-018": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782070147410-L.jpg" },
-  "livre-019": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782253109310-L.jpg" },
-  "livre-020": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782747011501-L.jpg" },
-  // Histoire
-  "livre-031": { coverUrl: "https://covers.openlibrary.org/b/isbn/9789232017093-L.jpg" },
-  "livre-032": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226099167-L.jpg" },
-  // Sciences
-  "livre-061": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782226257017-L.jpg" },
-  // Jeunesse
-  "livre-151": { coverUrl: "https://covers.openlibrary.org/b/isbn/9782211050937-L.jpg" }
-};
-
-// Traitement global : categoryKey + real coverUrl fallback
-Object.keys(booksRaw).forEach((catKey) => {
-  booksRaw[catKey] = booksRaw[catKey].map((book) => {
-    let finalCoverUrl = book.coverUrl;
-
-    // 1. Déjà un lien OpenLibrary valide ? On garde.
-    const isAlreadyOL = finalCoverUrl && finalCoverUrl.includes("covers.openlibrary.org");
-
-    // 2. Si pas OL ou si picsum (fallback temporaire), on check les overrides ou on génère.
-    if (!isAlreadyOL || (finalCoverUrl && finalCoverUrl.includes("picsum.photos"))) {
-      if (coverOverrides[book.id]) {
-        finalCoverUrl = coverOverrides[book.id].coverUrl;
-      } else {
-        const isbn13 = generateISBN13LikeFromId(book.id);
-        finalCoverUrl = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg`;
-      }
-    }
-
-    return {
-      ...book,
-      categoryKey: catKey,
-      coverUrl: finalCoverUrl
-    };
-  });
-});
-
-window.booksData = booksRaw;
-
-// Stats pour debug
-window.__booksCountByCat = Object.keys(window.booksData).reduce((acc, k) => {
-  acc[k] = window.booksData[k].length;
-  return acc;
-}, {});
-

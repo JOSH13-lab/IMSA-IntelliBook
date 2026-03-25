@@ -178,8 +178,8 @@
     };
   }
 
-  // Récupérer la vraie couverture d'un livre
-  async function loadBookCover(bookId, imgElement) {
+  // Récupérer la vraie couverture d'un livre (avec retry)
+  async function loadBookCover(bookId, imgElement, retries = 3) {
     try {
       const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
       const data = await res.json();
@@ -190,36 +190,117 @@
         if (fallback) fallback.style.display = 'none';
       }
     } catch (err) {
+      if (retries > 0) {
+        // Retry après 500ms
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return loadBookCover(bookId, imgElement, retries - 1);
+      }
       console.warn('Couverture indisponible pour', bookId);
     }
   }
 
-  // Charger TOUTES les couvertures de la page
-  function loadAllCovers() {
-    document.querySelectorAll('[data-book-id]').forEach(el => {
-      const bookId = el.dataset.bookId;
-      const img = el.querySelector('.book-cover-img');
-      if (img && bookId) loadBookCover(bookId, img);
-    });
+  // Charger TOUTES les couvertures de la page (méthode batch optimisée)
+  async function loadAllCovers() {
+    const elements = document.querySelectorAll('[data-book-id]');
+    if (elements.length === 0) return;
+
+    // Grouper par batch de 20 livres max
+    const BATCH_SIZE = 20;
+    const bookIds = Array.from(elements).map(el => el.dataset.bookId).filter(Boolean);
+    
+    for (let i = 0; i < bookIds.length; i += BATCH_SIZE) {
+      const batch = bookIds.slice(i, i + BATCH_SIZE);
+      await loadCoversBatch(batch, elements);
+      // Petit délai entre les batches pour ne pas surcharger
+      if (i + BATCH_SIZE < bookIds.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
   }
 
-  // Charge les couvertures depuis notre API back-end (nouvelle version)
+  // Charger un batch de couvertures via le nouvel endpoint
+  async function loadCoversBatch(bookIds, allElements) {
+    try {
+      const res = await fetch(`${API_BASE}/books/batch/covers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ bookIds })
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (data.success && data.covers) {
+        // Appliquer les couvertures trouvées
+        data.covers.forEach(cover => {
+          const element = Array.from(allElements).find(
+            el => el.dataset.bookId === cover.id || el.dataset.bookId === cover.legacy_id
+          );
+          if (element && cover.coverUrl) {
+            const img = element.querySelector('.book-cover-img');
+            if (img) {
+              img.src = cover.coverUrl;
+              img.classList.add("loaded");
+              const fallback = element.querySelector('.book-cover-fallback');
+              if (fallback) fallback.style.display = 'none';
+            }
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('Erreur batch covers:', err.message);
+      // Fallback : charger individuellement
+      bookIds.forEach(bookId => {
+        const element = Array.from(allElements).find(el => el.dataset.bookId === bookId);
+        if (element) {
+          const img = element.querySelector('.book-cover-img');
+          if (img) loadBookCover(bookId, img, 2);
+        }
+      });
+    }
+  }
+
+  // Charge les couvertures depuis notre API back-end (version alternative)
   async function loadAllBookCovers() {
     const cards = document.querySelectorAll('[data-id]');
-    for (const card of cards) {
-      const bookId = card.dataset.id;
-      const img = card.querySelector('img.book-cover-img, img');
-      if (!img || !bookId) continue;
+    if (cards.length === 0) return;
+
+    const BATCH_SIZE = 20;
+    const bookIds = Array.from(cards).map(c => c.dataset.id).filter(Boolean);
+
+    for (let i = 0; i < bookIds.length; i += BATCH_SIZE) {
+      const batch = bookIds.slice(i, i + BATCH_SIZE);
       try {
-        const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
+        const res = await fetch(`${API_BASE}/books/batch/covers`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookIds: batch })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        if (data.success && data.coverUrl) {
-          img.src = data.coverUrl;
-          img.style.display = 'block';
-          const fallback = card.querySelector('.book-cover-fallback');
-          if (fallback) fallback.style.display = 'none';
+
+        if (data.success && data.covers) {
+          data.covers.forEach(cover => {
+            const card = Array.from(cards).find(
+              c => c.dataset.id === cover.id || c.dataset.id === cover.legacy_id
+            );
+            if (card && cover.coverUrl) {
+              const img = card.querySelector('img.book-cover-img, img');
+              if (img) {
+                img.src = cover.coverUrl;
+                img.style.display = 'block';
+                const fallback = card.querySelector('.book-cover-fallback');
+                if (fallback) fallback.style.display = 'none';
+              }
+            }
+          });
         }
-      } catch (e) { }
+      } catch (e) {
+        console.warn('Erreur chargement couvertures batch:', e.message);
+      }
     }
   }
 

@@ -191,7 +191,7 @@
         )
         .join("");
     });
-  }
+  } g
 
   function initCarouselsOnPage() {
     const nodes = document.querySelectorAll(".imsa-carousel[data-imsa-carousel='home']");

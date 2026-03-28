@@ -1,324 +1,318 @@
-/* IMSA IntelliBook - Lecteur en ligne (PDF.js + fallback dummy) */
-(function () {
-  const STORAGE_BOOKMARK_PREFIX = "imsa_bookmark_";
-  const STORAGE_PROGRESS_PREFIX = "imsa_progress_";
-  const NIGHT_MODE_KEY = "imsa_reader_night";
+/* IMSA IntelliBook - Lecteur en Ligne */
 
-  function getBookIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("id");
+const API = 'http://localhost:5000/api';
+
+function getToken()   { return localStorage.getItem('imsa_access_token'); }
+function isLoggedIn() { return !!getToken(); }
+function getBookId()  { return new URLSearchParams(window.location.search).get('id'); }
+
+let currentPage  = 1;
+let totalPages   = 1;
+let bookData     = null;
+let saveInterval = null;
+
+// ── Initialisation ──
+document.addEventListener('DOMContentLoaded', async () => {
+  const bookId = getBookId();
+  if (!bookId) {
+    showMessage('Aucun livre sélectionné.', 'danger');
+    return;
   }
 
-  function getSavedJSON(key) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
+  if (!isLoggedIn()) {
+    showMessage(
+      'Connectez-vous pour lire ce livre. ' +
+      '<a href="inscription.html" class="btn btn-primary btn-sm ms-2">Se connecter</a>',
+      'warning'
+    );
+    return;
   }
 
-  function saveBookmark(bookId, pageNum) {
-    localStorage.setItem(`${STORAGE_BOOKMARK_PREFIX}${bookId}`, JSON.stringify({ page: pageNum, at: Date.now() }));
-  }
+  await loadBook(bookId);
+});
 
-  function updateProgress(bookId, pageNum, totalPages) {
-    const total = Math.max(1, totalPages);
-    const percent = Math.round(((pageNum - 1) / (total - 1 || 1)) * 100);
-    const payload = { page: pageNum, percent };
-    localStorage.setItem(`${STORAGE_PROGRESS_PREFIX}${bookId}`, JSON.stringify(payload));
-    const bar = document.getElementById("readerProgressBar");
-    if (bar) bar.style.width = `${percent}%`;
-  }
+// ── Charger le livre ──
+async function loadBook(bookId) {
+  try {
+    showLoader(true);
 
-  function toggleNightMode(force) {
-    const should =
-      typeof force === "boolean"
-        ? force
-        : !document.body.classList.contains("night-mode");
-    document.body.classList.toggle("night-mode", should);
-    localStorage.setItem(NIGHT_MODE_KEY, should ? "1" : "0");
-  }
-
-  function formatPageIndicator(pageNum, totalPages) {
-    const label = `Page ${pageNum} / ${totalPages}`;
-    const indicator = document.getElementById("pageIndicator");
-    const toolbarText = document.getElementById("toolbarPageText");
-    if (indicator) indicator.textContent = label;
-    if (toolbarText) toolbarText.textContent = label;
-  }
-
-  function setZoom(level) {
-    state.zoom = level;
-    state.zoomScale = level;
-    renderPage(state.currentPage);
-  }
-
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = String(text).split(/\s+/);
-    let line = "";
-    const lines = [];
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line ? `${line} ${words[n]}` : words[n];
-      const metrics = ctx.measureText(testLine);
-      const testWidth = metrics.width;
-      if (testWidth > maxWidth && line) {
-        lines.push(line);
-        line = words[n];
-      } else {
-        line = testLine;
-      }
-    }
-    if (line) lines.push(line);
-    lines.forEach((l, idx) => ctx.fillText(l, x, y + idx * lineHeight));
-  }
-
-  async function fetchBookContent(bookId) {
-    try {
-      // BACKEND: GET /api/books/:id/read
-      // return { pdfUrl: "..." }
-      // Démo: renvoie null => fallback dummy
-      await new Promise((r) => setTimeout(r, 120));
-      return { pdfUrl: null };
-    } catch (err) {
-      console.error(err);
-      return { pdfUrl: null };
-    }
-  }
-
-  function initDummyState(book) {
-    state.totalPages = 2;
-    state.currentPage = 1;
-    state.mode = "dummy";
-    state.dummyText = [
-      `Ce livre explore ${book.tags?.[0] || "le savoir"} et montre comment la culture gabonaise nourrit les apprentissages.\n\n${book.shortSummary}`,
-      `À travers une lecture guidée, vous découvrirez des repères pour comprendre, réfléchir et retenir.\n\n${book.shortSummary}`
-    ];
-  }
-
-  function setupCanvasSizing() {
-    const canvas = document.getElementById("pdfCanvas");
-    const viewer = document.getElementById("pdfViewer");
-    if (!canvas || !viewer) return;
-    const dpr = window.devicePixelRatio || 1;
-    const w = Math.min(820, viewer.clientWidth - 10);
-    const h = 900; // taille fixe pour un rendu cohérent
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    canvas.width = Math.floor(w * dpr * state.zoomScale);
-    canvas.height = Math.floor(h * dpr * state.zoomScale);
-    state.canvasCtx = canvas.getContext("2d");
-    if (state.canvasCtx) state.canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
-  }
-
-  function renderDummyPage(pageNum) {
-    const canvas = document.getElementById("pdfCanvas");
-    if (!canvas) return;
-    const ctx = state.canvasCtx || canvas.getContext("2d");
-    if (!ctx) return;
-
-    const w = canvas.width;
-    const h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    const night = document.body.classList.contains("night-mode");
-    const bg = night ? "#0F1923" : "#F5F0E8";
-    const text = night ? "#E8DCC8" : "#1A3A5C";
-    const muted = night ? "rgba(232,220,200,0.78)" : "rgba(26,58,92,0.70)";
-
-    // Fond
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, w, h);
-
-    // Bandeau
-    ctx.fillStyle = night ? "rgba(74,142,194,0.16)" : "rgba(46,109,164,0.14)";
-    ctx.fillRect(0, 0, w, Math.floor(140 * state.zoomScale));
-
-    ctx.fillStyle = text;
-    ctx.font = `${Math.floor(22 * state.zoomScale)}px "Playfair Display", serif`;
-    const title = state.book?.title || "";
-    ctx.fillText(title, Math.floor(34 * state.zoomScale), Math.floor(62 * state.zoomScale));
-
-    ctx.fillStyle = muted;
-    ctx.font = `${Math.floor(14 * state.zoomScale)}px "DM Sans", sans-serif`;
-    ctx.fillText(`Lecture en ligne • IMSA IntelliBook`, Math.floor(34 * state.zoomScale), Math.floor(94 * state.zoomScale));
-
-    // Contenu
-    ctx.fillStyle = text;
-    ctx.font = `${Math.floor(16 * state.zoomScale)}px "DM Sans", sans-serif`;
-    const raw = state.dummyText[pageNum - 1] || "";
-    const [p1, p2] = raw.split("\n\n");
-
-    const x = Math.floor(34 * state.zoomScale);
-    let y = Math.floor(210 * state.zoomScale);
-    const maxWidth = Math.floor(w - 68 * state.zoomScale);
-
-    if (p1) {
-      wrapText(ctx, p1, x, y, maxWidth, Math.floor(22 * state.zoomScale));
-      // Ajuste y selon lignes estimées
-      y += Math.floor(120 * state.zoomScale);
-    }
-    ctx.fillStyle = night ? "rgba(232,220,200,0.92)" : "rgba(26,58,92,0.92)";
-    if (p2) wrapText(ctx, p2, x, y, maxWidth, Math.floor(22 * state.zoomScale));
-
-    // Footer
-    ctx.fillStyle = muted;
-    ctx.font = `${Math.floor(12 * state.zoomScale)}px "DM Sans", sans-serif`;
-    ctx.fillText(`Page ${pageNum} • ${state.book?.author || ""}`, Math.floor(34 * state.zoomScale), Math.floor(h - 34 * state.zoomScale));
-  }
-
-  function renderPage(pageNum) {
-    const total = state.totalPages || 1;
-    const clamped = Math.max(1, Math.min(total, pageNum));
-    state.currentPage = clamped;
-
-    if (state.mode === "dummy") {
-      setupCanvasSizing();
-      renderDummyPage(clamped);
-    }
-
-    formatPageIndicator(clamped, total);
-    updateProgress(state.bookId, clamped, total);
-    // Marque/page list active
-    document.querySelectorAll("#pageList button").forEach((btn) => {
-      btn.classList.toggle("active", Number(btn.getAttribute("data-page")) === clamped);
+    const res = await fetch(`${API}/books/${bookId}/read`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
     });
-  }
 
-  function renderPageList(totalPages) {
-    const wrap = document.getElementById("pageList");
-    if (!wrap) return;
-    wrap.innerHTML = "";
-    for (let p = 1; p <= totalPages; p++) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "list-group-item list-group-item-action";
-      btn.setAttribute("data-page", String(p));
-      btn.textContent = `Page ${p}`;
-      btn.addEventListener("click", () => renderPage(p));
-      wrap.appendChild(btn);
-    }
-    const info = document.getElementById("readerPageCountInfo");
-    if (info) info.textContent = `${totalPages} pages`;
-  }
+    const data = await res.json();
 
-  function nextPage() {
-    renderPage(state.currentPage + 1);
-  }
-
-  function prevPage() {
-    renderPage(state.currentPage - 1);
-  }
-
-  async function initPDFViewer(bookId) {
-    state.bookId = bookId;
-    state.book = window.imsaUtils.getBookById(bookId);
-    const viewer = document.getElementById("pdfViewer");
-    if (viewer) viewer.setAttribute("data-book-id", bookId);
-
-    if (coverContainer) {
-      coverContainer.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(state.book);
-    }
-    if (title) title.textContent = state.book?.title || "";
-    if (author) author.textContent = state.book?.author || "";
-    if (backLink) backLink.href = `livre.html?id=${encodeURIComponent(bookId)}`;
-
-    // Avatar lecteur
-    const avatar = document.getElementById("readerUserAvatar");
-    if (avatar) {
-      const userRaw = localStorage.getItem("imsa_user");
-      if (userRaw) {
-        try {
-          const u = JSON.parse(userRaw);
-          const parts = (u.fullname || u.fullName || u.nom || "").split(/\s+/).filter(Boolean);
-          const ini = (parts[0]?.charAt(0) || "I") + (parts[1]?.charAt(0) || "M");
-          avatar.textContent = ini.toUpperCase();
-        } catch {
-          avatar.textContent = "IM";
-        }
-      } else avatar.textContent = "IM";
-    }
-
-    // Night mode persistance
-    const savedNight = localStorage.getItem(NIGHT_MODE_KEY) === "1";
-    toggleNightMode(savedNight);
-
-    // Chargement contenu (backend)
-    const content = await fetchBookContent(bookId);
-    if (content && content.pdfUrl) {
-      // PDF réel : mode PDF.js
-      state.mode = "pdf";
-      state.totalPages = 214; // fallback si on ne connaît pas encore
-      // On garde le fallback dummy pour ne pas bloquer la maquette.
-      initDummyState(state.book);
-    } else {
-      initDummyState(state.book);
-    }
-
-    renderPageList(state.totalPages);
-
-    const bookmark = getSavedJSON(`${STORAGE_BOOKMARK_PREFIX}${bookId}`);
-    const progress = getSavedJSON(`${STORAGE_PROGRESS_PREFIX}${bookId}`);
-    const desired = bookmark?.page || progress?.page || 1;
-    renderPage(desired);
-  }
-
-  // --- Init UI / Events ---
-  const state = {
-    bookId: null,
-    book: null,
-    mode: "dummy",
-    totalPages: 1,
-    currentPage: 1,
-    zoomScale: 1,
-    canvasCtx: null,
-    dummyText: []
-  };
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    const bookId = getBookIdFromUrl();
-    if (!bookId) {
-      window.imsaToast && window.imsaToast("Livre introuvable (paramètre manquant).", "error");
+    if (!data.success) {
+      if (data.must_borrow) {
+        showMessage(
+          `Vous devez d'abord emprunter ce livre pour le lire. ` +
+          `<a href="livre.html?id=${data.book_id}" class="btn btn-warning btn-sm ms-2">` +
+          `Emprunter</a>`,
+          'warning'
+        );
+      } else {
+        showMessage(data.message, 'danger');
+      }
+      showLoader(false);
       return;
     }
 
-    await initPDFViewer(bookId);
+    bookData = data.data;
 
-    // Nav boutons
-    document.getElementById("prevPageBtn")?.addEventListener("click", prevPage);
-    document.getElementById("nextPageBtn")?.addEventListener("click", nextPage);
-    document.getElementById("toolbarPrevBtn")?.addEventListener("click", prevPage);
-    document.getElementById("toolbarNextBtn")?.addEventListener("click", nextPage);
+    // Afficher les infos du livre
+    updateBookInfo(bookData);
 
-    // Zoom
-    document.querySelectorAll("[data-action='zoom']").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const z = Number(btn.getAttribute("data-zoom") || 1);
-        setZoom(z);
-      });
+    // Restaurer la progression
+    if (bookData.progress && bookData.progress.current_page > 1) {
+      currentPage = bookData.progress.current_page;
+    }
+
+    // Initialiser le lecteur
+    if (bookData.file_url) {
+      initPDFReader(bookData.file_url);
+    } else {
+      initDemoReader(bookData);
+    }
+
+    // Sauvegarder toutes les 30 secondes
+    saveInterval = setInterval(() => saveProgress(), 30000);
+
+    showLoader(false);
+  } catch (err) {
+    showMessage('Erreur de connexion au serveur.', 'danger');
+    showLoader(false);
+  }
+}
+
+// ── Afficher les infos du livre ──
+function updateBookInfo(book) {
+  const titleEl = document.getElementById('bookTitle');
+  const authorEl = document.getElementById('bookAuthor');
+  const coverEl = document.getElementById('bookCoverSidebar');
+
+  if (titleEl)  titleEl.textContent  = book.title;
+  if (authorEl) authorEl.textContent = book.author;
+  if (coverEl && book.cover_url) {
+    coverEl.src = book.cover_url;
+    coverEl.alt = book.title;
+  }
+  document.title = `${book.title} — IMSA IntelliBook`;
+}
+
+// ── Lecteur PDF avec PDF.js ──
+function initPDFReader(pdfUrl) {
+  if (typeof pdfjsLib === 'undefined') {
+    initDemoReader(bookData);
+    return;
+  }
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+    totalPages = pdf.numPages;
+    updatePageInfo();
+    renderPDFPage(pdf, currentPage);
+
+    document.getElementById('prevPageBtn')?.addEventListener('click', () => {
+      if (currentPage > 1) { currentPage--; renderPDFPage(pdf, currentPage); }
     });
 
-    // Mode nuit (double entrée)
-    const nightBtns = [document.getElementById("nightModeBtn"), document.getElementById("toolbarNightBtn")].filter(Boolean);
-    nightBtns.forEach((b) => b.addEventListener("click", () => toggleNightMode()));
-
-    // Bookmark
-    document.getElementById("bookmarkBtn")?.addEventListener("click", async () => {
-      saveBookmark(state.bookId, state.currentPage);
-      window.imsaToast && window.imsaToast(`Marque-page enregistré : page ${state.currentPage}.`, "success");
+    document.getElementById('nextPageBtn')?.addEventListener('click', () => {
+      if (currentPage < totalPages) { currentPage++; renderPDFPage(pdf, currentPage); }
     });
+  }).catch(() => initDemoReader(bookData));
+}
 
-    // Télécharger
-    document.getElementById("downloadBtn")?.addEventListener("click", async () => {
-      // BACKEND: GET /api/books/:id/download stub
-      window.imsaToast && window.imsaToast("Téléchargement (démo) prêt pour backend.", "info");
-    });
-
-    // Reflow / resize: recalcul canvas
-    window.addEventListener("resize", () => {
-      renderPage(state.currentPage);
-    }, { passive: true });
+function renderPDFPage(pdf, pageNum) {
+  pdf.getPage(pageNum).then(page => {
+    const canvas  = document.getElementById('pdfCanvas');
+    if (!canvas) return;
+    const context = canvas.getContext('2d');
+    const viewport = page.getViewport({ scale: 1.4 });
+    canvas.height = viewport.height;
+    canvas.width  = viewport.width;
+    page.render({ canvasContext: context, viewport });
+    updatePageInfo();
+    updateProgressBar();
+    saveProgress();
   });
-})();
+}
+
+// ── Lecteur demo (sans PDF) ──
+function initDemoReader(book) {
+  const content = document.getElementById('readerContent');
+  if (!content) return;
+
+  totalPages = 20;
+
+  content.innerHTML = `
+    <div class="reader-demo p-4" style="max-width:780px;margin:0 auto;font-family:'Georgia',serif;line-height:1.9;font-size:1.05rem;">
+      <h2 style="font-family:'Playfair Display',serif;color:#1A3A5C;margin-bottom:1.5rem;">
+        ${book.title}
+      </h2>
+      <p style="color:#6B7280;font-style:italic;margin-bottom:2rem;">
+        ${book.author}
+      </p>
+      <div id="pageContent"></div>
+    </div>
+  `;
+
+  renderDemoPage(currentPage, book);
+
+  document.getElementById('prevPageBtn')?.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderDemoPage(currentPage, book);
+      updatePageInfo();
+      updateProgressBar();
+      saveProgress();
+    }
+  });
+
+  document.getElementById('nextPageBtn')?.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderDemoPage(currentPage, book);
+      updatePageInfo();
+      updateProgressBar();
+      saveProgress();
+    }
+  });
+
+  updatePageInfo();
+  updateProgressBar();
+}
+
+function renderDemoPage(page, book) {
+  const el = document.getElementById('pageContent');
+  if (!el) return;
+  el.innerHTML = `
+    <p style="text-indent:2em;">
+      Vous lisez actuellement <strong>${book.title}</strong> de <em>${book.author}</em>.
+      Page ${page} sur ${totalPages}. Ce contenu de démonstration représente
+      l'aperçu du livre. Pour accéder au contenu complet en PDF,
+      le fichier doit être uploadé par l'administrateur via le dashboard.
+    </p>
+    <p style="text-indent:2em;margin-top:1.5rem;">
+      Ce livre fait partie du catalogue IMSA IntelliBook, la bibliothèque
+      numérique officielle de l'Institut Multimédia et Sciences Appliquées
+      de Libreville, Gabon. Retrouvez des milliers d'ouvrages africains
+      et gabonais disponibles gratuitement pour les étudiants de l'IMSA.
+    </p>
+    <p style="text-indent:2em;margin-top:1.5rem;color:#9CA3AF;font-style:italic;">
+      — Page ${page} / ${totalPages} —
+    </p>
+  `;
+}
+
+// ── Sauvegarder la progression ──
+async function saveProgress() {
+  if (!bookData || !isLoggedIn()) return;
+  const percent = Math.round((currentPage / totalPages) * 100);
+  try {
+    await fetch(`${API}/reading-progress`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      },
+      body: JSON.stringify({
+        book_id:     bookData.legacy_id || bookData.id,
+        current_page: currentPage,
+        total_pages:  totalPages,
+        percent
+      })
+    });
+  } catch(e) {}
+}
+
+// ── Marque-page ──
+document.getElementById('bookmarkBtn')?.addEventListener('click', async () => {
+  if (!bookData) return;
+  localStorage.setItem(`imsa_bookmark_${bookData.id}`, currentPage);
+  showReaderToast(`🔖 Marque-page placé à la page ${currentPage}`);
+  try {
+    await fetch(`${API}/reading-progress`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      },
+      body: JSON.stringify({
+        book_id:      bookData.legacy_id || bookData.id,
+        current_page: currentPage,
+        bookmark_page: currentPage
+      })
+    });
+  } catch(e) {}
+});
+
+// ── Mode nuit ──
+document.getElementById('nightModeBtn')?.addEventListener('click', () => {
+  document.body.classList.toggle('night-mode');
+  const btn = document.getElementById('nightModeBtn');
+  if (btn) {
+    const isNight = document.body.classList.contains('night-mode');
+    btn.innerHTML = isNight ? '☀️ Mode jour' : '🌙 Mode nuit';
+    localStorage.setItem('imsa_night_mode', isNight);
+  }
+});
+
+// Restaurer mode nuit
+if (localStorage.getItem('imsa_night_mode') === 'true') {
+  document.body.classList.add('night-mode');
+}
+
+// ── Utilitaires ──
+function updatePageInfo() {
+  const el = document.getElementById('pageInfo');
+  if (el) el.textContent = `Page ${currentPage} / ${totalPages}`;
+}
+
+function updateProgressBar() {
+  const bar = document.getElementById('readingProgressBar');
+  const pct = Math.round((currentPage / totalPages) * 100);
+  if (bar) {
+    bar.style.width = `${pct}%`;
+    bar.setAttribute('aria-valuenow', pct);
+  }
+}
+
+function showLoader(show) {
+  const loader = document.getElementById('readerLoader');
+  if (loader) loader.style.display = show ? 'flex' : 'none';
+}
+
+function showMessage(html, type) {
+  const container = document.getElementById('readerContent') ||
+                    document.querySelector('.reader-content');
+  if (container) {
+    container.innerHTML = `
+      <div class="alert alert-${type} m-4" role="alert">
+        ${html}
+      </div>
+    `;
+  }
+}
+
+function showReaderToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'position-fixed bottom-0 start-50 translate-middle-x mb-4';
+  toast.style.zIndex = '9999';
+  toast.innerHTML = `
+    <div class="toast show text-white fw-semibold px-4 py-2 rounded-pill"
+         style="background:#1A3A5C;">
+      ${msg}
+    </div>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Nettoyage
+window.addEventListener('beforeunload', () => {
+  if (saveInterval) clearInterval(saveInterval);
+  saveProgress();
+});
 

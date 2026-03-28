@@ -108,15 +108,77 @@
     return paras.slice(0, 5);
   }
 
-  function isLoggedIn() {
-    return !!localStorage.getItem("imsa_user");
+const API = 'http://localhost:5000/api';
+
+function getToken() {
+  return localStorage.getItem('imsa_access_token');
+}
+
+function isLoggedIn() {
+  return !!localStorage.getItem("imsa_user");
+}
+
+async function borrowBook(bookId) {
+  if (!isLoggedIn()) {
+    showToast('Connectez-vous pour emprunter un livre.', 'warning');
+    setTimeout(() => window.location.href = 'inscription.html', 1500);
+    return { ok: false };
   }
 
-  async function borrowBook(bookId) {
-    // BACKEND: POST /api/borrows { bookId, userId, dueDate }
-    await new Promise((r) => setTimeout(r, 80));
-    return { ok: true };
+  try {
+    const res = await fetch(`${API}/borrows`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      },
+      body: JSON.stringify({ book_id: bookId })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      showToast(data.message, 'success');
+      return { ok: true, data: data.data };
+    } else {
+      showToast(data.message, 'danger');
+      return { ok: false };
+    }
+  } catch (err) {
+    showToast('Erreur de connexion au serveur.', 'danger');
+    return { ok: false };
   }
+}
+
+function showToast(message, type = 'success') {
+  const existing = document.getElementById('liveToast');
+  if (existing) existing.remove();
+
+  const colors = {
+    success: '#198754',
+    danger:  '#dc3545',
+    warning: '#ffc107',
+    info:    '#0dcaf0'
+  };
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="liveToast" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+      <div class="toast show align-items-center text-white border-0"
+           style="background:${colors[type] || colors.success}">
+        <div class="d-flex">
+          <div class="toast-body fw-semibold">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                  onclick="this.closest('#liveToast').remove()"></button>
+        </div>
+      </div>
+    </div>
+  `);
+
+  setTimeout(() => {
+    const t = document.getElementById('liveToast');
+    if (t) t.remove();
+  }, 4000);
+}
 
   async function submitReview(bookId, data) {
     // BACKEND: POST /api/books/:id/reviews

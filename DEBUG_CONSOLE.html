@@ -1,0 +1,96 @@
+<!-- 
+DEBUGGING SCRIPT - Copy into browser console to test
+═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<script>
+// TEST 1: Vérifier les éléments trouvés
+console.log("=== TEST 1: Chercher les éléments avec data-id ===");
+const elements = document.querySelectorAll('.book-card[data-id]');
+console.log(`Trouvé: ${elements.length} éléments`);
+if (elements.length > 0) {
+  console.log("Premier élément:", elements[0]);
+  console.log("data-id:", elements[0].dataset.id);
+  const img = elements[0].querySelector('.book-cover-img');
+  console.log("Image src:", img?.src);
+}
+
+// TEST 2: Vérifier l'API
+console.log("\n=== TEST 2: Tester l'API /books/batch/covers ===");
+async function testAPI() {
+  const API_BASE = 'http://localhost:5000/api';
+  try {
+    const response = await fetch(`${API_BASE}/books/batch/covers`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ bookIds: ['livre-001', 'livre-002'] })
+    });
+    const data = await response.json();
+    console.log("Réponse API:", data);
+    if (data.covers && data.covers.length > 0) {
+      console.log("Première couverture:", data.covers[0]);
+    }
+  } catch (err) {
+    console.error("ERREUR API:", err);
+    console.error("Le backend n'est probablement pas démarré!");
+  }
+}
+testAPI();
+
+// TEST 3: Vérifier les URLs de couverture
+console.log("\n=== TEST 3: URLs actuelles des images ===");
+document.querySelectorAll('.book-cover-img').slice(0, 3).forEach((img, i) => {
+  console.log(`Image ${i}: src="${img.src.substring(0, 80)}..."`);
+  console.log(`  Classe: ${img.className}`);
+});
+
+// TEST 4: Simuler le chargement d'une couverture
+console.log("\n=== TEST 4: Tester le chargement manuel ===");
+async function testManualLoad() {
+  const testImg = document.querySelector('.book-cover-img');
+  if (!testImg) {
+    console.log("Pas d'image trouvée");
+    return;
+  }
+  const bookId = testImg.closest('.book-card')?.dataset.id;
+  if (!bookId) {
+    console.log("Pas de book-id trouvé");
+    return;
+  }
+  console.log(`Essayer de charger la couverture pour: ${bookId}`);
+  
+  const API_BASE = 'http://localhost:5000/api';
+  try {
+    const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
+    const data = await res.json();
+    console.log("Réponse:", data);
+    if (data.success && data.coverUrl) {
+      console.log("URL trouvée! Appliquer à l'image...");
+      testImg.src = data.coverUrl;
+      testImg.classList.add("loaded");
+      console.log("✅ Image mise à jour!");
+    } else {
+      console.log("❌ Pas de coverUrl retourné");
+    }
+  } catch (err) {
+    console.error("Erreur:", err);
+  }
+}
+testManualLoad();
+</script>
+
+═════════════════════════════════════════════════════════════════════════════════
+
+HOW TO USE:
+1. Ouvrir le site: http://localhost:5500/index.html
+2. Appuyer sur F12 pour ouvrir la console
+3. Copier-coller ce script en entier dans la console
+4. Appuyer sur Entrée
+
+Les résultats vont montrer:
+✅ Si les éléments sont trouvés
+✅ Si l'API répond
+✅ Les URLs de couverture
+✅ Si le chargement manuel marche
+
+═════════════════════════════════════════════════════════════════════════════════

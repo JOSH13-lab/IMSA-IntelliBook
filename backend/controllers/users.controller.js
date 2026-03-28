@@ -125,3 +125,56 @@ exports.getRecommendations = async (req, res, next) => {
     next(err);
   }
 };
+
+// GET /api/users/dashboard/stats — Statistiques dashboard admin
+exports.getDashboardStats = async (req, res, next) => {
+  try {
+    const { rows: stats } = await query(`
+      SELECT 
+        COUNT(DISTINCT u.id) FILTER (WHERE u.deleted_at IS NULL) as total_users,
+        COUNT(DISTINCT b.id) FILTER (WHERE b.status IN ('en_cours', 'prolonge')) as active_borrows,
+        COUNT(DISTINCT b.id) FILTER (WHERE b.status = 'en_retard') as overdue_count,
+        COUNT(DISTINCT bk.id) as total_books
+      FROM users u
+      LEFT JOIN borrows b ON u.id = b.user_id
+      LEFT JOIN books bk ON bk.is_active = TRUE
+    `);
+
+    const { rows: recentUsers } = await query(`
+      SELECT id, fullname, email, user_type, created_at
+      FROM users
+      WHERE deleted_at IS NULL
+      ORDER BY created_at DESC
+      LIMIT 5
+    `);
+
+    const { rows: topBooks } = await query(`
+      SELECT id, title, author, total_borrows, cover_url
+      FROM books
+      WHERE is_active = TRUE
+      ORDER BY total_borrows DESC
+      LIMIT 5
+    `);
+
+    const { rows: recentBorrows } = await query(`
+      SELECT b.id, u.fullname, bk.title, b.status, b.due_date, b.borrowed_at
+      FROM borrows b
+      JOIN users u ON b.user_id = u.id
+      JOIN books bk ON b.book_id = bk.id
+      ORDER BY b.borrowed_at DESC
+      LIMIT 10
+    `);
+
+    res.json({
+      success: true,
+      data: {
+        ...stats[0],
+        recent_users: recentUsers,
+        top_books: topBooks,
+        recent_borrows: recentBorrows
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};

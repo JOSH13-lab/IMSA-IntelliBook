@@ -186,7 +186,8 @@
       if (data.success && data.coverUrl) {
         imgElement.src = data.coverUrl;
         imgElement.classList.add("loaded");
-        const fallback = imgElement.closest('.book-cover-wrap')?.querySelector('.book-cover-fallback');
+        const fallback = imgElement.closest('.book-cover-container')?.nextElementSibling || 
+                        imgElement.closest('.book-cover-container')?.querySelector('.book-cover-fallback');
         if (fallback) fallback.style.display = 'none';
       }
     } catch (err) {
@@ -201,12 +202,12 @@
 
   // Charger TOUTES les couvertures de la page (méthode batch optimisée)
   async function loadAllCovers() {
-    const elements = document.querySelectorAll('[data-book-id]');
+    const elements = document.querySelectorAll('.book-card[data-id]');
     if (elements.length === 0) return;
 
     // Grouper par batch de 20 livres max
     const BATCH_SIZE = 20;
-    const bookIds = Array.from(elements).map(el => el.dataset.bookId).filter(Boolean);
+    const bookIds = Array.from(elements).map(el => el.dataset.id).filter(Boolean);
     
     for (let i = 0; i < bookIds.length; i += BATCH_SIZE) {
       const batch = bookIds.slice(i, i + BATCH_SIZE);
@@ -236,7 +237,7 @@
         // Appliquer les couvertures trouvées
         data.covers.forEach(cover => {
           const element = Array.from(allElements).find(
-            el => el.dataset.bookId === cover.id || el.dataset.bookId === cover.legacy_id
+            el => el.dataset.id === cover.id || el.dataset.id === cover.legacy_id
           );
           if (element && cover.coverUrl) {
             const img = element.querySelector('.book-cover-img');
@@ -253,7 +254,7 @@
       console.warn('Erreur batch covers:', err.message);
       // Fallback : charger individuellement
       bookIds.forEach(bookId => {
-        const element = Array.from(allElements).find(el => el.dataset.bookId === bookId);
+        const element = Array.from(allElements).find(el => el.dataset.id === bookId);
         if (element) {
           const img = element.querySelector('.book-cover-img');
           if (img) loadBookCover(bookId, img, 2);

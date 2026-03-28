@@ -52,13 +52,16 @@ window.imsaApi = {
       const b = result.data;
       if (!b) return null;
       // Normalisation minimaliste
+      const coverUrl = b.cover_url || b.coverUrl || 
+        (b.isbn13 || b.isbn ? `https://books.google.com/books/content?vid=ISBN:${b.isbn13 || b.isbn}&printsec=frontcover&img=1&zoom=1&source=gbs_api` : null);
+      
       return {
         ...b,
         categoryKey: b.category_slug || b.categoryKey,
         rating: b.average_rating || 0,
         ratingCount: b.total_reviews || 0,
         shortSummary: b.summary || "",
-        coverUrl: b.cover_url || b.coverUrl || `https://books.google.com/books/content?q=intitle:${encodeURIComponent(b.title)}+inauthor:${encodeURIComponent(b.author || '')}&printsec=frontcover&img=1&zoom=1&source=gbs_api`
+        coverUrl: coverUrl
       };
     } catch (err) {
       console.error(`Erreur chargement livre ${bookId}:`, err);
@@ -79,7 +82,8 @@ window.imsaApi = {
         rating: b.average_rating || 0,
         ratingCount: b.total_reviews || 0,
         shortSummary: b.summary || "",
-        coverUrl: b.cover_url || b.coverUrl || `https://books.google.com/books/content?q=intitle:${encodeURIComponent(b.title)}+inauthor:${encodeURIComponent(b.author || '')}&printsec=frontcover&img=1&zoom=1&source=gbs_api`
+        coverUrl: b.cover_url || b.coverUrl || 
+          (b.isbn13 || b.isbn ? `https://books.google.com/books/content?vid=ISBN:${b.isbn13 || b.isbn}&printsec=frontcover&img=1&zoom=1&source=gbs_api` : null)
       }));
     });
     

@@ -358,13 +358,17 @@ exports.deleteBook = async (req, res, next) => {
   }
 };
 
-// GET /api/books/:id/read — Accès lecture (protégé)
-// Connecté à : lire.html
-exports.getBookContent = async (req, res, next) => {
+// GET /api/books/:id/read — DEPRECATED: Use reading.controller.js instead
+// This function is kept for reference only and is NOT exported
+// All routes now use reading.controller.js getBookContent
+const _getBookContentDeprecated = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { rows } = await query(
-      'SELECT id, title, file_url, preview_url, total_copies FROM books WHERE id::text = $1 OR legacy_id = $1',
+      `SELECT id, title, author, file_url, preview_url, total_copies, 
+              cover_url, legacy_id
+       FROM books WHERE id::text = $1 OR legacy_id = $1
+       AND is_active = TRUE`,
       [id]
     );
 
@@ -372,27 +376,45 @@ exports.getBookContent = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Livre introuvable.' });
     }
 
-    // Vérifier que l'utilisateur a un emprunt actif
-    const borrow = await query(`
-      SELECT id FROM borrows
-      WHERE user_id = $1 AND book_id = $2
-        AND status IN ('en_cours', 'prolonge')
-    `, [req.user.id, rows[0].id]);
+    const book = rows[0];
 
-    if (!borrow.rows[0] && req.user.user_type !== 'administrateur') {
-      return res.status(403).json({
-        success: false,
-        message: 'Vous devez emprunter ce livre pour le lire.'
-      });
+    // Vérifier que l'utilisateur a un emprunt actif (sauf admin)
+    if (req.user.user_type !== 'administrateur') {
+      const borrow = await query(`
+        SELECT id FROM borrows
+        WHERE user_id = $1 AND book_id = $2
+          AND status IN ('en_cours', 'prolonge')
+      `, [req.user.id, book.id]);
+
+      if (!borrow.rows[0]) {
+        return res.status(403).json({
+          success: false,
+          message: 'Vous devez emprunter ce livre pour le lire en ligne.',
+          must_borrow: true,
+          book_id: book.legacy_id || book.id
+        });
+      }
     }
+
+    // Récupérer la progression de lecture
+    const progressResult = await query(
+      `SELECT current_page, percent, bookmark_page, total_pages
+       FROM reading_progress
+       WHERE user_id = $1 AND book_id = $2`,
+      [req.user.id, book.id]
+    );
 
     res.json({
       success: true,
       data: {
-        bookId: rows[0].id,
-        title: rows[0].title,
-        fileUrl: rows[0].file_url,    // URL PDF sécurisée
-        previewUrl: rows[0].preview_url
+        id:          book.id,
+        legacy_id:   book.legacy_id,
+        title:       book.title,
+        author:      book.author,
+        cover_url:   book.cover_url,
+        file_url:    book.file_url || null,
+        preview_url: book.preview_url || null,
+        progress:    progressResult.rows[0] || { current_page: 1, percent: 0 }
       }
     });
   } catch (err) {

@@ -5,6 +5,7 @@ const ctrl    = require('../controllers/users.controller');
 const fav     = require('../controllers/favorites.controller');
 const borrow  = require('../controllers/borrows.controller');
 
+router.get('/dashboard/stats', auth, isAdmin, ctrl.getDashboardStats);  // Dashboard stats
 router.get('/',              auth, isAdmin, ctrl.getUsers);       // GET    /api/users
 router.get('/:id',           auth, ctrl.getUserById);             // GET    /api/users/:id
 router.put('/:id',           auth, ctrl.updateUser);              // PUT    /api/users/:id

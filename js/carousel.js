@@ -196,6 +196,16 @@
         )
         .join("");
     });
+
+    if (typeof window.imsaInitBookCovers === "function") {
+      window.imsaInitBookCovers();
+    }
+    if (typeof window.imsaLoadAllCovers === "function") {
+      window.imsaLoadAllCovers();
+    }
+    if (typeof window.imsaLoadAllBookCovers === "function") {
+      window.imsaLoadAllBookCovers();
+    }
   }
 
   function initCarouselsOnPage() {

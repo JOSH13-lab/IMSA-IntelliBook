@@ -36,6 +36,10 @@ async function loadBook(bookId) {
   try {
     showLoader(true);
 
+    if (window.imsaApi?.loadLocalCoversManifest) {
+      await window.imsaApi.loadLocalCoversManifest();
+    }
+
     const res = await fetch(`${API}/books/${bookId}/read`, {
       headers: { 'Authorization': `Bearer ${getToken()}` }
     });
@@ -92,8 +96,11 @@ function updateBookInfo(book) {
 
   if (titleEl)  titleEl.textContent  = book.title;
   if (authorEl) authorEl.textContent = book.author;
-  if (coverEl && book.cover_url) {
-    coverEl.src = book.cover_url;
+  const preferredCoverUrl = window.imsaUtils?.resolvePreferredCoverUrl
+    ? window.imsaUtils.resolvePreferredCoverUrl(book)
+    : book.cover_url;
+  if (coverEl && preferredCoverUrl) {
+    coverEl.src = preferredCoverUrl;
     coverEl.alt = book.title;
   }
   document.title = `${book.title} — IMSA IntelliBook`;

@@ -82,6 +82,10 @@
     const booksWrap = document.getElementById("categoryPanelBooks");
     if (!panel || !title || !booksWrap) return;
 
+    if (window.imsaApi?.loadLocalCoversManifest) {
+      await window.imsaApi.loadLocalCoversManifest();
+    }
+
     title.textContent = window.imsaUtils.categoryLabel(categoryKey);
     panel.classList.remove("d-none");
 
@@ -110,6 +114,10 @@
         `
         )
         .join("");
+
+      if (typeof window.imsaInitBookCovers === "function") window.imsaInitBookCovers();
+      if (typeof window.imsaLoadAllCovers === "function") window.imsaLoadAllCovers();
+      if (typeof window.imsaLoadAllBookCovers === "function") window.imsaLoadAllBookCovers();
     } catch (err) {
       console.error("Erreur lors du chargement des livres:", err);
       // Fallback data if API fails
@@ -123,6 +131,10 @@
         `
         )
         .join("");
+
+      if (typeof window.imsaInitBookCovers === "function") window.imsaInitBookCovers();
+      if (typeof window.imsaLoadAllCovers === "function") window.imsaLoadAllCovers();
+      if (typeof window.imsaLoadAllBookCovers === "function") window.imsaLoadAllBookCovers();
     }
 
     // scroll doux

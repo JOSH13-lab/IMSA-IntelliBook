@@ -221,7 +221,14 @@
   }
 
   function bookCardHTML(book, mode) {
-    const cardHtml = window.imsaUtils.renderBookCardHTML(book, {
+    const bookWithPreferredCover = {
+      ...book,
+      coverUrl: window.imsaUtils.resolvePreferredCoverUrl
+        ? window.imsaUtils.resolvePreferredCoverUrl(book)
+        : (book.coverUrl || book.cover_url || null)
+    };
+
+    const cardHtml = window.imsaUtils.renderBookCardHTML(bookWithPreferredCover, {
       showNewBadge: true,
       showBorrowButton: true,
       showCategoryChip: true,
@@ -277,6 +284,10 @@
       grid.classList.add("d-none");
       list.innerHTML = `<div class="d-flex flex-column gap-3">${pageBooks.map((b) => bookCardHTML(b, "list")).join("")}</div>`;
     }
+
+    if (typeof window.imsaInitBookCovers === "function") window.imsaInitBookCovers();
+    if (typeof window.imsaLoadAllCovers === "function") window.imsaLoadAllCovers();
+    if (typeof window.imsaLoadAllBookCovers === "function") window.imsaLoadAllBookCovers();
 
     const end = Math.min(total, start + pageBooks.length);
     const rangeText = document.getElementById("resultsRangeText");
@@ -342,6 +353,9 @@
   document.addEventListener("DOMContentLoaded", async () => {
     // Render dynamic filters
     renderCategoryFilters();
+    if (window.imsaApi?.loadLocalCoversManifest) {
+      await window.imsaApi.loadLocalCoversManifest();
+    }
 
     // S'assurer que les données sont chargées
     if (window.imsaApi && (!window.booksData || Object.values(window.booksData).every(arr => arr.length === 0))) {

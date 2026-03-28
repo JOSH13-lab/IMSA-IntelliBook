@@ -1,0 +1,1088 @@
+{
+  "l-001": {
+    "file": "covers/l-001.jpg",
+    "source": "existing",
+    "isbn": "9782070368501",
+    "title": "L'Enfant noir"
+  },
+  "l-002": {
+    "file": "covers/l-002.jpg",
+    "source": "existing",
+    "isbn": "9782070364879",
+    "title": "Les Soleils des indépendances"
+  },
+  "l-003": {
+    "file": "covers/l-003.jpg",
+    "source": "existing",
+    "isbn": "9782253007807",
+    "title": "Une si longue lettre"
+  },
+  "l-004": {
+    "file": "covers/l-004.jpg",
+    "source": "existing",
+    "isbn": "9782070361625",
+    "title": "Le monde s'effondre"
+  },
+  "l-005": {
+    "file": "covers/l-005.jpg",
+    "source": "existing",
+    "isbn": "9782020648165",
+    "title": "Verre Cassé"
+  },
+  "l-006": {
+    "file": "covers/l-006.jpg",
+    "source": "existing",
+    "isbn": "9782746714502",
+    "title": "Murambi, le livre des ossements"
+  },
+  "l-007": {
+    "file": "covers/l-007.jpg",
+    "source": "existing",
+    "isbn": "9782264005984",
+    "title": "L'Aventure ambiguë"
+  },
+  "l-008": {
+    "file": "covers/l-008.jpg",
+    "source": "existing",
+    "isbn": "9782246859413",
+    "title": "Petit Pays"
+  },
+  "l-009": {
+    "file": "covers/l-009.jpg",
+    "source": "existing",
+    "isbn": "9780307455925",
+    "title": "Americanah"
+  },
+  "l-010": {
+    "file": "covers/l-010.jpg",
+    "source": "existing",
+    "isbn": "9782226258342",
+    "title": "Congo Inc."
+  },
+  "l-011": {
+    "file": "covers/l-011.jpg",
+    "source": "existing",
+    "isbn": "9782738411518",
+    "title": "Histoire du Gabon : des origines à l'aube du XXIe siècle"
+  },
+  "l-012": {
+    "file": "covers/l-012.jpg",
+    "source": "existing",
+    "isbn": "9782865370696",
+    "title": "Le Gabon et son ombre"
+  },
+  "l-013": {
+    "file": "covers/l-013.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Les Fangs du Gabon"
+  },
+  "l-015": {
+    "file": "covers/l-015.jpg",
+    "source": "existing",
+    "isbn": "9782296541054",
+    "title": "Économie et sociétés d'Afrique centrale"
+  },
+  "l-016": {
+    "file": "covers/l-016.jpg",
+    "source": "existing",
+    "isbn": "9782296259201",
+    "title": "Le Gabon : l'éveil d'une nation"
+  },
+  "l-017": {
+    "file": "covers/l-017.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Les Mpongwè et l'histoire du Gabon"
+  },
+  "l-018": {
+    "file": "covers/l-018.jpg",
+    "source": "existing",
+    "isbn": "9782708705968",
+    "title": "Rites de passage au Gabon"
+  },
+  "l-020": {
+    "file": "covers/l-020.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Okoumé : Bois du Gabon"
+  },
+  "l-021": {
+    "file": "covers/l-021.jpg",
+    "source": "existing",
+    "isbn": "9782340102972",
+    "title": "Méthodologie de la recherche en sciences de l'homme"
+  },
+  "l-022": {
+    "file": "covers/l-022.jpg",
+    "source": "existing",
+    "isbn": "9782130537625",
+    "title": "Théories de la science"
+  },
+  "l-023": {
+    "file": "covers/l-023.jpg",
+    "source": "existing",
+    "isbn": "9782738100610",
+    "title": "Le chaos et l'harmonie"
+  },
+  "l-024": {
+    "file": "covers/l-024.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "La Recherche en Afrique : Enjeux et perspectives"
+  },
+  "l-025": {
+    "file": "covers/l-025.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Biodiversité africaine"
+  },
+  "l-026": {
+    "file": "covers/l-026.jpg",
+    "source": "existing",
+    "isbn": "9782757852200",
+    "title": "L'ordre du temps"
+  },
+  "l-027": {
+    "file": "covers/l-027.jpg",
+    "source": "existing",
+    "isbn": "9782070350018",
+    "title": "Penser la science"
+  },
+  "l-028": {
+    "file": "covers/l-028.jpg",
+    "source": "existing",
+    "isbn": "9782858165209",
+    "title": "Savoirs locaux et environnement"
+  },
+  "l-029": {
+    "file": "covers/l-029.jpg",
+    "source": "existing",
+    "isbn": "9782711322763",
+    "title": "La démarche scientifique"
+  },
+  "l-030": {
+    "file": "covers/l-030.jpg",
+    "source": "existing",
+    "isbn": "9782020212458",
+    "title": "Introduction à la pensée complexe"
+  },
+  "l-031": {
+    "file": "covers/l-031.jpg",
+    "source": "existing",
+    "isbn": "9782412040478",
+    "title": "L'intelligence artificielle pour les Nuls"
+  },
+  "l-032": {
+    "file": "covers/l-032.jpg",
+    "source": "existing",
+    "isbn": "9781593279288",
+    "title": "Python Crash Course"
+  },
+  "l-033": {
+    "file": "covers/l-033.jpg",
+    "source": "existing",
+    "isbn": "9782212127768",
+    "title": "Réseaux et Télécoms"
+  },
+  "l-034": {
+    "file": "covers/l-034.jpg",
+    "source": "existing",
+    "isbn": "9782212672695",
+    "title": "Cybersécurité : Analyser les risques"
+  },
+  "l-035": {
+    "file": "covers/l-035.jpg",
+    "source": "existing",
+    "isbn": "9782212671803",
+    "title": "Le Cloud Computing"
+  },
+  "l-036": {
+    "file": "covers/l-036.jpg",
+    "source": "existing",
+    "isbn": "9782212675719",
+    "title": "Data Science : fondamentaux et études de cas"
+  },
+  "l-037": {
+    "file": "covers/l-037.jpg",
+    "source": "existing",
+    "isbn": "9782212678093",
+    "title": "Développement Web avec HTML5 et CSS3"
+  },
+  "l-038": {
+    "file": "covers/l-038.jpg",
+    "source": "existing",
+    "isbn": "9782212675122",
+    "title": "Le Guide de la Blockchain"
+  },
+  "l-039": {
+    "file": "covers/l-039.jpg",
+    "source": "existing",
+    "isbn": "9780262033848",
+    "title": "Algorithmique et structures de données"
+  },
+  "l-040": {
+    "file": "covers/l-040.jpg",
+    "source": "existing",
+    "isbn": "9782412025963",
+    "title": "Le Big Data"
+  },
+  "l-041": {
+    "file": "covers/l-041.jpg",
+    "source": "existing",
+    "isbn": "9782247123506",
+    "title": "Droit constitutionnel et institutions politiques"
+  },
+  "l-042": {
+    "file": "covers/l-042.jpg",
+    "source": "existing",
+    "isbn": "9782850698156",
+    "title": "L'État au Gabon"
+  },
+  "l-043": {
+    "file": "covers/l-043.jpg",
+    "source": "existing",
+    "isbn": "9782866005504",
+    "title": "Introduction au droit d'Afrique noire"
+  },
+  "l-044": {
+    "file": "covers/l-044.jpg",
+    "source": "existing",
+    "isbn": "9782707193421",
+    "title": "Géopolitique de l'Afrique"
+  },
+  "l-045": {
+    "file": "covers/l-045.jpg",
+    "source": "open_library",
+    "isbn": "9782802726135",
+    "title": "Droit du travail en Afrique OHADA"
+  },
+  "l-046": {
+    "file": "covers/l-046.jpg",
+    "source": "existing",
+    "isbn": "9782843773587",
+    "title": "L'Afrique noire est-elle maudite ?"
+  },
+  "l-047": {
+    "file": "covers/l-047.jpg",
+    "source": "existing",
+    "isbn": "9782070748808",
+    "title": "L'État en Afrique"
+  },
+  "l-048": {
+    "file": "covers/l-048.jpg",
+    "source": "open_library_search",
+    "isbn": "9782130800293",
+    "title": "Droit international public"
+  },
+  "l-050": {
+    "file": "covers/l-050.jpg",
+    "source": "existing",
+    "isbn": "9782247062263",
+    "title": "Traité de droit civil"
+  },
+  "l-051": {
+    "file": "covers/l-051.jpg",
+    "source": "existing",
+    "isbn": "9782352079927",
+    "title": "Akissi"
+  },
+  "l-055": {
+    "file": "covers/l-055.jpg",
+    "source": "open_library",
+    "isbn": "9782070541980",
+    "title": "Kirikou et la sorcière"
+  },
+  "l-061": {
+    "file": "covers/l-061.jpg",
+    "source": "open_library",
+    "isbn": "9782867700507",
+    "title": "L'art africain"
+  },
+  "l-062": {
+    "file": "covers/l-062.jpg",
+    "source": "open_library_search",
+    "isbn": null,
+    "title": "Musiques du Gabon"
+  },
+  "l-063": {
+    "file": "covers/l-063.jpg",
+    "source": "existing",
+    "isbn": "9782493976000",
+    "title": "Masques et sculptures du bassin de l'Ogooué"
+  },
+  "l-067": {
+    "file": "covers/l-067.jpg",
+    "source": "open_library",
+    "isbn": "9782738410153",
+    "title": "Philosophie et culture africaine"
+  },
+  "l-068": {
+    "file": "covers/l-068.jpg",
+    "source": "existing",
+    "isbn": "9782908948080",
+    "title": "Rumba Congolaise : Histoire musicale"
+  },
+  "l-069": {
+    "file": "covers/l-069.jpg",
+    "source": "existing",
+    "isbn": "9782207248904",
+    "title": "La poésie traditionnelle africaine"
+  },
+  "l-070": {
+    "file": "covers/l-070.jpg",
+    "source": "existing",
+    "isbn": "9782843237645",
+    "title": "Art contemporain africain"
+  },
+  "l-071": {
+    "file": "covers/l-071.jpg",
+    "source": "existing",
+    "isbn": "9782360137572",
+    "title": "L'Afrique peut-elle partir ?"
+  },
+  "l-072": {
+    "file": "covers/l-072.jpg",
+    "source": "open_library_search",
+    "isbn": "9782707172310",
+    "title": "Économie de l'Afrique"
+  },
+  "l-073": {
+    "file": "covers/l-073.jpg",
+    "source": "existing",
+    "isbn": "9782213636894",
+    "title": "L'aide au développement en Afrique"
+  },
+  "l-075": {
+    "file": "covers/l-075.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Le Plan Stratégique Gabon Émergent"
+  },
+  "l-076": {
+    "file": "covers/l-076.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Pétrole et développement au Gabon"
+  },
+  "l-081": {
+    "file": "covers/l-081.jpg",
+    "source": "open_library_search",
+    "isbn": "9782761337182",
+    "title": "Biologie de Campbell"
+  },
+  "l-082": {
+    "file": "covers/l-082.jpg",
+    "source": "open_library_search",
+    "isbn": "9782804148485",
+    "title": "Biochimie"
+  },
+  "l-083": {
+    "file": "covers/l-083.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294742248",
+    "title": "Immunologie"
+  },
+  "l-084": {
+    "file": "covers/l-084.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294741883",
+    "title": "Génétique médicale"
+  },
+  "l-086": {
+    "file": "covers/l-086.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294756788",
+    "title": "Anatomie humaine"
+  },
+  "l-089": {
+    "file": "covers/l-089.jpg",
+    "source": "open_library_search",
+    "isbn": "9782804153700",
+    "title": "Biologie cellulaire"
+  },
+  "l-092": {
+    "file": "covers/l-092.jpg",
+    "source": "existing",
+    "isbn": "9782804165659",
+    "title": "Psychologie sociale"
+  },
+  "l-093": {
+    "file": "covers/l-093.jpg",
+    "source": "existing",
+    "isbn": "9780205237326",
+    "title": "Anthropologie"
+  },
+  "l-094": {
+    "file": "covers/l-094.jpg",
+    "source": "existing",
+    "isbn": "9781452242569",
+    "title": "Méthodes sociales"
+  },
+  "l-095": {
+    "file": "covers/l-095.jpg",
+    "source": "existing",
+    "isbn": "9780205205585",
+    "title": "Comportement humain"
+  },
+  "l-097": {
+    "file": "covers/l-097.jpg",
+    "source": "existing",
+    "isbn": "9782200344795",
+    "title": "Culture et société"
+  },
+  "l-098": {
+    "file": "covers/l-098.jpg",
+    "source": "existing",
+    "isbn": "9780155000971",
+    "title": "Psychologie générale"
+  },
+  "l-101": {
+    "file": "covers/l-101.png",
+    "source": "existing",
+    "isbn": "9782294744570",
+    "title": "Obstétrique"
+  },
+  "l-103": {
+    "file": "covers/l-103.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294740824",
+    "title": "Embryologie"
+  },
+  "l-110": {
+    "file": "covers/l-110.jpg",
+    "source": "existing",
+    "isbn": "9782913628755",
+    "title": "Guide sage-femme"
+  },
+  "l-112": {
+    "file": "covers/l-112.jpg",
+    "source": "existing",
+    "isbn": "9782294744839",
+    "title": "Physiopathologie"
+  },
+  "l-115": {
+    "file": "covers/l-115.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294744761",
+    "title": "Urgences"
+  },
+  "l-119": {
+    "file": "covers/l-119.jpg",
+    "source": "open_library_search",
+    "isbn": "9782294751844",
+    "title": "Pharmacologie"
+  },
+  "l-121": {
+    "file": "covers/l-121.jpg",
+    "source": "existing",
+    "isbn": "9782842441913",
+    "title": "Agronomie"
+  },
+  "l-123": {
+    "file": "covers/l-123.jpg",
+    "source": "existing",
+    "isbn": "9780367740399",
+    "title": "Agroécologie"
+  },
+  "l-126": {
+    "file": "covers/l-126.jpg",
+    "source": "open_library_search",
+    "isbn": null,
+    "title": "Irrigation"
+  },
+  "l-128": {
+    "file": "covers/l-128.jpg",
+    "source": "open_library_search",
+    "isbn": "9782747579490",
+    "title": "Protection cultures"
+  },
+  "l-129": {
+    "file": "covers/l-129.jpg",
+    "source": "existing",
+    "isbn": "9782759220229",
+    "title": "Agriculture durable"
+  },
+  "l-137": {
+    "file": "covers/l-137.jpg",
+    "source": "open_library_search",
+    "isbn": "9782749215174",
+    "title": "Prévention"
+  },
+  "l-138": {
+    "file": "covers/l-138.jpg",
+    "source": "open_library_search",
+    "isbn": "9782764411131",
+    "title": "Environnement"
+  },
+  "l-141": {
+    "file": "covers/l-141.jpg",
+    "source": "open_library_search",
+    "isbn": "9781444347111",
+    "title": "Aquaculture"
+  },
+  "l-155": {
+    "file": "covers/l-155.jpg",
+    "source": "existing",
+    "isbn": "9780071390538",
+    "title": "Qualité"
+  },
+  "l-158": {
+    "file": "covers/l-158.jpg",
+    "source": "open_library_search",
+    "isbn": "9782766305032",
+    "title": "Organisation"
+  },
+  "l-159": {
+    "file": "covers/l-159.jpg",
+    "source": "open_library_search",
+    "isbn": "9782912877130",
+    "title": "Méthodes"
+  },
+  "l-160": {
+    "file": "covers/l-160.jpg",
+    "source": "open_library_search",
+    "isbn": "9782843682742",
+    "title": "Industrie"
+  },
+  "l-161": {
+    "file": "covers/l-161.jpg",
+    "source": "existing",
+    "isbn": "9780073529554",
+    "title": "Génie électrique"
+  },
+  "l-163": {
+    "file": "covers/l-163.jpg",
+    "source": "existing",
+    "isbn": "9780199339136",
+    "title": "Électronique"
+  },
+  "l-166": {
+    "file": "covers/l-166.jpg",
+    "source": "existing",
+    "isbn": null,
+    "title": "Électrotechnique"
+  },
+  "l-168": {
+    "file": "covers/l-168.jpg",
+    "source": "open_library_search",
+    "isbn": null,
+    "title": "Instrumentation"
+  },
+  "l-170": {
+    "file": "covers/l-170.jpg",
+    "source": "open_library_search",
+    "isbn": "9782140168192",
+    "title": "Systèmes"
+  },
+  "l-171": {
+    "file": "covers/l-171.jpg",
+    "source": "existing",
+    "isbn": "9780132126953",
+    "title": "Réseaux informatiques"
+  },
+  "l-181": {
+    "file": "covers/l-181.jpg",
+    "source": "existing",
+    "isbn": "9780073375977",
+    "title": "Génie logiciel"
+  },
+  "l-182": {
+    "file": "covers/l-182.jpg",
+    "source": "open_library_search",
+    "isbn": "9781098171278",
+    "title": "Python"
+  },
+  "l-183": {
+    "file": "covers/l-183.jpg",
+    "source": "open_library_search",
+    "isbn": "9780133002638",
+    "title": "Java"
+  },
+  "l-185": {
+    "file": "covers/l-185.jpg",
+    "source": "open_library_search",
+    "isbn": "9782729607067",
+    "title": "Systèmes"
+  },
+  "l-188": {
+    "file": "covers/l-188.jpg",
+    "source": "existing",
+    "isbn": "9781118008188",
+    "title": "Web"
+  },
+  "l-190": {
+    "file": "covers/l-190.jpg",
+    "source": "open_library_search",
+    "isbn": "9781942788072",
+    "title": "DevOps"
+  },
+  "l-014": {
+    "file": "covers/l-014.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Figures d'hier et d'aujourd'hui"
+  },
+  "l-019": {
+    "file": "covers/l-019.svg",
+    "source": "generated_local",
+    "isbn": "9782912776594",
+    "title": "Contes gabonais"
+  },
+  "l-049": {
+    "file": "covers/l-049.svg",
+    "source": "generated_local",
+    "isbn": "9782802736318",
+    "title": "Les régimes politiques africains"
+  },
+  "l-052": {
+    "file": "covers/l-052.svg",
+    "source": "generated_local",
+    "isbn": "9782356130464",
+    "title": "Kirdi et le secret de la forêt"
+  },
+  "l-053": {
+    "file": "covers/l-053.svg",
+    "source": "generated_local",
+    "isbn": "9782070620005",
+    "title": "Contes de la brousse et de la forêt"
+  },
+  "l-054": {
+    "file": "covers/l-054.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "La chèvre de ma grand-mère"
+  },
+  "l-056": {
+    "file": "covers/l-056.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Le pagne magique"
+  },
+  "l-057": {
+    "file": "covers/l-057.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Alba et le mystère du volcan"
+  },
+  "l-058": {
+    "file": "covers/l-058.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Samba et le lion"
+  },
+  "l-059": {
+    "file": "covers/l-059.svg",
+    "source": "generated_local",
+    "isbn": "9782012019416",
+    "title": "Les aventures de Leuk-le-lièvre"
+  },
+  "l-060": {
+    "file": "covers/l-060.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Amina la reine guerrière"
+  },
+  "l-064": {
+    "file": "covers/l-064.svg",
+    "source": "generated_local",
+    "isbn": "9782070320882",
+    "title": "Les arts de l'Afrique noire"
+  },
+  "l-065": {
+    "file": "covers/l-065.svg",
+    "source": "generated_local",
+    "isbn": "9782708704251",
+    "title": "L'épopée du Mvett"
+  },
+  "l-066": {
+    "file": "covers/l-066.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Cinéma africain : émergence et développement"
+  },
+  "l-074": {
+    "file": "covers/l-074.svg",
+    "source": "generated_local",
+    "isbn": "9782738155184",
+    "title": "Développement durable en Afrique"
+  },
+  "l-077": {
+    "file": "covers/l-077.svg",
+    "source": "generated_local",
+    "isbn": "9782070786176",
+    "title": "Microfinance et développement"
+  },
+  "l-078": {
+    "file": "covers/l-078.svg",
+    "source": "generated_local",
+    "isbn": "9782213710563",
+    "title": "L'Afrique en marche"
+  },
+  "l-079": {
+    "file": "covers/l-079.svg",
+    "source": "generated_local",
+    "isbn": "9780199919086",
+    "title": "Investissements chinois en Afrique"
+  },
+  "l-080": {
+    "file": "covers/l-080.svg",
+    "source": "generated_local",
+    "isbn": "9789264276444",
+    "title": "L'Afrique en 2050"
+  },
+  "l-085": {
+    "file": "covers/l-085.svg",
+    "source": "generated_local",
+    "isbn": "9782294744556",
+    "title": "Microbiologie médicale"
+  },
+  "l-087": {
+    "file": "covers/l-087.svg",
+    "source": "generated_local",
+    "isbn": "9782804165420",
+    "title": "Physiologie humaine"
+  },
+  "l-088": {
+    "file": "covers/l-088.svg",
+    "source": "generated_local",
+    "isbn": "9781259863059",
+    "title": "Histologie"
+  },
+  "l-090": {
+    "file": "covers/l-090.svg",
+    "source": "generated_local",
+    "isbn": "9781455706136",
+    "title": "Parasitologie"
+  },
+  "l-091": {
+    "file": "covers/l-091.svg",
+    "source": "generated_local",
+    "isbn": "9782130624561",
+    "title": "Introduction à la sociologie"
+  },
+  "l-096": {
+    "file": "covers/l-096.svg",
+    "source": "generated_local",
+    "isbn": "9782130607885",
+    "title": "Sociologie santé"
+  },
+  "l-099": {
+    "file": "covers/l-099.svg",
+    "source": "generated_local",
+    "isbn": "9782130587521",
+    "title": "Sociologie moderne"
+  },
+  "l-100": {
+    "file": "covers/l-100.svg",
+    "source": "generated_local",
+    "isbn": "9782130554059",
+    "title": "Analyse sociale"
+  },
+  "l-102": {
+    "file": "covers/l-102.svg",
+    "source": "generated_local",
+    "isbn": "9782294745539",
+    "title": "Gynécologie"
+  },
+  "l-104": {
+    "file": "covers/l-104.svg",
+    "source": "generated_local",
+    "isbn": "9782294723735",
+    "title": "Accouchement"
+  },
+  "l-105": {
+    "file": "covers/l-105.svg",
+    "source": "generated_local",
+    "isbn": "9782294712470",
+    "title": "Grossesse"
+  },
+  "l-106": {
+    "file": "covers/l-106.svg",
+    "source": "generated_local",
+    "isbn": "9782294741586",
+    "title": "Urgences obstétricales"
+  },
+  "l-107": {
+    "file": "covers/l-107.svg",
+    "source": "generated_local",
+    "isbn": "9782294741661",
+    "title": "Pelvis féminin"
+  },
+  "l-108": {
+    "file": "covers/l-108.svg",
+    "source": "generated_local",
+    "isbn": "9789242549294",
+    "title": "Soins néonatals"
+  },
+  "l-109": {
+    "file": "covers/l-109.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Suivi grossesse"
+  },
+  "l-111": {
+    "file": "covers/l-111.svg",
+    "source": "generated_local",
+    "isbn": "9782294744754",
+    "title": "Mémo infirmier"
+  },
+  "l-113": {
+    "file": "covers/l-113.svg",
+    "source": "generated_local",
+    "isbn": "9782294744983",
+    "title": "Calcul de doses"
+  },
+  "l-114": {
+    "file": "covers/l-114.svg",
+    "source": "generated_local",
+    "isbn": "9782294745041",
+    "title": "Soins infirmiers"
+  },
+  "l-116": {
+    "file": "covers/l-116.svg",
+    "source": "generated_local",
+    "isbn": "9782294744778",
+    "title": "Anatomie infirmier"
+  },
+  "l-117": {
+    "file": "covers/l-117.svg",
+    "source": "generated_local",
+    "isbn": "9782294744785",
+    "title": "Guide clinique"
+  },
+  "l-118": {
+    "file": "covers/l-118.svg",
+    "source": "generated_local",
+    "isbn": "9782294744846",
+    "title": "Pathologies"
+  },
+  "l-120": {
+    "file": "covers/l-120.svg",
+    "source": "generated_local",
+    "isbn": "9782294751851",
+    "title": "Diagnostic infirmier"
+  },
+  "l-122": {
+    "file": "covers/l-122.svg",
+    "source": "generated_local",
+    "isbn": "9782804153793",
+    "title": "Physiologie végétale"
+  },
+  "l-124": {
+    "file": "covers/l-124.svg",
+    "source": "generated_local",
+    "isbn": "9780131402935",
+    "title": "Science du sol"
+  },
+  "l-125": {
+    "file": "covers/l-125.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Production végétale"
+  },
+  "l-127": {
+    "file": "covers/l-127.svg",
+    "source": "generated_local",
+    "isbn": "9782759236916",
+    "title": "Économie agricole"
+  },
+  "l-130": {
+    "file": "covers/l-130.svg",
+    "source": "generated_local",
+    "isbn": "9791027502639",
+    "title": "Systèmes agricoles"
+  },
+  "l-131": {
+    "file": "covers/l-131.svg",
+    "source": "generated_local",
+    "isbn": "9782763725871",
+    "title": "Gestion HSE"
+  },
+  "l-132": {
+    "file": "covers/l-132.svg",
+    "source": "generated_local",
+    "isbn": "9782296126381",
+    "title": "Sécurité travail"
+  },
+  "l-133": {
+    "file": "covers/l-133.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Hygiène industrielle"
+  },
+  "l-134": {
+    "file": "covers/l-134.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Normes ISO"
+  },
+  "l-135": {
+    "file": "covers/l-135.svg",
+    "source": "generated_local",
+    "isbn": "9782212861815",
+    "title": "Gestion risques"
+  },
+  "l-136": {
+    "file": "covers/l-136.svg",
+    "source": "generated_local",
+    "isbn": "9782212086065",
+    "title": "Audit HSE"
+  },
+  "l-139": {
+    "file": "covers/l-139.svg",
+    "source": "generated_local",
+    "isbn": "9782296126381",
+    "title": "Santé travail"
+  },
+  "l-140": {
+    "file": "covers/l-140.svg",
+    "source": "generated_local",
+    "isbn": "9782212598193",
+    "title": "Management sécurité"
+  },
+  "l-142": {
+    "file": "covers/l-142.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Biologie poissons"
+  },
+  "l-143": {
+    "file": "covers/l-143.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Hydrobiologie"
+  },
+  "l-144": {
+    "file": "covers/l-144.svg",
+    "source": "generated_local",
+    "isbn": "9780080494920",
+    "title": "Nutrition poissons"
+  },
+  "l-145": {
+    "file": "covers/l-145.svg",
+    "source": "generated_local",
+    "isbn": "9782844449689",
+    "title": "Élevage"
+  },
+  "l-146": {
+    "file": "covers/l-146.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Pêche"
+  },
+  "l-147": {
+    "file": "covers/l-147.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Écologie aquatique"
+  },
+  "l-148": {
+    "file": "covers/l-148.svg",
+    "source": "generated_local",
+    "isbn": "9782844160041",
+    "title": "Technologie pêche"
+  },
+  "l-149": {
+    "file": "covers/l-149.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Systèmes aquacoles"
+  },
+  "l-150": {
+    "file": "covers/l-150.svg",
+    "source": "generated_local",
+    "isbn": "9782844160041",
+    "title": "Gestion pêcheries"
+  },
+  "l-151": {
+    "file": "covers/l-151.svg",
+    "source": "generated_local",
+    "isbn": "9782212114492",
+    "title": "Maintenance industrielle"
+  },
+  "l-152": {
+    "file": "covers/l-152.svg",
+    "source": "generated_local",
+    "isbn": "9782763724010",
+    "title": "Production"
+  },
+  "l-153": {
+    "file": "covers/l-153.svg",
+    "source": "generated_local",
+    "isbn": "9780071370554",
+    "title": "Génie industriel"
+  },
+  "l-154": {
+    "file": "covers/l-154.svg",
+    "source": "generated_local",
+    "isbn": "9782100545438",
+    "title": "Lean manufacturing"
+  },
+  "l-156": {
+    "file": "covers/l-156.svg",
+    "source": "generated_local",
+    "isbn": "9780073375830",
+    "title": "Automatisation"
+  },
+  "l-157": {
+    "file": "covers/l-157.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Logistique"
+  },
+  "l-162": {
+    "file": "covers/l-162.svg",
+    "source": "generated_local",
+    "isbn": "9780073366975",
+    "title": "Machines électriques"
+  },
+  "l-164": {
+    "file": "covers/l-164.svg",
+    "source": "generated_local",
+    "isbn": "9780134683492",
+    "title": "Circuits"
+  },
+  "l-165": {
+    "file": "covers/l-165.svg",
+    "source": "generated_local",
+    "isbn": "9780136097068",
+    "title": "Automatique"
+  },
+  "l-167": {
+    "file": "covers/l-167.svg",
+    "source": "generated_local",
+    "isbn": "9780471226093",
+    "title": "Puissance"
+  },
+  "l-169": {
+    "file": "covers/l-169.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Réseaux électriques"
+  },
+  "l-184": {
+    "file": "covers/l-184.svg",
+    "source": "generated_local",
+    "isbn": "9782100701513",
+    "title": "Algorithmes"
+  },
+  "l-186": {
+    "file": "covers/l-186.svg",
+    "source": "generated_local",
+    "isbn": "9782744072482",
+    "title": "Base données"
+  },
+  "l-187": {
+    "file": "covers/l-187.svg",
+    "source": "generated_local",
+    "isbn": null,
+    "title": "Admin système"
+  },
+  "l-189": {
+    "file": "covers/l-189.svg",
+    "source": "generated_local",
+    "isbn": "9780132942782",
+    "title": "Architecture"
+  }
+}

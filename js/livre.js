@@ -46,8 +46,7 @@
   function generateMeta(book) {
     const h = hashStr(book.id);
     const isbn = `978-${(h % 9999_9999).toString().padStart(9, "0")}-${(h % 97).toString().padStart(2, "0")}`;
-    const editorList = ["Éditions IMSA", "Presses du Gabon", "Savanes & Savoirs", "Maison Horizon Afrique", "IRSH Publications"];
-    const editor = editorList[h % editorList.length];
+    const editor = (book.publisher || book.editor || book.editeur || "").toString().trim();
     const langue = book.language || "Français";
     const pages = 180 + (h % 520);
     const year = book.year;
@@ -325,6 +324,10 @@ function showToast(message, type = 'success') {
       });
       row.appendChild(wrap);
     });
+
+    if (typeof window.imsaInitBookCovers === "function") window.imsaInitBookCovers();
+    if (typeof window.imsaLoadAllCovers === "function") window.imsaLoadAllCovers();
+    if (typeof window.imsaLoadAllBookCovers === "function") window.imsaLoadAllBookCovers();
   }
 
   function setButtonsState(book) {
@@ -358,7 +361,17 @@ function showToast(message, type = 'success') {
 
     const coverWrap = document.getElementById("bookCoverContainer");
     if (coverWrap) {
-      coverWrap.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(book);
+      const temp = document.createElement("div");
+      temp.innerHTML = window.imsaUtils.renderBookCoverContainerHTML(book).trim();
+      const renderedCover = temp.firstElementChild;
+      if (renderedCover) {
+        renderedCover.id = "bookCoverContainer";
+        renderedCover.style.maxWidth = "280px";
+        renderedCover.style.margin = "0 auto";
+        renderedCover.style.borderRadius = "14px";
+        renderedCover.style.boxShadow = "0 16px 48px rgba(0,0,0,0.30)";
+        coverWrap.replaceWith(renderedCover);
+      }
     }
 
     // Breadcrumb current
@@ -384,7 +397,7 @@ function showToast(message, type = 'success') {
     // Meta card
     const meta = generateMeta(book);
     document.getElementById("metaISBN").textContent = book.isbn || meta.isbn;
-    document.getElementById("metaEditor").textContent = book.publisher || meta.editor;
+    document.getElementById("metaEditor").textContent = meta.editor || "Éditeur non renseigné";
     document.getElementById("metaLang").textContent = book.language || meta.langue;
     document.getElementById("metaPages").textContent = String(book.page_count || book.pages || meta.pages);
     document.getElementById("metaYear").textContent = String(book.year || meta.year);
@@ -482,9 +495,12 @@ function showToast(message, type = 'success') {
       borrowBtn.addEventListener("click", () => {
         const today = new Date();
         dueDate = addDays(today, 14);
+        const modalCoverUrl = window.imsaUtils?.resolvePreferredCoverUrl
+          ? window.imsaUtils.resolvePreferredCoverUrl(book)
+          : (book.coverUrl || book.cover_url || "");
         modalBody.innerHTML = `
           <div class="d-flex gap-3 align-items-start">
-              <img src="${book.coverUrl}" alt="Couverture" class="admin-mini-thumb" style="width:64px;height:84px;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"/>
+              <img src="${modalCoverUrl}" alt="Couverture" class="admin-mini-thumb" style="width:64px;height:84px;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"/>
             <div>
               <div class="fw-bold">${escape(book.title)}</div>
               <div class="text-muted small mt-1">Durée du prêt : 14 jours</div>

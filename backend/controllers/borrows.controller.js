@@ -274,6 +274,38 @@ exports.getMyBorrows = async (req, res, next) => {
   }
 };
 
+exports.getUserBorrows = async (req, res, next) => {
+  try {
+    const userId = req.params.id === 'me' ? req.user.id : req.params.id;
+
+    await query(
+      `UPDATE borrows
+       SET status = 'en_retard'
+       WHERE user_id = $1
+         AND status = 'en_cours'
+         AND due_date < NOW()`,
+      [userId]
+    );
+
+    const { rows } = await query(
+      `SELECT b.*,
+              bk.title, bk.author, bk.cover_url,
+              bk.legacy_id AS book_legacy_id,
+              c.name AS category_name, c.color_class
+       FROM borrows b
+       JOIN books bk ON b.book_id = bk.id
+       JOIN categories c ON bk.category_id = c.id
+       WHERE b.user_id = $1
+       ORDER BY b.borrowed_at DESC`,
+      [userId]
+    );
+
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // ── GET /api/borrows/active ──
 // Vérifier si un livre est emprunté activement
 exports.checkActiveBorrow = async (req, res, next) => {

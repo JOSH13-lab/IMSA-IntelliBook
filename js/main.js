@@ -183,8 +183,11 @@
     try {
       const res = await fetch(`${API_BASE}/books/${bookId}/cover`);
       const data = await res.json();
-      if (data.success && data.coverUrl) {
-        imgElement.src = data.coverUrl;
+      const safeCoverUrl = window.imsaUtils?.sanitizeCoverUrl
+        ? window.imsaUtils.sanitizeCoverUrl(data.coverUrl)
+        : data.coverUrl;
+      if (data.success && safeCoverUrl) {
+        imgElement.src = safeCoverUrl;
         imgElement.classList.add("loaded");
         const fallback = imgElement.closest('.book-cover-container')?.nextElementSibling || 
                         imgElement.closest('.book-cover-container')?.querySelector('.book-cover-fallback');
@@ -239,10 +242,13 @@
           const element = Array.from(allElements).find(
             el => el.dataset.id === cover.id || el.dataset.id === cover.legacy_id
           );
-          if (element && cover.coverUrl) {
+          const safeCoverUrl = window.imsaUtils?.sanitizeCoverUrl
+            ? window.imsaUtils.sanitizeCoverUrl(cover.coverUrl)
+            : cover.coverUrl;
+          if (element && safeCoverUrl) {
             const img = element.querySelector('.book-cover-img');
             if (img) {
-              img.src = cover.coverUrl;
+              img.src = safeCoverUrl;
               img.classList.add("loaded");
               const fallback = element.querySelector('.book-cover-fallback');
               if (fallback) fallback.style.display = 'none';
@@ -288,10 +294,13 @@
             const card = Array.from(cards).find(
               c => c.dataset.id === cover.id || c.dataset.id === cover.legacy_id
             );
-            if (card && cover.coverUrl) {
+            const safeCoverUrl = window.imsaUtils?.sanitizeCoverUrl
+              ? window.imsaUtils.sanitizeCoverUrl(cover.coverUrl)
+              : cover.coverUrl;
+            if (card && safeCoverUrl) {
               const img = card.querySelector('img.book-cover-img, img');
               if (img) {
-                img.src = cover.coverUrl;
+                img.src = safeCoverUrl;
                 img.style.display = 'block';
                 const fallback = card.querySelector('.book-cover-fallback');
                 if (fallback) fallback.style.display = 'none';
@@ -328,6 +337,10 @@
       });
     });
   }
+
+  window.imsaLoadAllCovers = loadAllCovers;
+  window.imsaLoadAllBookCovers = loadAllBookCovers;
+  window.imsaInitBookCovers = initBookCovers;
 
   // ═══════════════════════════════════════
   //  FONCTION POUR GÉNÉRER UNE CARTE LIVRE

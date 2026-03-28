@@ -181,10 +181,11 @@ exports.getBooksCoversBatch = async (req, res, next) => {
     }
 
     // Récupérer les livres depuis la BD
-    const placeholders = bookIds.map((_, i) => `$${i + 1}`).join(',');
+    const idPlaceholders = bookIds.map((_, i) => `$${i + 1}`).join(',');
+    const legacyPlaceholders = bookIds.map((_, i) => `$${i + 1 + bookIds.length}`).join(',');
     const { rows: books } = await query(
       `SELECT id, legacy_id, isbn, isbn13, title, author, cover_url FROM books 
-       WHERE id::text IN (${placeholders}) OR legacy_id IN (${placeholders})`,
+       WHERE id::text IN (${idPlaceholders}) OR legacy_id IN (${legacyPlaceholders})`,
       [...bookIds, ...bookIds]
     );
 

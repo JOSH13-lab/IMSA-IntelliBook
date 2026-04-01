@@ -9,7 +9,7 @@ router.get('/dashboard/stats', auth, isAdmin, ctrl.getDashboardStats);  // Dashb
 router.get('/',              auth, isAdmin, ctrl.getUsers);       // GET    /api/users
 router.get('/:id',           auth, ctrl.getUserById);             // GET    /api/users/:id
 router.put('/:id',           auth, ctrl.updateUser);              // PUT    /api/users/:id
-router.delete('/:id',        auth, isAdmin, ctrl.deleteUser);     // DELETE /api/users/:id
+router.delete('/:id',        auth, ctrl.deleteUser);              // DELETE /api/users/:id
 
 router.get('/:id/borrows',   auth, borrow.getUserBorrows);
 router.get('/:id/favorites', auth, fav.getUserFavorites);         // GET    /api/users/:id/favorites

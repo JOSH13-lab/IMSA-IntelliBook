@@ -29,13 +29,39 @@
 
   function initProfileLinkToggle() {
     const item = document.getElementById("navProfileItem");
-    if (!item) return;
     const userRaw = localStorage.getItem("imsa_user");
-    const hasUser = !!userRaw;
+    let user = null;
+    try {
+      user = userRaw ? JSON.parse(userRaw) : null;
+    } catch {
+      user = null;
+    }
+    const hasUser = !!user;
+    const isAdmin = user?.user_type === "administrateur";
+    if (!item) return;
     item.classList.toggle("d-none", !hasUser);
 
+    const desktopLink = item.querySelector("a");
+    if (desktopLink && hasUser) {
+      desktopLink.href = isAdmin ? "utilisateurs.html" : "profil.html";
+      desktopLink.textContent = isAdmin ? "Tableau de bord" : "Mon Profil";
+      desktopLink.setAttribute("aria-label", isAdmin ? "Tableau de bord" : "Mon profil");
+    }
+
     const mobile = document.getElementById("navProfileLinkMobile");
-    if (mobile) mobile.classList.toggle("d-none", !hasUser);
+    if (mobile) {
+      mobile.classList.toggle("d-none", !hasUser);
+      if (hasUser) {
+        mobile.href = isAdmin ? "utilisateurs.html" : "profil.html";
+        mobile.textContent = isAdmin ? "Tableau de bord" : "Mon Profil";
+      }
+    }
+
+    document.querySelectorAll('a[href="inscription.html"].btn.btn-orange, a[href="inscription.html"].nav-link').forEach((el) => {
+      if (!el.closest("#navProfileItem")) {
+        el.classList.toggle("d-none", hasUser);
+      }
+    });
   }
 
   function initScrollAnimations() {

@@ -101,6 +101,24 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isSelfDelete = req.user.id === id;
+    const isAdminDelete = req.user.user_type === 'administrateur';
+
+    if (!isSelfDelete && !isAdminDelete) {
+      return res.status(403).json({ success: false, message: 'Action non autorisée.' });
+    }
+
+    const activeUsers = await query(
+      "SELECT COUNT(*)::int AS count FROM users WHERE deleted_at IS NULL"
+    );
+
+    if ((activeUsers.rows[0]?.count || 0) <= 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Impossible de supprimer le dernier compte restant.'
+      });
+    }
+
     await query(
       "UPDATE users SET deleted_at = NOW(), status = 'inactif' WHERE id = $1",
       [id]

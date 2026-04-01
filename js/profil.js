@@ -3,6 +3,19 @@
   const BORROWS_KEY = "imsa_user_borrows";
   const FAVORITES_KEY = "imsa_user_favorites";
   const NIGHT_LS = "imsa_reader_night";
+  const API = "http://localhost:5000/api";
+
+  function getToken() {
+    return localStorage.getItem("imsa_access_token");
+  }
+
+  function authHeaders(extra = {}) {
+    return {
+      "Content-Type": "application/json",
+      Authorization: getToken() ? `Bearer ${getToken()}` : "",
+      ...extra
+    };
+  }
 
   function toastFallback(message, type = "info") {
     if (window.imsaToast) return window.imsaToast(message, type);
@@ -25,8 +38,16 @@
   }
 
   async function updateProfile(userId, formData) {
-    // BACKEND: PUT /api/users/:id
-    return { ok: true };
+    const res = await fetch(`${API}/users/${userId}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(formData)
+    });
+    const data = await res.json();
+    if (data.success && data.data) {
+      localStorage.setItem("imsa_user", JSON.stringify({ ...getUserSession(), ...data.data }));
+    }
+    return { ok: !!data.success, data, error: data.message };
   }
 
   async function changePassword(data) {
@@ -35,8 +56,17 @@
   }
 
   async function deleteAccount(userId) {
-    // BACKEND: DELETE /api/users/:id
-    return { ok: true };
+    const res = await fetch(`${API}/users/${userId}`, {
+      method: "DELETE",
+      headers: authHeaders()
+    });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.removeItem("imsa_user");
+      localStorage.removeItem("imsa_access_token");
+      localStorage.removeItem("imsa_refresh_token");
+    }
+    return { ok: !!data.success, data, error: data.message };
   }
 
   function getUserSession() {
@@ -147,7 +177,7 @@
 
   function renderProfile(user) {
     const fullname = user.fullname || user.fullName || "Lecteur";
-    const type = user.usertype || user.usertype || "Lecteur";
+    const type = user.user_type || user.usertype || "Lecteur";
     const city = user.city || "Libreville";
     const joined = user.joined || user.joinedAt || "2025-01-01";
 

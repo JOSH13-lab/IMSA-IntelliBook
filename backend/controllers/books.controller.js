@@ -267,15 +267,28 @@ exports.getBooksCoversBatch = async (req, res, next) => {
 exports.createBook = async (req, res, next) => {
   try {
     const {
-      legacy_id, title, author, category_id, isbn, isbn13,
+      legacy_id, title, author, category_id, category, isbn, isbn13,
       year, pages, language, format, summary, description,
-      cover_url, publisher, tags, is_featured, is_new, total_copies
+      cover_url, publisher, file_url, preview_url, tags, is_featured, is_new, total_copies
     } = req.body;
 
     // Si une image est uploadée
+    const coverFile = req.files?.cover?.[0] || null;
+    const bookFile = req.files?.book_file?.[0] || null;
+    const previewFile = req.files?.preview_file?.[0] || null;
+
+    let resolvedCategoryId = category_id;
+    if (!resolvedCategoryId && category) {
+      const categoryResult = await query(
+        'SELECT id FROM categories WHERE slug = $1 OR id::text = $1 LIMIT 1',
+        [category]
+      );
+      resolvedCategoryId = categoryResult.rows[0]?.id || null;
+    }
+
     let finalCoverUrl = cover_url;
-    if (req.file) {
-      finalCoverUrl = `/uploads/covers/${req.file.filename}`;
+    if (coverFile) {
+      finalCoverUrl = `/uploads/covers/${coverFile.filename}`;
     }
 
     // Sinon récupérer automatiquement depuis Google Books
@@ -284,26 +297,29 @@ exports.createBook = async (req, res, next) => {
                    || coversService.getDirectCoverUrl(isbn13 || isbn);
     }
 
+    const finalFileUrl = bookFile ? `/uploads/books/${bookFile.filename}` : (file_url || null);
+    const finalPreviewUrl = previewFile ? `/uploads/previews/${previewFile.filename}` : (preview_url || null);
+
     const { rows } = await query(`
       INSERT INTO books (
         legacy_id, title, author, category_id, isbn, isbn13,
         year, pages, language, format, summary, description,
-        cover_url, publisher, tags, is_featured, is_new,
+        cover_url, publisher, file_url, preview_url, tags, is_featured, is_new,
         total_copies, available_copies
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$18)
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$20)
       RETURNING *
     `, [
-      legacy_id, title, author, category_id, isbn || null, isbn13 || null,
+      legacy_id, title, author, resolvedCategoryId, isbn || null, isbn13 || null,
       year || null, pages || null, language || 'francais', format || 'pdf',
       summary, description || null, finalCoverUrl || null,
-      publisher || null, tags || [], is_featured || false,
+      publisher || null, finalFileUrl, finalPreviewUrl, tags || [], is_featured || false,
       is_new || false, total_copies || 3
     ]);
 
     // Mettre à jour le compteur de la catégorie
     await query(
       'UPDATE categories SET book_count = book_count + 1 WHERE id::text = $1',
-      [category_id]
+      [resolvedCategoryId]
     );
 
     res.status(201).json({
@@ -320,10 +336,22 @@ exports.createBook = async (req, res, next) => {
 exports.updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const fields = req.body;
+    const fields = { ...req.body };
 
-    if (req.file) {
-      fields.cover_url = `/uploads/covers/${req.file.filename}`;
+    const coverFile = req.files?.cover?.[0] || null;
+    const bookFile = req.files?.book_file?.[0] || null;
+    const previewFile = req.files?.preview_file?.[0] || null;
+    if (coverFile) fields.cover_url = `/uploads/covers/${coverFile.filename}`;
+    if (bookFile) fields.file_url = `/uploads/books/${bookFile.filename}`;
+    if (previewFile) fields.preview_url = `/uploads/previews/${previewFile.filename}`;
+
+    if (fields.category && !fields.category_id) {
+      const categoryResult = await query(
+        'SELECT id FROM categories WHERE slug = $1 OR id::text = $1 LIMIT 1',
+        [fields.category]
+      );
+      if (categoryResult.rows[0]?.id) fields.category_id = categoryResult.rows[0].id;
+      delete fields.category;
     }
 
     const setClauses = Object.keys(fields)

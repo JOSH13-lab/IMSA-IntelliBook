@@ -108,6 +108,14 @@
   }
 
 const API = 'http://localhost:5000/api';
+const API_ORIGIN = API.replace(/\/api\/?$/, '');
+
+function resolveBookFileUrl(book) {
+  const raw = book?.file_url || book?.preview_url || null;
+  if (!raw) return null;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return `${API_ORIGIN}${raw.startsWith('/') ? '' : '/'}${raw}`;
+}
 
 function getToken() {
   return localStorage.getItem('imsa_access_token');
@@ -349,7 +357,17 @@ function showToast(message, type = 'success') {
     if (borrowBtn) borrowBtn.setAttribute("data-book-id", book.id);
 
     const readBtn = document.getElementById("readOnlineBtn");
-    if (readBtn) readBtn.href = `lire.html?id=${encodeURIComponent(book.id)}`;
+    if (readBtn) {
+      const fileUrl = resolveBookFileUrl(book);
+      readBtn.href = fileUrl || `lire.html?id=${encodeURIComponent(book.id)}`;
+      if (fileUrl) {
+        readBtn.setAttribute("target", "_blank");
+        readBtn.setAttribute("rel", "noopener noreferrer");
+      } else {
+        readBtn.removeAttribute("target");
+        readBtn.removeAttribute("rel");
+      }
+    }
 
     document.getElementById("shareBtn")?.setAttribute("data-book-id", book.id);
   }

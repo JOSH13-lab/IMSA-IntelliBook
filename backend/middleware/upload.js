@@ -1,36 +1,43 @@
+const fs = require('fs');
+const path = require('path');
 const multer = require('multer');
-const path   = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-// Configuration du stockage
+function ensureDir(dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, process.env.UPLOAD_DIR || 'uploads/covers');
+    let folder = 'uploads/covers';
+    if (file.fieldname === 'book_file') folder = 'uploads/books';
+    if (file.fieldname === 'preview_file') folder = 'uploads/previews';
+    ensureDir(path.join(__dirname, '..', folder));
+    cb(null, path.join(__dirname, '..', folder));
   },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
+    const ext = path.extname(file.originalname || '').toLowerCase();
     cb(null, `${uuidv4()}${ext}`);
   }
 });
 
-// Filtre des fichiers (uniquement images)
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|webp/;
-  const mimetype = allowedTypes.test(file.mimetype);
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const imageTypes = /jpeg|jpg|png|webp|svg/;
+  const isImage = imageTypes.test(file.mimetype) || imageTypes.test(path.extname(file.originalname).toLowerCase());
+  const isPdf = file.mimetype === 'application/pdf' || path.extname(file.originalname).toLowerCase() === '.pdf';
 
-  if (mimetype && extname) {
-    return cb(null, true);
-  }
-  cb(new Error('Format de fichier non supporté (JPG, PNG, WEBP uniquement).'));
+  if (file.fieldname === 'cover' && isImage) return cb(null, true);
+  if ((file.fieldname === 'book_file' || file.fieldname === 'preview_file') && isPdf) return cb(null, true);
+
+  cb(new Error('Format de fichier non supporté pour ce champ.'));
 };
 
-const upload = multer({
+module.exports = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880 // 5MB par défaut
+    fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 15 * 1024 * 1024
   }
 });
-
-module.exports = upload;

@@ -17,8 +17,6 @@
 </head>
 
 <body>
-  <div class="d-none d-lg-block admin-shell"></div>
-
   <!-- Sidebar + Main -->
   <div class="container-fluid admin-shell">
     <div class="row g-0 min-vh-100">
@@ -84,7 +82,7 @@
                   <div class="text-orange"><i class="fa-solid fa-users fs-4"></i></div>
                   <div class="trend-up"><i class="fa-solid fa-arrow-up"></i> +6%</div>
                 </div>
-                <div class="display-6 fw-bold mt-2">1 248</div>
+                <div class="display-6 fw-bold mt-2" id="totalUsers">1 248</div>
                 <div class="text-muted fw-semibold">Total Utilisateurs</div>
               </div>
             </div>
@@ -94,7 +92,7 @@
                   <div class="text-orange"><i class="fa-solid fa-bookmark fs-4"></i></div>
                   <div class="trend-down"><i class="fa-solid fa-arrow-down"></i> +4%</div>
                 </div>
-                <div class="display-6 fw-bold mt-2">347</div>
+                <div class="display-6 fw-bold mt-2" id="activeBorrows">347</div>
                 <div class="text-muted fw-semibold">Emprunts Actifs</div>
               </div>
             </div>
@@ -104,7 +102,7 @@
                   <div class="text-success"><i class="fa-solid fa-book-open fs-4"></i></div>
                   <div class="trend-up"><i class="fa-solid fa-arrow-up"></i> +2%</div>
                 </div>
-                <div class="display-6 fw-bold mt-2">2 104</div>
+                <div class="display-6 fw-bold mt-2" id="totalBooks">2 104</div>
                 <div class="text-muted fw-semibold">Livres Disponibles</div>
               </div>
             </div>
@@ -114,8 +112,8 @@
                   <div style="color:#7c3aed;"><i class="fa-solid fa-sparkles fs-4"></i></div>
                   <div class="trend-up"><i class="fa-solid fa-arrow-up"></i> +9%</div>
                 </div>
-                <div class="display-6 fw-bold mt-2">89</div>
-                <div class="text-muted fw-semibold">Nouveaux ce mois</div>
+                <div class="display-6 fw-bold mt-2" id="overdueBooks">89</div>
+                <div class="text-muted fw-semibold">Emprunts en retard</div>
               </div>
             </div>
           </div>

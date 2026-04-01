@@ -25,6 +25,10 @@
   position: relative;
   z-index: 1;
 }
+.hero-copy{
+  max-width: 760px;
+  padding: 20px 0 12px;
+}
 .hero-card-stats{
   background: rgba(245,240,232,0.14);
   border: 1px solid rgba(255,255,255,0.18);
@@ -38,6 +42,21 @@
 }
 .hero-sub{
   color: rgba(255,255,255,0.9);
+}
+.hero-description{
+  max-width: 640px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 14px;
+  margin-top: 2rem;
+}
+.hero-actions .btn{
+  min-width: 220px;
+  min-height: 54px;
 }
 
 .btn-hero-outline{
@@ -170,5 +189,18 @@
 
 @media (prefers-reduced-motion: reduce){
   .fade-in-up{ animation: none; opacity:1; transform:none; }
+}
+
+@media (max-width: 991.98px){
+  .hero-copy{
+    max-width: 100%;
+  }
+  .hero-description{
+    max-width: 100%;
+  }
+  .hero-actions .btn{
+    width: 100%;
+    min-width: 0;
+  }
 }
 
